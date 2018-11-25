@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>OneToOne</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>@OneToOne</h1>
+                    <p>
+                        Predpokladáme, že jeden študent môže mať práve jeden ISIC preukaz. Triedu študenta aktualizujeme
+                        a pridáme triedu ISIC.
+                    </p>
+                    <p:panelGrid columns="2">
+                        <textarea rows="15" cols="70" style="border: none">
+                            @Entity
+                            ...
+                            public class Student implements Serializable {
+                                ...
+                                @Id
+                                @GeneratedValue(strategy = GenerationType.IDENTITY)
+                                @Column( nullable=false, unique=true)
+                                private Long id;
+                                ...
+                                @OneToOne
+                                @JoinColumn(name = "isic_id")
+                                private ISIC isic;
+                        </textarea>
+                        <textarea rows="17" cols="70" style="border: none">
+                            @Entity
+                            public class ISIC {
+                                ...
+                                @Id
+                                @GeneratedValue(strategy = GenerationType.IDENTITY)
+                                @Column( nullable=false, unique=true)
+                                private Long id;
+
+                                @Column( nullable=false, unique=true)
+                                private String isic_number;
+
+                                @Column( nullable = true, unique = false)
+                                private String faculty;
+
+                                @Column( nullable=false, unique=false)
+                                private Date creation;
+                        </textarea>
+                    </p:panelGrid>
+
+                    <h:form>
+                        <p:growl id="messages" showDetail="true"/>
+                        <p:panelGrid columns="2">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="login" value="Student login:" />
+                                <p:inputText id="login" value="#{RSOneToOne.login}" />
+
+                                <p:outputLabel for="isicNumb" value="Isic string:" />
+                                <p:inputText id="isicNumb" value="#{RSOneToOne.isicNumb}" />
+
+                                <p:outputLabel for="isicFaculty" value="Faculty:" />
+                                <p:inputText id="isicFaculty" value="#{RSOneToOne.faculty}" />
+
+                                <p:commandButton value="AddIsic" icon="ui-icon-star" action="#{RSOneToOne.addIsicToStudent}" ajax="false"/>
+                                </p:panelGrid>
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="isicNumbRemove" value="Isic:" />
+                                <p:inputText id="isicNumbRemove" value="#{RSOneToOne.isicNumbDel}" />
+                                <p:commandButton value="RemoveIsic" icon="ui-icon-star" action="#{RSOneToOne.removeIsic}" ajax="false"/>
+
+                            </p:panelGrid>
+                        </p:panelGrid>
+                    </h:form>
+                    <h:form>
+                        <p:dataTable id="table1" value="#{StudentView.students}" var="student" style="width: 800px">
+                            <p:column headerText="Login">
+                                <h:outputText  value="#{student.login}"/>
+                            </p:column>
+                            <p:column headerText="Name">
+                                <h:outputText  value="#{student.name}"/>
+                            </p:column>
+                            <p:column headerText="Signed">
+                                <h:outputText  value="#{student.signed}"/>
+                            </p:column>
+                            <p:column headerText="Faculty">
+                                <h:outputText  value="#{student.isic.faculty}"/>
+                            </p:column>
+                            <p:column headerText="ISIC">
+                                <h:outputText  value="#{student.isic.isic_number}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

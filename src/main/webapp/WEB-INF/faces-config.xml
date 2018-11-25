@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+    version="2.2">
+    <navigation-rule>
+        <from-view-id>/index.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{menuView.home}</from-action>
+            <from-outcome>home</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{menuView.jpa}</from-action>
+            <from-outcome>jpa</from-outcome>
+            <to-view-id>/ui/jsf/Entity.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{menuView.hibernate}</from-action>
+            <from-outcome>hibernate</from-outcome>
+            <to-view-id>/ui/jsf/HQL.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>

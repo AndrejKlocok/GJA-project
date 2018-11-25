@@ -1,0 +1,23 @@
+<ui:composition
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
+
+    <h:form>
+        <p:menu>
+            <p:submenu label="Main">
+                <p:menuitem value="Home" action="#{menuView.home_welcome}" />
+                <p:menuitem value="Setup" action="#{menuView.home_setUp}" />
+            </p:submenu>
+            <p:submenu label="Tutorials">
+                <p:menuitem value="Entity" action="#{menuView.entity}" />
+                <p:menuitem value="CRUD" action="#{menuView.crud}" />
+                <p:menuitem value="Query" action="#{menuView.query}" />
+                <p:menuitem value="OneToOne" action="#{menuView.oneToOne}" />
+                <p:menuitem value="OneToMany" action="#{menuView.oneToMany}" />
+                <p:menuitem value="HQL" action="#{menuView.hql}"  />
+            </p:submenu>
+        </p:menu>
+    </h:form>
+</ui:composition>

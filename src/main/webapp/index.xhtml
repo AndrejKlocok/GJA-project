@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>JPA-Hibernate</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Home</h1>
+                    <p> Tutorial Java ee aplikácie, ktorá pracuje s Mysql databázou.</p>
+                    <p> Pred spustením tutoriálu je potrebné vytvoriť uživateľa,  databázu. Toto je pripravené
+                        v priloženom skripte, v <i>src/resources/db/dbMysql.sh</i></p>
+                    <p> Tento skript spúšťa jednotlivé query, ktoré vytvoria užívateľa, databázu a tabuľku Student</p>
+
+                    <ul>
+                        <li>
+                            JPA - špecifikácia perzistného API
+                        </li>
+                        <li>
+                            Hibernate - jedna z implementácii JPA
+                            <ul>
+                                <li>
+                                    Peristencia (načítanie dát z db)
+                                </li>
+                                <li>
+                                    Cashing
+                                </li>
+                                <li>
+                                    Managovanie vzťahov
+                                </li>
+                                <li>
+                                    Mapovanie objektov
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <textarea rows="15" cols="100" style="border:none">
+                        CREATE USER user69@localhost IDENTIFIED BY 'heslo';
+                        GRANT ALL PRIVILEGES ON mydatabase.* TO 'user69'@'localhost';
+                        FLUSH PRIVILEGES;
+                        create table if not exists Student (
+                            id     int auto_increment
+                            primary key,
+                            name   varchar(64) not null,
+                            login  varchar(8)  not null,
+                            signed date        not null,
+                            constraint Student_login_uindex
+                            unique (login)
+                            );
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

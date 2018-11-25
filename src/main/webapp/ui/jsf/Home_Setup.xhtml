@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Set up</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Setup</h1>
+                    <h2>JPA</h2>
+                    <p>V adresáry <i>src/main/resources</i> je nutné umiestniť adresár <i>META-INF</i>, v ktorom sa bude
+                        nachádzať konfiguračný súbor <i>persistence.xml</i>. V tomto súbore sú definované persistentné
+                        jednotky, pripojenie na databazu, v našom prípade MySql
+                    </p>
+                    <p>
+                        Príklad použitého presistence.xml
+                    </p>
+                    <textarea rows="15" cols="200" style="border:none;">
+                        <persistence-unit name="StudentsPU" transaction-type="RESOURCE_LOCAL">
+                            <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+                            <class>cz.vutbr.fit.models.Student</class>
+                            <class>cz.vutbr.fit.models.ISIC</class>
+                            <class>cz.vutbr.fit.models.Subject</class>
+                            <class>cz.vutbr.fit.models.Faculty</class>
+                            <properties>
+                                <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+                                <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/GJA" />
+                                <property name="javax.persistence.jdbc.user" value="user69" />
+                                <property name="javax.persistence.jdbc.password" value="heslo" />
+                            </properties>
+                        </persistence-unit>
+                    </textarea>
+
+                    <p>
+                        Vytvorenie <i>entity manager</i> s ktorým môžeme pracovať s perzistentnými objektami.
+                    </p>
+                    <textarea rows="5" cols="120">
+                        //JPA
+                        protected EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
+                        protected EntityManager em = factory.createEntityManager();
+                    </textarea>
+
+                    <h2>Hibernate</h2>
+                    <p>
+                        Hibernate používa konfiguračný súbor <i>hibernate.cfg.xml </i>. Tento súbor treba umiestniť do adresára
+                        <i>src/main/resources</i>. Obsahuje mapovanie entit, informacie pre pripojenie do databaze a dalšie...
+                    </p>
+                    <p>
+                        Príklad použitého <i>hibernate.cfg.xml </i>.
+                    </p>
+                    <textarea rows="30" cols="150">
+                        <session-factory>
+                            <!-- Database connection settings -->
+                            <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+                            <property name="connection.url">jdbc:mysql://localhost/GJA</property>
+                            <property name="connection.username">user69</property>
+                            <property name="connection.password">heslo</property>
+
+                            <!-- JDBC connection pool (use the built-in) -->
+                            <property name="connection.pool_size">1</property>
+
+                            <!-- SQL dialect -->
+                            <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+                            <!-- Enable Hibernate's automatic session context management -->
+                            <property name="current_session_context_class">thread</property>
+
+                            <!-- Disable the second-level cache -->
+                            <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+
+                            <!-- Echo all executed SQL to stdout -->
+                            <property name="show_sql">true</property>
+
+                            <mapping class="cz.vutbr.fit.models.Student"/>
+                            <mapping class="cz.vutbr.fit.models.ISIC"/>
+                            <mapping class="cz.vutbr.fit.models.Subject"/>
+                            <mapping class="cz.vutbr.fit.models.Faculty"/>
+                        </session-factory>
+                    </textarea>
+                    <p>
+                        Hibernate využíva <i>Session</i>  pre správu perzistentných objektov.
+                    </p>
+                    <textarea rows="5" cols="150">
+                            //Hibernate
+                            protected SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+                    </textarea>
+                    <p>
+                        Vytvorenie <i>Session Factory</i> z konfiguračného súboru môže vypadať nasledovne:
+                    </p>
+                    <textarea rows="10" cols="150">
+                        // Vytvorenie serviceRegistry z configuracneho subora hibernate.cfg.xml
+                        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()//
+                                .configure("hibernate.cfg.xml").build();
+
+                        // Vytvorenie metadat zdrojov pouzitim service registry
+                        Metadata metadata = new MetadataSources(serviceRegistry).getMetadataBuilder().build();
+
+                        return metadata.getSessionFactoryBuilder().build();
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

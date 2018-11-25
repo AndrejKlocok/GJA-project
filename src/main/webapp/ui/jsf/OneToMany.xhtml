@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>OneToOne</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+
+                    <h1>@OneToMany</h1>
+                    <p>
+                        Predpokladajme, že každá fakulta môže vyučovať N predmetov. Zavedieme novú triedu <i>Faculty</i>
+                        a <i>Subject</i>. Je nutné vytvorenie týchto entit v databáze. Samotnú väzbu spravíme obojsmernú,
+                        teda vytvoríme si väzobnú tabulku <i>Faculty_Subject</i>. Táto tabulka obsahuje id oboch tabuliek,
+                        , ktoré sú cudzími klúčami do spomínaných tabuliek (označené ako <i>fk_fakulty</i> a <i>fk_subject</i>).
+                        pričom toto riešenie sa takmer zhoduje s využitím väzby N-N.
+                    </p>
+                    <p:panelGrid columns="2">
+                        <textarea rows="20" cols="70" style="border: none">
+                            @Entity
+                            public class Faculty {
+                                @Id
+                                @GeneratedValue(strategy = GenerationType.IDENTITY)
+                                @Column( nullable=false, unique=true)
+                                private Long id_faculty;
+
+                                @Column( nullable=false)
+                                private String name;
+
+                                @OneToMany( orphanRemoval = true, cascade = CascadeType.ALL)
+                                @JoinTable(name = "Faculty_Subject",
+                                        joinColumns = {@JoinColumn(name = "fk_faculty",
+                                            referencedColumnName = "id_faculty")},
+                                        inverseJoinColumns = {@JoinColumn(name = "fk_subject",
+                                            referencedColumnName = "id_subject")}
+                                )
+                        </textarea>
+                        <textarea rows="26" cols="70" style="border: none">
+                            @Entity
+                            public class Subject {
+                                @Id
+                                @GeneratedValue(strategy = GenerationType.IDENTITY)
+                                @Column( nullable=false, unique=true)
+                                private Long id_subject;
+
+                                @Column( nullable=false)
+                                private String name;
+
+                                @Column( nullable=false)
+                                private Date created;
+
+                                @ManyToOne
+                                @JoinTable(name = "Faculty_Subject",
+                                        joinColumns = {@JoinColumn(name = "fk_subject",
+                                                insertable = false,
+                                                updatable = false,
+                                                referencedColumnName = "id_subject")},
+                                        inverseJoinColumns = {@JoinColumn(name = "fk_faculty",
+                                                insertable = false,
+                                                updatable = false,
+                                                referencedColumnName = "id_faculty")}
+                                )
+                                private Faculty subjectFaculty;
+                        </textarea>
+                        <p>
+                            Pridanie predmetu do fakulty:
+                        </p>
+                        <textarea rows="30" cols="120">
+                            //zistime meno fakulty
+                            Faculty f = facultyDAO.getFaculty(facultyName);
+                            if(f == null){
+                                return;
+                            }
+
+                            Subject subject ;
+                            subject = subjectDAO.getSubject(subjectName);
+
+                            //zistime ci uz predmet existuje
+                            if(subject != null){
+                                addMessage("Failure", "Subject already exists");
+                                return;
+                            }
+
+                            //vyrvorim predmet
+                            subject = new Subject(subjectName);
+                            subjectDAO.insert(subject);
+
+                            //aktualizujem vztahy
+                            subject.setSubjectFaculty(f);
+                            f.addSubject(subject);
+
+                            //mergnem fakultu
+                            facultyDAO.update(f);
+                        </textarea>
+                    </p:panelGrid>
+                    <h:form>
+                        <p:growl id="messages" showDetail="true"/>
+                        <p:panelGrid columns="2">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="facultyName" value="Faculty name:" />
+                                <p:inputText id="facultyName" value="#{RSOneToMany.facultyName}" >
+                                    <f:validateLength minimum="3" />
+                                </p:inputText>
+
+                                <p:commandButton value="Create" icon="ui-icon-star" action="#{RSOneToMany.createFaculty}" ajax="false"/>
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="subjectName" value="Subject name:" />
+                                <p:inputText id="subjectName" value="#{RSOneToMany.subjectName}">
+                                </p:inputText>
+                                <p:commandButton value="AddSubject" icon="ui-icon-star" action="#{RSOneToMany.addSubjectToFaculty}" ajax="false"/>
+                            </p:panelGrid>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="2">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="subjectNameDelete" value="Subject name:" />
+                                <p:inputText id="subjectNameDelete" value="#{RSOneToMany.subjectNameDel}"/>
+                                <p:commandButton value="RemoveSubject" icon="ui-icon-star" action="#{RSOneToMany.removeSubject}" ajax="false"/>
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="facultyNameDel" value="Faculty name:" />
+                                <p:inputText id="facultyNameDel" value="#{RSOneToMany.facultyNameDel}" >
+                                </p:inputText>
+
+                                <p:commandButton value="Remove Faculty" icon="ui-icon-star" action="#{RSOneToMany.removeFaculty}" ajax="false"/>
+                            </p:panelGrid>
+                        </p:panelGrid>
+                    </h:form>
+                    <h:form>
+                        <p:dataTable id="table1" value="#{RSOneToMany.faculties}" var="faculty" style="width: 800px">
+                            <f:facet name="header">
+                                Fakulty
+                            </f:facet>
+                            <p:subTable var="subject" value="#{faculty.subjectList}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{faculty.name}" />
+                                </f:facet>
+                                <p:column>
+                                    <h:outputText value="#{subject.name}" />
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{subject.created}" />
+                                </p:column>
+                            </p:subTable>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

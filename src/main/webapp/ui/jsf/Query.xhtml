@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Query</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Query</h1>
+                    <p>
+                        Inštancie query sú získané z factory metód entity managera. Rozhranie Query ponúka napr:
+                    </p>
+                    <ul>
+                        <li>getResultList() – spustí dotaz, ktorý vráti viacero výsledkov</li>
+                        <li>getSingleResult() – spustí dotaz a vráti jeden výsledok</li>
+                        <li>executeUpdate() – spustí hromadnú aktualizáciu/zmazanie</li>
+                        <li>setFirstResult() – vráti prvý výsledok</li>
+                        <li>setMaxResults() – nastavý maximálny počet výsledkov</li>
+                        <li>setParameter() – viazanie hodnoty na pomenovaný parameter</li>
+                    </ul>
+                    <p>
+                        Jednoduchý dotaz na vrátenie maximálne 50 riadkov z dabulky.
+                    </p>
+                    <textarea rows="4" cols="150" style="border:none">
+                        List&lt;Student&gt; students = new ArrayList&lt;&gt;();
+                        students = em.createQuery("Select s FROM Student s").setMaxResults(50).getResultList();
+                    </textarea>
+                    <ui:include src="/ui/components/studentsView.xhtml"/>
+                    <p>
+                        Dotaz na vrátenie inštancie študenta s daným loginom, ktorý je predaný dotazu ako parameter.
+                    </p>
+                    <textarea rows="6" cols="100" style="border:none">
+                        Student  student = (Student) em.createQuery(
+                                            "SELECT s from Student s where s.login = :login")
+                                            .setParameter("login", loginParam)
+                                            .getSingleResult();
+                    </textarea>
+
+                    <h:form>
+                        <p:growl id="messages" showDetail="true"/>
+                        <p:panelGrid columns="2">
+                            <p:panelGrid columns="1">
+                                <p:outputLabel for="login" value="Student login:" />
+                                <p:inputText id="login" value="#{StudentUpdate.login}" />
+                            </p:panelGrid>
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Student id:" />
+                                <p:outputLabel value="#{StudentUpdate.id}" />
+                                <p:outputLabel value="Student name:" />
+                                <p:outputLabel value="#{StudentUpdate.name}" />
+                                <p:outputLabel value="Student login:" />
+                                <p:outputLabel value="#{StudentUpdate.login}" />
+                                <p:outputLabel value="Student signed:" />
+                                <p:outputLabel value="#{StudentUpdate.signed}" />
+                            </p:panelGrid>
+                            <p:commandButton value="Find" icon="ui-icon-star" action="#{StudentUpdate.findStudent}" ajax="false"/>
+                        </p:panelGrid>
+                    </h:form>
+
+
+                    <h1>Named query</h1>
+                    <p>
+                        Pomenovaná query je staticky definovaný dotaz s preddefinovaným a nezmenitelných query reťazcom.
+                        Použitie pomenovaných  dotazov namiesto dynamických môže pomôcť k lepšej organizácii kódu, oddelenie
+                        javy a query reťazcov.
+                    </p>
+                    <p>
+                        Použijeme pomenovaný dotaz na vykonanie hromadnej úpravy db (bulk update).
+                    </p>
+                    <textarea rows="15" cols="150" style="border:none">
+                        @Entity
+                        @NamedQuery(name="Student.updateBlankName", query = "UPDATE Student S SET S.name = 'MenoStudenta' WHERE S.name =''")
+                        public class Student implements Serializable {
+                        ...
+                        public void namedUpdate(){
+                            Transaction tr = session.getTransaction();
+
+                            try{
+                                tr.begin();
+                                Query q = em.createNamedQuery("Student.updateBlankName");
+                                q.executeUpdate();
+                                tr.commit();
+                        ...
+                    </textarea>
+                    <h:form>
+                        <p:commandButton value="FixEmpty" icon="ui-icon-star" action="#{StudentQuery.fixStudentvalues}" ajax="false"/>
+                    </h:form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

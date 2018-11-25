@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>HQL</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Hibernate query language</h1>
+                    <h2>Ukážky jazyka</h2>
+                    <p>
+                        Pár príkladov HQL, použijeme <i>session</i>.
+                    </p>
+                    <p>
+                        Dotaz na získanie všetkých objektov <i>Subject</i>
+                    </p>
+                    <textarea rows="12" cols="120">
+                        Session session = sessionFactory.getCurrentSession();
+                        List&lt;Subject&gt; subjects = new ArrayList&lt;&gt;();
+                        Transaction tr = session.getTransaction();
+                        String hql = "FROM Subject AS S";
+                        Query query = session.createQuery(hql);
+                        try {
+                            tr.begin();
+                            subjects =  query.setMaxResults(50).list();
+                            tr.commit();
+                            return subjects;
+                        }
+                    </textarea>
+
+                    <h:form>
+                        <p:growl id="messages" showDetail="true"/>
+                        <p:dataTable id="table1" value="#{HQL.subjects}" var="subj" style="max-width: 800px">
+                            <p:column headerText="Id">
+                                <h:outputText  value="#{subj.id_subject}"/>
+                            </p:column>
+                            <p:column headerText="Meno">
+                                <h:outputText  value="#{subj.name}"/>
+                            </p:column>
+                            <p:column headerText="Fakulta">
+                                <h:outputText  value="#{subj.subjectFaculty.name}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                    <p>
+                        Vyhladanie počtu predmetov v danej fakulte. Vzťah fakulty a predmetu je reprezentovaný väzobnou tabulkou.
+                    </p>
+                    <textarea rows="20" cols="120">
+                        Session session = sessionFactory.getCurrentSession();
+                        Transaction tr = session.getTransaction();
+                        String hql = "Select count(*) AS subjects From Faculty F Join Faculty_Subject FS " +
+                                "ON(F.id_faculty=FS.fk_faculty) Join Subject S ON(S.id_subject=FS.fk_subject)"+
+                                "where F.name = :name  Group By F.name";
+                        Query query = session.createQuery(hql).setParameter("name", faculty);
+                        int count = 0;
+
+
+                        try {
+                            tr.begin();
+                            count = (int) query.getSingleResult();
+                            tr.commit();
+                            return count;
+                        }
+                    </textarea>
+                    <h:form>
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="Subj count" />
+                            <p:outputLabel value= "#{HQL.subjCount}" />
+                        </p:panelGrid>
+                    </h:form>
+
+                    <h2>Hibernate criteria</h2>
+                    <p>
+                        Hibernate criteria je API, pomocou ktorého môžeme vytvárať selekty do databáze objektovým spôsobom.
+                    </p>
+
+                    <p>
+                        Dotaz na študentov, ktorí majú ISIC, zoradený podľa mena.
+                    </p>
+                    <textarea rows="20" cols="120">
+                        Session session = sessionFactory.getCurrentSession();
+                        Transaction tr = session.getTransaction();
+                        List&lt;Student&gt; students = new ArrayList&lt;&gt;();
+
+                        try {
+                            tr.begin();
+                            Criteria cr = session.createCriteria(Student.class);
+                            cr.add(Restrictions.isNotNull("isic"));
+                            cr.addOrder(Order.asc("name"));
+                            students = cr.list();
+                            tr.commit();
+                    </textarea>
+                    <h:form>
+                        <p:dataTable id="table2" value="#{HQL.students}" var="student" style="width: 800px">
+                            <p:column headerText="Login">
+                                <h:outputText  value="#{student.login}"/>
+                            </p:column>
+                            <p:column headerText="Name">
+                                <h:outputText  value="#{student.name}"/>
+                            </p:column>
+                            <p:column headerText="ISIC">
+                                <h:outputText  value="#{student.isic.isic_number}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <p>
+                        Dotaz na získanie počtu študentov, ktorí majú rôzne meno a ich login začína na x.
+                    </p>
+
+                    <textarea rows="15" cols="120" >
+
+                        Session session = sessionFactory.getCurrentSession();
+                        Transaction tr = session.getTransaction();
+                        Long count = 0L;
+
+                        try {
+                            tr.begin();
+                            Criteria cr = session.createCriteria(Student.class);
+                            cr.setProjection(Projections.countDistinct("name"));
+                            cr.add(Restrictions.ilike("login", "x%"));
+                            cr.addOrder(Order.asc("login"));
+                            count = (Long) cr.uniqueResult();
+                    </textarea>
+
+                    <h:form>
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="Students count" />
+                            <p:outputLabel value= "#{HQL.studCount}" />
+                        </p:panelGrid>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <title>Persist and Remove</title>
+</h:head>
+
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Entity</h1>
+                    <p>Javovská trieda <i>Student</i> reprezentuje tabulku v databáze. Trieda implementuje rozhranie
+                        <i>Serializable</i> a súčasne je využitá anotácia ( od Hibernate):
+                    </p>
+                    <ul>
+                        <li>
+                            <i>@Entity</i>, ktorá naznačuje väzbu na tabulku a músí obsahovať bezparametrový konštruktor.
+                        </li>
+
+                        <li>
+                            <i>@Id</i> (primárny kľuč). V prípade viacnásobného PK použijeme anotáciu <i>@Id</i> u daných atribútov.
+                            Tiež je možné využiť <i>@GeneratedValue</i> na autoinkrement napr. PK.
+                        </li>
+
+                        <li>
+                            <i>@Column</i> špecifikuje hodnotu a pridáva constraints (podmienky) ako <i>unique, nullable</i>.
+                        </li>
+                    </ul>
+                    <p>
+                        Na prácu s entitami môžeme využiť JPA <i>Entity manager</i> alebo Hibernate <i>Session</i>. V tomto tutorialy
+                        využijeme session.
+                    </p>
+
+                    <p>Príklad:</p>
+                    <p>
+                        <textarea rows="20" cols="140" style="border:none">
+                            @Entity
+                            public class Student implements Serializable {
+                                private static final long serialVersionUID = 1L;
+
+                                // Persistent Fields:
+                                @Id
+                                @GeneratedValue(strategy = GenerationType.IDENTITY)
+                                @Column( nullable=false, unique=true)
+                                private Long id;
+
+                                @Column( nullable=false, unique=false)
+                                private String name;
+
+                                @Column(nullable=false, unique=false)
+                                private String login;
+
+                                @Column(nullable=false, unique=false)
+                                private Date signed;
+                            }
+                        </textarea>
+                    </p>
+                    <h1>Service</h1>
+                    <p> Pre túto triedu(<i>Student</i>) môžeme definovať službu, ktorá komunikuje s DB</p>
+                    <textarea rows="18" cols="140" style="border:none">
+                        @Singleton
+                        public class StudentDAO {
+
+                            private EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
+                            private EntityManager em = factory.createEntityManager();
+
+                            public Student getStudent(String loginParam) {}
+
+                            public boolean inserStudent(Student student) {}
+
+                            public boolean deleteStudent(Long id) {...}
+
+                            ...
+                        }
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>
+
