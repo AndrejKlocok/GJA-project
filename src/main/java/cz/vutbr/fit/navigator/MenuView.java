@@ -65,7 +65,7 @@ public class MenuView {
     }
 
     public String  entity() {
-        return "/ui/jsf/JPA_Entity"; }
+        return "/ui/jsf/Entity"; }
 
     public String  oneToOne(){
         return "/ui/jsf/OneToOne";

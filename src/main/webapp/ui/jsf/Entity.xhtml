@@ -39,7 +39,7 @@
                     </ul>
                     <p>
                         Na prácu s entitami môžeme využiť JPA <i>Entity manager</i> alebo Hibernate <i>Session</i>. V tomto tutorialy
-                        využijeme session.
+                        využijeme oba.
                     </p>
 
                     <p>Príklad:</p>
@@ -68,12 +68,22 @@
                     </p>
                     <h1>Service</h1>
                     <p> Pre túto triedu(<i>Student</i>) môžeme definovať službu, ktorá komunikuje s DB</p>
-                    <textarea rows="18" cols="140" style="border:none">
-                        @Singleton
-                        public class StudentDAO {
+                    <textarea rows="26" cols="140" style="border:none">
+                        public class DAO {
+                            //JPA
+                            protected EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
+                            protected EntityManager em = factory.createEntityManager();
 
-                            private EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
-                            private EntityManager em = factory.createEntityManager();
+                            //Hibernate
+                            protected SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+
+                            //Pop Up message
+                            public void addMessage(String summary, String detail)
+                            ...
+                        }
+
+                        @Singleton
+                        public class StudentDAO extends DAO{
 
                             public Student getStudent(String loginParam) {}
 

@@ -45,20 +45,14 @@
                             </ul>
                         </li>
                     </ul>
-
+                    <p>
+                        Priložený skript inicializuje databazu GJA.
+                    </p>
                     <textarea rows="15" cols="100" style="border:none">
                         CREATE USER user69@localhost IDENTIFIED BY 'heslo';
                         GRANT ALL PRIVILEGES ON mydatabase.* TO 'user69'@'localhost';
                         FLUSH PRIVILEGES;
-                        create table if not exists Student (
-                            id     int auto_increment
-                            primary key,
-                            name   varchar(64) not null,
-                            login  varchar(8)  not null,
-                            signed date        not null,
-                            constraint Student_login_uindex
-                            unique (login)
-                            );
+
                     </textarea>
                 </div>
             </div>
