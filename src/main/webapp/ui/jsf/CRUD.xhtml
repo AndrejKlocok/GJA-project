@@ -93,7 +93,9 @@
 
                             <p:panelGrid columns="2">
                                 <p:outputLabel for="loginDel" value="Student login:" />
-                                <p:inputText id="loginDel" value="#{StudentDelete.login}" />
+                                <p:inputText id="loginDel" value="#{StudentDelete.login}" >
+                                    <f:validateLength maximum="8" />
+                                </p:inputText>
 
                                 <p:commandButton value="Remove" icon="ui-icon-star" action="#{StudentDelete.deleteStudent}" ajax="false"/>
                             </p:panelGrid>

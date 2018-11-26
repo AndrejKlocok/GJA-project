@@ -92,7 +92,7 @@
                                 return;
                             }
 
-                            //vyrvorim predmet
+                            //vytvorim predmet
                             subject = new Subject(subjectName);
                             subjectDAO.insert(subject);
 
@@ -106,38 +106,33 @@
                     </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
+
                         <p:panelGrid columns="2">
-                            <p:panelGrid columns="2">
-                                <p:outputLabel for="facultyName" value="Faculty name:" />
-                                <p:inputText id="facultyName" value="#{RSOneToMany.facultyName}" >
-                                    <f:validateLength minimum="3" />
-                                </p:inputText>
+                            <p:outputLabel for="facultyName" value="Faculty name:" />
+                            <p:inputText id="facultyName" value="#{RSOneToMany.facultyName}" />
 
-                                <p:commandButton value="Create" icon="ui-icon-star" action="#{RSOneToMany.createFaculty}" ajax="false"/>
-                            </p:panelGrid>
-
-                            <p:panelGrid columns="2">
-                                <p:outputLabel for="subjectName" value="Subject name:" />
-                                <p:inputText id="subjectName" value="#{RSOneToMany.subjectName}">
-                                </p:inputText>
-                                <p:commandButton value="AddSubject" icon="ui-icon-star" action="#{RSOneToMany.addSubjectToFaculty}" ajax="false"/>
-                            </p:panelGrid>
+                            <p:commandButton value="Create" icon="ui-icon-star" action="#{RSOneToMany.createFaculty}" ajax="false"/>
+                            <p:commandButton value="Remove Faculty" icon="ui-icon-star" action="#{RSOneToMany.removeFaculty}" ajax="false"/>
                         </p:panelGrid>
 
+
                         <p:panelGrid columns="2">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="subjectName" value="Subject name:" />
+                                <p:inputText id="subjectName" value="#{RSOneToMany.subjectName}"/>
+
+                                <p:outputLabel for="facultyNameAdd" value="Faculty name:" />
+                                <p:inputText id="facultyNameAdd" value="#{RSOneToMany.toFacultyAddSubj}" />
+
+                                <p:commandButton value="AddSubject" icon="ui-icon-star" action="#{RSOneToMany.addSubjectToFaculty}" ajax="false"/>
+                            </p:panelGrid>
+
                             <p:panelGrid columns="2">
                                 <p:outputLabel for="subjectNameDelete" value="Subject name:" />
                                 <p:inputText id="subjectNameDelete" value="#{RSOneToMany.subjectNameDel}"/>
                                 <p:commandButton value="RemoveSubject" icon="ui-icon-star" action="#{RSOneToMany.removeSubject}" ajax="false"/>
                             </p:panelGrid>
 
-                            <p:panelGrid columns="2">
-                                <p:outputLabel for="facultyNameDel" value="Faculty name:" />
-                                <p:inputText id="facultyNameDel" value="#{RSOneToMany.facultyNameDel}" >
-                                </p:inputText>
-
-                                <p:commandButton value="Remove Faculty" icon="ui-icon-star" action="#{RSOneToMany.removeFaculty}" ajax="false"/>
-                            </p:panelGrid>
                         </p:panelGrid>
                     </h:form>
                     <h:form>

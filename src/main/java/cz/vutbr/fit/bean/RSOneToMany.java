@@ -21,7 +21,7 @@ public class RSOneToMany {
     private String facultyName;
     private String subjectName;
 
-    private String facultyNameDel;
+    private String toFacultyAddSubj;
     private String subjectNameDel;
 
 
@@ -35,7 +35,7 @@ public class RSOneToMany {
     public void removeFaculty(){
         Faculty faculty;
 
-        faculty = facultyDAO.getFaculty(facultyNameDel);
+        faculty = facultyDAO.getFaculty(facultyName);
         if(faculty == null){
             return;
         }
@@ -59,6 +59,7 @@ public class RSOneToMany {
 
         faculty = subject.getSubjectFaculty();
 
+        //upravim vztahy medzi entitami
         faculty.removeSubject(subject);
         subject.setSubjectFaculty(null);
 
@@ -69,7 +70,7 @@ public class RSOneToMany {
 
     public void addSubjectToFaculty(){
         //zistime meno fakulty
-        Faculty f = facultyDAO.getFaculty(facultyName);
+        Faculty f = facultyDAO.getFaculty(toFacultyAddSubj);
         if(f == null){
             return;
         }
@@ -123,20 +124,20 @@ public class RSOneToMany {
         this.faculties = faculties;
     }
 
-    public String getFacultyNameDel() {
-        return facultyNameDel;
-    }
-
-    public void setFacultyNameDel(String facultyNameDel) {
-        this.facultyNameDel = facultyNameDel;
-    }
-
     public String getSubjectNameDel() {
         return subjectNameDel;
     }
 
     public void setSubjectNameDel(String subjectNameDel) {
         this.subjectNameDel = subjectNameDel;
+    }
+
+    public String getToFacultyAddSubj() {
+        return toFacultyAddSubj;
+    }
+
+    public void setToFacultyAddSubj(String toFacultyAddSubj) {
+        this.toFacultyAddSubj = toFacultyAddSubj;
     }
 
     public void addMessage(String summary, String detail) {

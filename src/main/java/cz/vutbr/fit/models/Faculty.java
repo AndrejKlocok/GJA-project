@@ -13,7 +13,7 @@ public class Faculty {
     @Column( nullable=false, unique=true)
     private Long id_faculty;
 
-    @Column( nullable=false)
+    @Column( nullable=false, unique = true)
     private String name;
 
     @OneToMany( orphanRemoval = true, cascade = CascadeType.ALL)
