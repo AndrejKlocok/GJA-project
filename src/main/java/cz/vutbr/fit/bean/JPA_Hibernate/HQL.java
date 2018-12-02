@@ -1,4 +1,4 @@
-package cz.vutbr.fit.bean;
+package cz.vutbr.fit.bean.JPA_Hibernate;
 
 import cz.vutbr.fit.DAO.FacultyDAO;
 import cz.vutbr.fit.DAO.StudentDAO;
@@ -9,16 +9,23 @@ import cz.vutbr.fit.models.Subject;
 import javax.faces.bean.ManagedBean;
 import java.util.List;
 
+/**
+ * Managed bean for HQL page
+ */
 @ManagedBean(name = "HQL")
 public class HQL {
+    //db objects
     private StudentDAO studentDAO = new StudentDAO();
     private SubjectDAO subjectDAO = new SubjectDAO();
 
-    private List<Subject> subjects;
-    private List<Student> students;
-    private Long subjCount;     //total numb of subjects
-    private Long studCount;     //number of students with distinct name and login starts with x
+    //managed properties on page
+    private List<Subject> subjects;     //list of subjects
+    private List<Student> students;     //list of students
+    private Long subjCount;             //total numb of subjects
+    private Long studCount;             //number of students with distinct name and login starts with x
 
+
+    //getters and setters of properties
     public List<Subject> getSubjects() {
         setSubjects(subjectDAO.getAll());
         return subjects;

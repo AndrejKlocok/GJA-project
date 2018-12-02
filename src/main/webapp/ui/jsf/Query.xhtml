@@ -52,19 +52,19 @@
                         <p:panelGrid columns="2">
                             <p:panelGrid columns="1">
                                 <p:outputLabel for="login" value="Student login:" />
-                                <p:inputText id="login" value="#{StudentUpdate.login}" />
+                                <p:inputText id="login" value="#{StudentQuery.login}" />
                             </p:panelGrid>
                             <p:panelGrid columns="2">
                                 <p:outputLabel value="Student id:" />
-                                <p:outputLabel value="#{StudentUpdate.id}" />
+                                <p:outputLabel value="#{StudentQuery.id}" />
                                 <p:outputLabel value="Student name:" />
-                                <p:outputLabel value="#{StudentUpdate.name}" />
+                                <p:outputLabel value="#{StudentQuery.name}" />
                                 <p:outputLabel value="Student login:" />
-                                <p:outputLabel value="#{StudentUpdate.login}" />
+                                <p:outputLabel value="#{StudentQuery.login}" />
                                 <p:outputLabel value="Student signed:" />
-                                <p:outputLabel value="#{StudentUpdate.signed}" />
+                                <p:outputLabel value="#{StudentQuery.signed}" />
                             </p:panelGrid>
-                            <p:commandButton value="Find" icon="ui-icon-star" action="#{StudentUpdate.findStudent}" ajax="false"/>
+                            <p:commandButton value="Find" icon="ui-icon-star" action="#{StudentQuery.findStudent}" ajax="false"/>
                         </p:panelGrid>
                     </h:form>
 

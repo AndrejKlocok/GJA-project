@@ -1,11 +1,13 @@
-package cz.vutbr.fit.bean;
+package cz.vutbr.fit.bean.JPA_Hibernate;
 
 import cz.vutbr.fit.DAO.StudentDAO;
 import cz.vutbr.fit.models.Student;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 
+/**
+ * Managed bean for CRUD page
+ */
 @ManagedBean(name = "StudentDelete")
 public class StudentDelete {
     private StudentDAO studentDAO = new StudentDAO();

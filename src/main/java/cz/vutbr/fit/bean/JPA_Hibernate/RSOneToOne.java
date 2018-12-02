@@ -1,4 +1,4 @@
-package cz.vutbr.fit.bean;
+package cz.vutbr.fit.bean.JPA_Hibernate;
 
 import cz.vutbr.fit.DAO.IsicDAO;
 import cz.vutbr.fit.DAO.StudentDAO;
@@ -8,21 +8,24 @@ import cz.vutbr.fit.models.Student;
 import javax.faces.bean.ManagedBean;
 import java.util.Date;
 
+/**
+ * Managed bean for RSOneToOne page
+ */
 @ManagedBean(name = "RSOneToOne")
 public class RSOneToOne {
-
+    //db repositories
     private StudentDAO studentDAO = new StudentDAO();
     private IsicDAO isicDAO = new IsicDAO();
 
-    //Student
-    private String login;
+   //properties
+    private String login;       //student login
+    private String isicNumb;    //isic number
+    private String faculty;     //faculty name
+    private String isicNumbDel; //number od isic to be deleted
 
-    //Isic instance
-    private String isicNumb;
-    private String faculty;
-
-    private String isicNumbDel;
-
+    /**
+     * Method adds isic to Student
+     */
     public void addIsicToStudent(){
         Student s;
         ISIC isic;
@@ -33,32 +36,40 @@ public class RSOneToOne {
         if(s == null){
             return;
         }
-
+        //One to one association
         isic = new ISIC(isicNumb, faculty);
-
+        //insert isic into db
         isicDAO.inserIsic(isic);
-
+        //One to one association
         s.setIsic(isic);
 
         studentDAO.updateStudent(s);
     }
 
+    /**
+     * Method removes isic
+     */
     public void removeIsic(){
         ISIC isic;
         Student student;
 
+        //get student obj by isic number
         student = studentDAO.getStudentByISIC(isicNumbDel);
         if(student == null){
             return;
         }
+        //get isic from student obj
         isic = student.getIsic();
 
+        //update association
         student.setIsic(null);
         studentDAO.updateStudent(student);
 
+        //delete obj
         isicDAO.deleteIsic(isic.getIsic_number());
     }
 
+    //Getters setters
     public String getLogin() {
         return login;
     }

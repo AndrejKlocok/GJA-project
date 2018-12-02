@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Inputs</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Inputs</h1>
+                    <h2>Messages</h2>
+                    <p>
+                        Faces Messages používame pre zobrazovanie správ, často chybových hlásení, napr z formulárov alebo
+                        zo služieb spravujúcich komunikáciu s DB.
+                    </p>
+                    <p>
+                        Príklad takejto služby v <i>StudentDAO</i> objekte:
+                    </p>
+                    <textarea rows="20" cols="120">
+                        //Pop Up message
+                        public void addMessage(String summary, String detail) {
+                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
+                            FacesContext.getCurrentInstance().addMessage(null, message);
+                        }
+
+                        ...
+
+                        public Student getStudent(String loginParam) {
+                            ...
+
+                            if(student == null){
+                                addMessage("Not found", "Entity not found");
+                            }
+                            ...
+                        }
+                    </textarea>
+                    <p>
+                        Následne v .xhtml súbore stačí pridať:
+                    </p>
+                    <textarea rows="5" cols="120">
+                        &lt;h:form&gt;
+                            &lt;p:growl id="messages" showDetail="true"/&gt;
+                            ...
+                        &lt;/h:form&gt;
+                    </textarea>
+                    <h2>Client side validation - Bean</h2>
+                    <p>
+                        Validácia pomocou Managed Beanu, ktorý obsahuje anotované vlastnosti. Napríklad:
+                    </p>
+                    <textarea rows="20" cols="120">
+                        @ManagedBean(name = "ValidationBean")
+                        public class ValidationBean {
+                            @Size(min = 1, max = 10)
+                            private String field;
+                            @Min(0) @Max(100)
+                            private int intVal;
+                            @Digits(integer = 2, fraction = 2)
+                            private double percent;
+                            @Future
+                            private Date dateVal;
+                            @Pattern(regexp = "^x[a-z]{5}\\d{2}$")
+                            private String regex;
+                            @NotNull
+                            private Boolean radioBtn;
+                    </textarea>
+                    <p>
+                        Na tento bean môžeme jednoducho namapovať odpovedajúce .xhtml. Následne overenie formulára
+                        pomocou <i>CommandButtona</i>.
+                    </p>
+                    <textarea rows="10" cols="120">
+                        &lt;h:form&gt;
+                        &lt;p:panel header="Inputs" style="width: 600px"&gt;
+                            &lt;p:outputLabel for="@next" value="String @Size" /&gt;
+                            &lt;p:inputText value="#{ValidationBean.field}" label="string"/&gt;
+                            &lt;p:message for="@previous" / &gt;
+                            ....
+                            &lt;p:commandButton value="Check" ajax="false" validateClient="true"/&gt;
+
+                    </textarea>
+                    <h:form>
+                        <p:panel header="Inputs" style="width: 600px">
+                            <p:outputLabel for="@next" value="String @Size" />
+                            <p:inputText value="#{ValidationBean.field}" label="string"/>
+                            <p:message for="@previous" />
+
+                            <p:outputLabel for="@next" value="Int @Min @Max" />
+                            <p:inputText value="#{ValidationBean.intVal}" label="int"/>
+                            <p:message for="@previous" />
+
+                            <p:outputLabel for="@next" value="Percent @Digits" />
+                            <p:inputText value="#{ValidationBean.percent}" label="percent"/>
+                            <p:message for="@previous" />
+
+                            <p:outputLabel for="@next" value="Date @Future" />
+                            <p:inputText value="#{ValidationBean.dateVal}" label="date">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:inputText>
+                            <p:message for="@previous" />
+
+                            <p:outputLabel for="@next" value="Login @Pattern" />
+                            <p:inputText value="#{ValidationBean.regex}" label="login"/>
+                            <p:message for="@previous" />
+
+                            <p:outputLabel for="@next" value="Radio Input"/>
+                            <p:selectOneRadio value="#{ValidationBean.radioBtn}">
+                                <f:selectItem itemValue="#{true}" itemLabel="True"/>
+                                <f:selectItem itemValue="#{false}" itemLabel="False"/>
+                            </p:selectOneRadio>
+
+                            <p:message for="@previous"/>
+
+                            <p:commandButton value="Check" ajax="false" validateClient="true"/>
+                        </p:panel>
+                    </h:form>
+                    <h2>Autocomplete</h2>
+                    <p>
+                        Autocomplete má za vstup reťazec, na ktorý môžeme adekvátne reagovať. Napríklad jednoduché pridávanie čísel
+                        za vložený text. (<i>"#{</i> boli odstránené aby to preprocesor mohol zobrať...)
+                    </p>
+                    
+                    <textarea rows="20" cols="120">
+                        public List&lt;String&gt; autoComplete(String text) {
+                            List&lt;String&gt; output = new ArrayList&lt;String&gt;();
+                            for(int i = 0; i &lt; 10; i++) {
+                                output.add(text + i);
+                            }
+                            return output;
+                        }
+
+                        &lt;h:form&gt;
+                        &lt;p:growl id="msgs" showDetail="true" /&gt;
+                        &lt;h:panelGrid columns="2" cellpadding="5"&gt;
+                            &lt;p:outputLabel value="LimitedResults:" for="limited" /&gt;
+                            ...
+                    </textarea>
+
+                    <h:form>
+                        <p:growl id="msgs" showDetail="true" />
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel value="LimitedResults:" for="limited" />
+                            <p:autoComplete id="limited" maxResults="4" value="#{ValidationBean.autocomplete1}" completeMethod="#{ValidationBean.autoComplete}" />
+
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+
+</html>

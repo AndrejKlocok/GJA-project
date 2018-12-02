@@ -5,9 +5,7 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 
 
 @ManagedBean
@@ -21,51 +19,56 @@ public class MenuView {
 
         DefaultMenuItem item;
 
-        //Second submenu
-        DefaultSubMenu secondSubmenu = new DefaultSubMenu("Dynamic Actions");
+        DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
+        DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
+        DefaultSubMenu primeMenu = new DefaultSubMenu("Primefaces");
 
         item = new DefaultMenuItem("Home_Welcome");
         item.setCommand("#{menuView.home_welcome}");
-        secondSubmenu.addElement(item);
+        mainMenu.addElement(item);
 
         item = new DefaultMenuItem("Home_SetUP");
         item.setCommand("#{menuView.home_setUp}");
-        secondSubmenu.addElement(item);
+        mainMenu.addElement(item);
+
+        item = new DefaultMenuItem("Inputs");
+        item.setCommand("#{menuView.inputs}");
+        mainMenu.addElement(item);
 
         item = new DefaultMenuItem("Entity");
         item.setCommand("#{menuView.entity}");
-        secondSubmenu.addElement(item);
+        dbMenu.addElement(item);
 
         item = new DefaultMenuItem("OneToOne");
         item.setCommand("#{menuView.oneToOne}");
-        secondSubmenu.addElement(item);
+        dbMenu.addElement(item);
 
         item = new DefaultMenuItem("OneToMany");
         item.setCommand("#{menuView.oneToMany}");
-        secondSubmenu.addElement(item);
-
+        dbMenu.addElement(item);
 
         item = new DefaultMenuItem("CRUD");
         item.setCommand("#{menuView.crud}");
-        secondSubmenu.addElement(item);
+        dbMenu.addElement(item);
 
         item = new DefaultMenuItem("Query");
         item.setCommand("#{menuView.query}");
-        secondSubmenu.addElement(item);
+        dbMenu.addElement(item);
 
         item = new DefaultMenuItem("HQL");
         item.setCommand("#{menuView.hql}");
-        secondSubmenu.addElement(item);
+        dbMenu.addElement(item);
 
-        model.addElement(secondSubmenu);
+        model.addElement(mainMenu);
+        model.addElement(primeMenu);
+        model.addElement(dbMenu);
     }
 
     public MenuModel getModel() {
         return model;
     }
 
-    public String  entity() {
-        return "/ui/jsf/Entity"; }
+    public String  entity() { return "/ui/jsf/Entity"; }
 
     public String  oneToOne(){
         return "/ui/jsf/OneToOne";
@@ -87,13 +90,9 @@ public class MenuView {
         return "/ui/jsf/HQL";
     }
 
-    public String  home_welcome(){
+    public String  home_welcome(){ return "/index"; }
 
-        return "/index";
-    }
+    public String  home_setUp(){ return "/ui/jsf/Home_Setup"; }
 
-    public String  home_setUp(){
-
-        return "/ui/jsf/Home_Setup";
-    }
+    public String inputs(){ return "/ui/jsf/Inputs";}
 }

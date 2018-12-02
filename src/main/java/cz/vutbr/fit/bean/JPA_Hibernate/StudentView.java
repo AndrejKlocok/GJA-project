@@ -1,4 +1,4 @@
-package cz.vutbr.fit.bean;
+package cz.vutbr.fit.bean.JPA_Hibernate;
 
 import cz.vutbr.fit.DAO.StudentDAO;
 import cz.vutbr.fit.models.Student;
@@ -8,7 +8,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Managed bean students list
+ */
 @ManagedBean(name = "StudentView")
 public class StudentView {
 

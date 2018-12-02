@@ -1,4 +1,4 @@
-package cz.vutbr.fit.bean;
+package cz.vutbr.fit.bean.JPA_Hibernate;
 
 import cz.vutbr.fit.DAO.FacultyDAO;
 import cz.vutbr.fit.DAO.SubjectDAO;
@@ -11,30 +11,37 @@ import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Managed bean for OneToMany page
+ */
 @ManagedBean(name = "RSOneToMany")
 public class RSOneToMany {
-
+    //db objects
     private FacultyDAO facultyDAO = new FacultyDAO();
     private SubjectDAO subjectDAO = new SubjectDAO();
 
+    //page properties
+    private String facultyName;         //name of faculty
+    private String subjectName;         //name of subject
+    private String toFacultyAddSubj;    //name of faculty to which we add subject
+    private String subjectNameDel;      //name of subject which will be deleted
+    private List<Faculty> faculties = new ArrayList<>();    //list of faculties
 
-    private String facultyName;
-    private String subjectName;
-
-    private String toFacultyAddSubj;
-    private String subjectNameDel;
-
-
-    private List<Faculty> faculties = new ArrayList<>();
-
+    /**
+     * Method creates faculty persistent object
+     */
     public void createFaculty(){
         Faculty faculty = new Faculty(facultyName);
         facultyDAO.insert(faculty);
     }
 
+    /**
+     * Method removes faculty object according to date
+     */
     public void removeFaculty(){
         Faculty faculty;
 
+        //get faculty object by name
         faculty = facultyDAO.getFaculty(facultyName);
         if(faculty == null){
             return;
@@ -43,60 +50,73 @@ public class RSOneToMany {
         facultyDAO.delete(faculty.getName());
     }
 
+    /**
+     * Method creates persistent subject object
+     */
     public void createSubject(){
         Subject subject = new Subject(subjectName);
         subjectDAO.insert(subject);
     }
 
+    /**
+     * Method deletes subject
+     */
     public void removeSubject(){
         Faculty faculty;
         Subject subject;
 
+        //get subject by name
         subject = subjectDAO.getSubject(subjectNameDel);
         if(subject == null){
             return;
         }
-
+        //get faculty from association between subj and faculty
         faculty = subject.getSubjectFaculty();
 
-        //upravim vztahy medzi entitami
+        //update associations
         faculty.removeSubject(subject);
         subject.setSubjectFaculty(null);
 
+        //merge faculty`s new state
         facultyDAO.update(faculty);
 
+        //remove subject
         subjectDAO.delete(subject.getName());
     }
 
+    /**
+     * Method adds subject to faculty
+     */
     public void addSubjectToFaculty(){
-        //zistime meno fakulty
+        //get faculty by name
         Faculty f = facultyDAO.getFaculty(toFacultyAddSubj);
         if(f == null){
             return;
         }
 
         Subject subject ;
+        //get subject by name
         subject = subjectDAO.getSubject(subjectName);
 
-        //zistime ci uz predmet existuje
+        //if subject does not exists
         if(subject != null){
             addMessage("Failure", "Subject already exists");
             return;
         }
 
-        //vyrvorim predmet
+        //create new subject
         subject = new Subject(subjectName);
         subjectDAO.insert(subject);
 
-        //aktualizujem vztahy
+        //update associations
         subject.setSubjectFaculty(f);
         f.addSubject(subject);
 
-        //mergnem fakultu
+        //merge faculty new state
         facultyDAO.update(f);
     }
 
-
+    //getters and setters
 
     public String getFacultyName() {
         return facultyName;
