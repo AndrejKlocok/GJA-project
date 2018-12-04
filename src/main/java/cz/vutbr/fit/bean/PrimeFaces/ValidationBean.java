@@ -1,6 +1,11 @@
 package cz.vutbr.fit.bean.PrimeFaces;
 
+import org.primefaces.event.RateEvent;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +27,12 @@ public class ValidationBean {
     private Boolean radioBtn;
 
     private String autocomplete1;
+    private String telephoneString;
+    private Integer rating;
+
+    private String colorInline;
+    private int sliderNumber;
+
 
     public List<String> autoComplete(String text) {
         List<String> output = new ArrayList<String>();
@@ -31,6 +42,44 @@ public class ValidationBean {
         return output;
     }
 
+    public void onRate(RateEvent rateEvent) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Rate Event", "You rated:" + ((Integer) rateEvent.getRating()).intValue());
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public void onCancel() {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cancel Event", "Rate Reset");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public void onInputChanged(ValueChangeEvent event) {
+        FacesMessage message = new FacesMessage("Input Changed", "Value: " + event.getNewValue());
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public int getSliderNumber() {
+        return sliderNumber;
+    }
+
+    public void setSliderNumber(int sliderNumber) {
+        this.sliderNumber = sliderNumber;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public String getTelephoneString() {
+        return telephoneString;
+    }
+
+    public void setTelephoneString(String telephoneString) {
+        this.telephoneString = telephoneString;
+    }
 
     public String getAutocomplete1() {
         return autocomplete1;
@@ -86,5 +135,13 @@ public class ValidationBean {
 
     public void setRegex(String regex) {
         this.regex = regex;
+    }
+
+    public String getColorInline() {
+        return colorInline;
+    }
+
+    public void setColorInline(String colorInline) {
+        this.colorInline = colorInline;
     }
 }

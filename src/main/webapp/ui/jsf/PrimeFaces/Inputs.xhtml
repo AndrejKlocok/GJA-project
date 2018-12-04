@@ -52,6 +52,19 @@
                             ...
                         &lt;/h:form&gt;
                     </textarea>
+                    <h2>Input Mask</h2>
+                    <p>
+                        Validuje vstupné dáta, používa niečo ako "regulárny" výraz.
+                    </p>
+                    <textarea rows="5" cols="120">
+                        &lt;p:inputMask id="phone" value="#{ValidationBean.telephoneString}" mask="9999-999-999"/&lt;
+                    </textarea>
+                    <h:form>
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel for="phone" value="Phone:" />
+                            <p:inputMask id="phone" value="#{ValidationBean.telephoneString}" mask="9999-999-999"/>
+                        </h:panelGrid>
+                    </h:form>
                     <h2>Client side validation - Bean</h2>
                     <p>
                         Validácia pomocou Managed Beanu, ktorý obsahuje anotované vlastnosti. Napríklad:
@@ -124,10 +137,10 @@
                     <h2>Autocomplete</h2>
                     <p>
                         Autocomplete má za vstup reťazec, na ktorý môžeme adekvátne reagovať. Napríklad jednoduché pridávanie čísel
-                        za vložený text. (<i>"#{</i> boli odstránené aby to preprocesor mohol zobrať...)
+                        za vložený text. (Niektoré znaky boli odstránené aby to preprocesor mohol zobrať...)
                     </p>
-                    
-                    <textarea rows="20" cols="120">
+
+                    <textarea rows="20" cols="170">
                         public List&lt;String&gt; autoComplete(String text) {
                             List&lt;String&gt; output = new ArrayList&lt;String&gt;();
                             for(int i = 0; i &lt; 10; i++) {
@@ -140,7 +153,8 @@
                         &lt;p:growl id="msgs" showDetail="true" /&gt;
                         &lt;h:panelGrid columns="2" cellpadding="5"&gt;
                             &lt;p:outputLabel value="LimitedResults:" for="limited" /&gt;
-                            ...
+                            &lt;p:autoComplete id="limited" maxResults="4" value= ValidationBean.autocomplete1 completeMethod= ValidationBean.autoComplete /&gt;
+
                     </textarea>
 
                     <h:form>
@@ -148,9 +162,29 @@
                         <h:panelGrid columns="2" cellpadding="5">
                             <p:outputLabel value="LimitedResults:" for="limited" />
                             <p:autoComplete id="limited" maxResults="4" value="#{ValidationBean.autocomplete1}" completeMethod="#{ValidationBean.autoComplete}" />
-
                         </h:panelGrid>
                     </h:form>
+
+                    <h2>Various Inputs</h2>
+                    <h:form>
+                        <p:growl id="messages" showDetail="true" />
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputText value="Ajax Rate:" />
+                            <p:rating value="#{ValidationBean.rating}">
+                                <p:ajax event="rate" listener="#{ValidationBean.onRate}" update="messages" />
+                                <p:ajax event="cancel" listener="#{ValidationBean.onCancel}" update="messages" />
+                            </p:rating>
+
+                            <h:outputText value="Inline: " />
+                            <p:colorPicker value="#{ValidationBean.colorInline}" mode="inline" />
+
+                            <p:inputNumber id="sliderNumber" value="#{ValidationBean.sliderNumber}" symbol=" €" valueChangeListener="#{ValidationBean.onInputChanged}">
+                                <p:ajax process="@this" update="messages" />
+                            </p:inputNumber>
+                            <p:slider for="sliderNumber" />
+                        </h:panelGrid>
+                    </h:form>
+
                 </div>
             </div>
         </div>

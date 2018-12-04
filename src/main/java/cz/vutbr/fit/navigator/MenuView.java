@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 
 @ManagedBean
 public class MenuView {
-
     private MenuModel model;
 
     @PostConstruct
@@ -22,7 +21,9 @@ public class MenuView {
         DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
         DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
         DefaultSubMenu primeMenu = new DefaultSubMenu("Primefaces");
+        DefaultSubMenu prettyMenu = new DefaultSubMenu("Prettyfaces");
 
+        //MAIN
         item = new DefaultMenuItem("Home_Welcome");
         item.setCommand("#{menuView.home_welcome}");
         mainMenu.addElement(item);
@@ -31,10 +32,45 @@ public class MenuView {
         item.setCommand("#{menuView.home_setUp}");
         mainMenu.addElement(item);
 
+        //Primefaces
         item = new DefaultMenuItem("Inputs");
         item.setCommand("#{menuView.inputs}");
-        mainMenu.addElement(item);
+        primeMenu.addElement(item);
 
+        item = new DefaultMenuItem("Layouts");
+        item.setCommand("#{menuView.layout}");
+        primeMenu.addElement(item);
+
+        item = new DefaultMenuItem("Menus");
+        item.setCommand("#{menuView.menus}");
+        primeMenu.addElement(item);
+
+        item = new DefaultMenuItem("Data");
+        item.setCommand("#{menuView.data}");
+        primeMenu.addElement(item);
+
+        item = new DefaultMenuItem("Files_Images");
+        item.setCommand("#{menuView.filesImages}");
+        primeMenu.addElement(item);
+
+        //PrettyFaces
+        item = new DefaultMenuItem("DragDrop");
+        item.setCommand("#{menuView.dragDrop}");
+        primeMenu.addElement(item);
+
+        item = new DefaultMenuItem("Push");
+        item.setCommand("#{menuView.push}");
+        primeMenu.addElement(item);
+
+        item = new DefaultMenuItem("RC");
+        item.setCommand("#{menuView.rc}");
+        primeMenu.addElement(item);
+
+        item = new DefaultMenuItem("Charts");
+        item.setCommand("#{menuView.charts}");
+        primeMenu.addElement(item);
+
+        //JPA_Hibernate
         item = new DefaultMenuItem("Entity");
         item.setCommand("#{menuView.entity}");
         dbMenu.addElement(item);
@@ -61,6 +97,7 @@ public class MenuView {
 
         model.addElement(mainMenu);
         model.addElement(primeMenu);
+        model.addElement(prettyMenu);
         model.addElement(dbMenu);
     }
 
@@ -68,31 +105,51 @@ public class MenuView {
         return model;
     }
 
-    public String  entity() { return "/ui/jsf/Entity"; }
-
-    public String  oneToOne(){
-        return "/ui/jsf/OneToOne";
-    }
-
-    public String  oneToMany(){
-        return "/ui/jsf/OneToMany";
-    }
-
-    public String  crud(){
-        return "/ui/jsf/CRUD";
-    }
-
-    public String  query(){
-        return "/ui/jsf/Query";
-    }
-
-    public String  hql(){
-        return "/ui/jsf/HQL";
-    }
-
+    //Main Menu
     public String  home_welcome(){ return "/index"; }
 
     public String  home_setUp(){ return "/ui/jsf/Home_Setup"; }
 
-    public String inputs(){ return "/ui/jsf/Inputs";}
+    //JPA_Hibernate
+    public String  entity() { return "/ui/jsf/JPA_Hibernate/Entity"; }
+
+    public String  oneToOne(){
+        return "/ui/jsf/JPA_Hibernate/OneToOne";
+    }
+
+    public String  oneToMany(){
+        return "/ui/jsf/JPA_Hibernate/OneToMany";
+    }
+
+    public String  crud(){
+        return "/ui/jsf/JPA_Hibernate/CRUD";
+    }
+
+    public String  query(){
+        return "/ui/jsf/JPA_Hibernate/Query";
+    }
+
+    public String  hql(){
+        return "/ui/jsf/JPA_Hibernate/HQL";
+    }
+
+    //PrimeFaces
+    public String inputs(){ return "/ui/jsf/PrimeFaces/Inputs";}
+
+    public String layout(){ return "/ui/jsf/PrimeFaces/Layout";}
+
+    public String menus(){ return "/ui/jsf/PrimeFaces/Menu";}
+
+    public String data(){ return "/ui/jsf/PrimeFaces/Data";}
+
+    public String filesImages(){ return "/ui/jsf/PrimeFaces/Files_Images";}
+
+    //PrettyFaces
+    public String charts(){ return "/ui/jsf/PrettyFaces/Charts";}
+
+    public String dragDrop(){ return "/ui/jsf/PrettyFaces/Drag_Drop";}
+
+    public String push(){ return "/ui/jsf/PrettyFaces/Push";}
+
+    public String rc(){ return "/ui/jsf/PrettyFaces/RemoteCommand";}
 }
