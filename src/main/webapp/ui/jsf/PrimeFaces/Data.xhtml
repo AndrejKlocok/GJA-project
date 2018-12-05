@@ -18,8 +18,55 @@
             <div class="ui-g-12 ui-g-nopad">
                 <div class="box">
                     <h1>Data</h1>
+                    <h2>Classic data table</h2>
+                    <h:form>
+                        <p:dataTable id="table1" value="#{DataBean.students}" var="student" style="width: 800px">
+                            <p:column headerText="Login">
+                                <h:outputText  value="#{student.login}"/>
+                            </p:column>
+                            <p:column headerText="Name">
+                                <h:outputText  value="#{student.name}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <h2>Dynamic edit</h2>
+                    <h:form id="form">
+                        <p:growl id="msgs" showDetail="true"/>
+
+                        <p:dataTable var="student" value="#{DataBean.students}"
+                                     editable="true" style="margin-bottom:20px;width: 800px">
+
+                            <p:ajax event="rowEdit"
+                                    listener="#{DataBean.onRowEdit}"
+                                    update=":form:msgs" />
+                            <p:ajax event="rowEditCancel"
+                                    listener="#{DataBean.onRowCancel}"
+                                    update=":form:msgs" />
 
 
+                            <p:column headerText="Login">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{student.login}" /></f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText value="#{student.login}" style="width:100%" label="Login"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Name">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{student.name}" /></f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText value="#{student.name}" style="width:100%" label="Name"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column style="width:32px">
+                                <p:rowEditor />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
                 </div>
             </div>
         </div>

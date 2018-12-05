@@ -10,16 +10,149 @@
     <title>Layouts</title>
 </h:head>
 <h:body>
+    <style type="text/css">
+        .layout div {
+            background-color: #ededed;
+            text-align: center;
+            border: 1px solid #fafafa;
+        }
+    </style>
+    <h:outputStylesheet library="styles" name="style.css"  />
     <div class="ui-g">
         <div class="ui-g-12 ui-md-2">
             <ui:include src="/ui/components/menu.xhtml"/>
         </div>
         <div class="ui-g-12 ui-md-10 ui-g-nopad">
             <div class="ui-g-12 ui-g-nopad">
-                <div class="box">
+                <div class="myPage" style="width: 700px">
                     <h1>Layouts</h1>
+                    <h2>AccordionPanel</h2>
+                    <p>
+                        Príklad statického panelu:
+                    </p>
 
+                    <h3>Viacnásobný výber</h3>
 
+                    <h:form>
+                        <p:accordionPanel multiple="true" >
+                            <p:tab title="Header1">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <h:outputText value="text" />
+                                    <h:outputText value="Lorem Ipsum a tak dalej" />
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Header2">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <h:outputText value="text" />
+                                    <h:outputText value="Lorem Ipsum a tak dalej" />
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Header3">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <h:outputText value="text" />
+                                    <h:outputText value="Lorem Ipsum a tak dalej" />
+                                </h:panelGrid>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </h:form>
+
+                    <h3>DataModel</h3>
+                    <p>
+                        Lepšie využitie ako data model s backing beanom. Využijeme <i>Hibernate</i> a model <i>Faculty</i>
+                    </p>
+                    <h:form>
+                        <p:accordionPanel value="#{LayoutBean.faculties}" var="faculty">
+                            <p:tab title="#{faculty.name}">
+                                <p:dataTable var="subject" value="#{faculty.subjectList}" style="width: 300px">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{faculty.name}" />
+                                    </f:facet>
+                                    <p:column>
+                                        <h:outputText value="#{subject.name}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{subject.created}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </h:form>
+
+                    <h2>Toggle able panel</h2>
+                    <h:form>
+                        <p:growl id="messages" showDetail="true" />
+                        <p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="420"
+                                 closeSpeed="420" widgetVar="panel" >
+
+                            <p:ajax event="close" listener="#{LayoutBean.onClose}" update="messages" />
+                            <p:ajax event="toggle" listener="#{LayoutBean.onToggle}" update="messages" />
+
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <h:outputText value="text" />
+                                <h:outputText value="Lorem Ipsum a tak dalej" />
+                            </h:panelGrid>
+
+                            <f:facet name="options">
+                                <p:menu>
+                                    <p:submenu label="Settings">
+                                        <p:menuitem value="Toggle" url="#" icon="pi pi-clone" onclick="PF('panel').toggle()" />
+                                        <p:menuitem value="Remove" url="#" icon="pi pi-times" onclick="PF('panel').close()" />
+                                    </p:submenu>
+                                </p:menu>
+                            </f:facet>
+                        </p:panel>
+                    </h:form>
+
+                    <h2>Sample layout CSS</h2>
+                    <div class="ui-g layout">
+                        <div class="ui-g-12">
+                            Header
+                        </div>
+                        <div class="ui-g-12 ui-md-2">
+                            Left Bar
+                        </div>
+                        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+                            <div class="ui-g-12">
+                                Menu
+                            </div>
+                            <div class="ui-g-12 ui-g-nopad">
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-4">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed imperdiet, orci nec dictum convallis, ligula mauris vestibulum turpis,
+                                        nec varius tortor quam at diam. Nullam a viverra nibh. In tincidunt tempor lectus quis vulputate. Pellentesque nec dui aliquam,
+                                        lobortis est in, lobortis ante
+                                    </div>
+                                    <div class="ui-g-12 ui-md-4">
+                                        Maecenas vel nisi aliquet, vulputate tortor id, laoreet massa. Maecenas mattis tristique bibendum. Suspendisse vel mi dictum,
+                                        vestibulum lacus quis, pulvinar quam. Proin vulputate, nibh at finibus varius, leo eros lacinia elit, nec blandit odio tellus a
+                                        justo. Donec nec ex auctor, tristique nulla nec, rutrum sapien.
+                                    </div>
+                                    <div class="ui-g-12 ui-md-4">
+                                        Proin efficitur in leo eget ornare. Nam vestibulum neque sed velit sagittis sodales. Sed scelerisque hendrerit magna a
+                                        hendrerit. Cras tempor sem at justo pharetra convallis. Curabitur vel sodales purus. Vestibulum interdum facilisis nulla imperdiet suscipit.
+                                        Quisque lectus felis, condimentum eget hendrerit sit amet.
+                                    </div>
+                                </div>
+
+                                <div class="ui-g">
+                                    Lorem Curabitur vel sodales purus. Vestibulum interdum facilisis nulla imperdiet suscipit.
+                                    Quisque lectus felis, condimentum eget hendrerit sit amet.
+                                </div>
+
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6">Phasellus faucibus purus volutpat mauris lacinia sodales. Ut sit amet sapien facilisis, commodo dui non,
+                                        fringilla tellus. Quisque tempus facilisis nisi sodales finibus. Pellentesque neque orci, ullamcorper vitae ligula quis, dignissim
+                                        euismod augue.</div>
+                                    <div class="ui-g-12 ui-md-6">Fusce ullamcorper congue massa, eget ullamcorper nunc lobortis egestas. Lorem ipsum dolor sit amet, consectetur
+                                        adipiscing elit. Quisque ultrices dui eget dolor feugiat dapibus. Aliquam pretium leo et egestas luctus. Nunc facilisis gravida tellus.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g-12">
+                            Footer
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

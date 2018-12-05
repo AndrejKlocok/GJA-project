@@ -14,8 +14,8 @@ import java.util.List;
 @ManagedBean(name = "StudentView")
 public class StudentView {
 
-    private StudentDAO studentDAO = new StudentDAO();
-    private List<Student> students = new ArrayList<>();
+    protected StudentDAO studentDAO = new StudentDAO();
+    protected List<Student> students = new ArrayList<>();
 
     public void setStudents(List<Student> students) {
 
