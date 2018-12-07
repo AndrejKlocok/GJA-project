@@ -18,8 +18,63 @@
             <div class="ui-g-12 ui-g-nopad">
                 <div class="box">
                     <h1>Menu</h1>
+                    <h2>Plain Menu</h2>
+                    <p>
+                        V aplikácii používame plain menu, ktoré obsahuje submenu. Menu je používa callbacky beanu
+                        aby zistilo cestu ku chcenej stránke.<br/>
+                        JSF vyzerá následovne:
+                    </p>
 
+                    <textarea rows="19" cols="120">
+                        &lt;h:form&gt;
+                            &lt;p:menu&gt;
+                            &lt;p:submenu label="Main"&gt;
+                                &lt;p:menuitem value="Home" action=menuView.home_welcome /&gt;
+                                &lt;p:menuitem value="Setup" action=menuView.home_setUp /&gt;
+                            &lt;/p:submenu&gt;
+                            &lt;p:submenu label="PrimeFaces"&gt;
+                                &lt;p:menuitem value="Inputs" action=menuView.inputs /&gt;
+                                ...
+                                &lt;p:menuitem value="Files/Images" action=menuView.filesImages /&gt;
+                            &lt;/p:submenu&gt;
+                            ...
+                            &lt;/p:menu&gt;
+                        &lt;/h:form&gt;
+                    </textarea>
+                    <p>
+                        Java bean obshujúci volané metódy, ktoré vracajú cestu na odkazovanú java server faces. Hneď po vytvorení
+                        beanu zavoláme funkciu <i>init</i> a vytvoríme Menu model.
+                    </p>
+                    <textarea rows="34" cols="120">
+                        private MenuModel model;
 
+                        @PostConstruct
+                        public void init() {
+                            model = new DefaultMenuModel();
+                            //create defaut item
+                            DefaultMenuItem item;
+
+                            //create submenus
+                            DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
+                            DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
+                            ...
+
+                            //MAIN
+                            item = new DefaultMenuItem("Home_Welcome");
+                            item.setCommand(...);
+                            mainMenu.addElement(item);
+
+                            item = new DefaultMenuItem("Home_SetUP");
+                            item.setCommand(...);
+                            mainMenu.addElement(item);
+                            ...
+                        }
+                        //Main Menu
+                        public String  home_welcome(){ return "/index"; }
+
+                        public String  home_setUp(){ return "/ui/jsf/Home_Setup"; }
+                    </textarea>
+                    <ui:include src="/ui/components/menu.xhtml"/>
                 </div>
             </div>
         </div>
