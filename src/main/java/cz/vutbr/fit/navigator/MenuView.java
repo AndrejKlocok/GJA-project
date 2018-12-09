@@ -53,10 +53,6 @@ public class MenuView {
         item.setCommand("#{menuView.filesImages}");
         primeMenu.addElement(item);
 
-        item = new DefaultMenuItem("Push");
-        item.setCommand("#{menuView.push}");
-        primeMenu.addElement(item);
-
         //JPA_Hibernate
         item = new DefaultMenuItem("DB_SetUP");
         item.setCommand("#{menuView.db_setUp}");
@@ -133,8 +129,6 @@ public class MenuView {
     public String data(){ return "/ui/jsf/PrimeFaces/Data";}
 
     public String filesImages(){ return "/ui/jsf/PrimeFaces/Files_Images";}
-
-    public String push(){ return "/ui/jsf/PrimeFaces/Push";}
 
     public String pr_setUp(){ return "/ui/jsf/PrimeFaces/PrimeFaces_SetUp";}
 }
