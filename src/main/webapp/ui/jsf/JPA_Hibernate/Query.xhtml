@@ -7,6 +7,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <title>Query</title>
 </h:head>
 <h:body>
@@ -32,20 +34,20 @@
                     <p>
                         Jednoduchý dotaz na vrátenie maximálne 50 riadkov z dabulky.
                     </p>
-                    <textarea rows="4" cols="150" style="border:none">
-                        List&lt;Student&gt; students = new ArrayList&lt;&gt;();
-                        students = em.createQuery("Select s FROM Student s").setMaxResults(50).getResultList();
-                    </textarea>
+                    <pre><code class="java">
+List&lt;Student&gt; students = new ArrayList&lt;&gt;();
+students = em.createQuery("Select s FROM Student s").setMaxResults(50).getResultList();
+                    </code></pre>
                     <ui:include src="/ui/components/studentsView.xhtml"/>
                     <p>
                         Dotaz na vrátenie inštancie študenta s daným loginom, ktorý je predaný dotazu ako parameter.
                     </p>
-                    <textarea rows="6" cols="100" style="border:none">
-                        Student  student = (Student) em.createQuery(
-                                            "SELECT s from Student s where s.login = :login")
-                                            .setParameter("login", loginParam)
-                                            .getSingleResult();
-                    </textarea>
+                    <pre><code class="java">
+Student  student = (Student) em.createQuery(
+                    "SELECT s from Student s where s.login = :login")
+                    .setParameter("login", loginParam)
+                    .getSingleResult();
+                    </code></pre>
 
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
@@ -78,21 +80,21 @@
                     <p>
                         Použijeme pomenovaný dotaz na vykonanie hromadnej úpravy db (bulk update).
                     </p>
-                    <textarea rows="15" cols="150" style="border:none">
-                        @Entity
-                        @NamedQuery(name="Student.updateBlankName", query = "UPDATE Student S SET S.name = 'MenoStudenta' WHERE S.name =''")
-                        public class Student implements Serializable {
-                        ...
-                        public void namedUpdate(){
-                            Transaction tr = session.getTransaction();
+                    <pre><code class="java">
+@Entity
+@NamedQuery(name="Student.updateBlankName", query = "UPDATE Student S SET S.name = 'MenoStudenta' WHERE S.name =''")
+public class Student implements Serializable {
+...
+public void namedUpdate(){
+    Transaction tr = session.getTransaction();
 
-                            try{
-                                tr.begin();
-                                Query q = em.createNamedQuery("Student.updateBlankName");
-                                q.executeUpdate();
-                                tr.commit();
-                        ...
-                    </textarea>
+    try{
+        tr.begin();
+        Query q = em.createNamedQuery("Student.updateBlankName");
+        q.executeUpdate();
+        tr.commit();
+...
+                    </code></pre>
                     <h:form>
                         <p:commandButton value="FixEmpty" icon="ui-icon-star" action="#{StudentQuery.fixStudentvalues}" ajax="false"/>
                     </h:form>
@@ -101,5 +103,8 @@
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 </html>

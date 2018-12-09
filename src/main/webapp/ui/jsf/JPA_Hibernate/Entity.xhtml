@@ -7,6 +7,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <link rel="stylesheet" type="text/css" href="styles/style.css" />
     <title>Persist and Remove</title>
 </h:head>
@@ -43,61 +45,62 @@
                     </p>
 
                     <p>Príklad:</p>
-                    <p>
-                        <textarea rows="20" cols="140" style="border:none">
-                            @Entity
-                            public class Student implements Serializable {
-                                private static final long serialVersionUID = 1L;
+                    <pre><code class="java">
+@Entity
+public class Student implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-                                // Persistent Fields:
-                                @Id
-                                @GeneratedValue(strategy = GenerationType.IDENTITY)
-                                @Column( nullable=false, unique=true)
-                                private Long id;
+    // Persistent Fields:
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( nullable=false, unique=true)
+    private Long id;
 
-                                @Column( nullable=false, unique=false)
-                                private String name;
+    @Column( nullable=false, unique=false)
+    private String name;
 
-                                @Column(nullable=false, unique=false)
-                                private String login;
+    @Column(nullable=false, unique=false)
+    private String login;
 
-                                @Column(nullable=false, unique=false)
-                                private Date signed;
-                            }
-                        </textarea>
-                    </p>
+    @Column(nullable=false, unique=false)
+    private Date signed;
+}
+                    </code></pre>
                     <h1>Service</h1>
                     <p> Pre túto triedu(<i>Student</i>) môžeme definovať službu, ktorá komunikuje s DB</p>
-                    <textarea rows="26" cols="140" style="border:none">
-                        public class DAO {
-                            //JPA
-                            protected EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
-                            protected EntityManager em = factory.createEntityManager();
+                    <pre><code class="java">
+public class DAO {
+    //JPA
+    protected EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
+    protected EntityManager em = factory.createEntityManager();
 
-                            //Hibernate
-                            protected SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+    //Hibernate
+    protected SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
 
-                            //Pop Up message
-                            public void addMessage(String summary, String detail)
-                            ...
-                        }
+    //Pop Up message
+    public void addMessage(String summary, String detail)
+    ...
+}
 
-                        @Singleton
-                        public class StudentDAO extends DAO{
+@Singleton
+public class StudentDAO extends DAO{
 
-                            public Student getStudent(String loginParam) {}
+    public Student getStudent(String loginParam) {}
 
-                            public boolean inserStudent(Student student) {}
+    public boolean inserStudent(Student student) {}
 
-                            public boolean deleteStudent(Long id) {...}
+    public boolean deleteStudent(Long id) {...}
 
-                            ...
-                        }
-                    </textarea>
+    ...
+}
+                    </code></pre>
                 </div>
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 </html>
 

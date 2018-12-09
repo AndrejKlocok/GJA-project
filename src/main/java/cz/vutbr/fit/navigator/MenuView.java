@@ -20,6 +20,8 @@ public class MenuView {
 
         DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
         DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
+        DefaultSubMenu rmiMenu = new DefaultSubMenu("RMI");
+        DefaultSubMenu jmsMenu = new DefaultSubMenu("JMS");
         DefaultSubMenu primeMenu = new DefaultSubMenu("Primefaces");
         DefaultSubMenu prettyMenu = new DefaultSubMenu("Prettyfaces");
 
@@ -95,10 +97,26 @@ public class MenuView {
         item.setCommand("#{menuView.hql}");
         dbMenu.addElement(item);
 
+        //RMI
+        item = new DefaultMenuItem("Client_Server");
+        item.setCommand("#{menuView.clientServer}");
+        rmiMenu.addElement(item);
+
+        //JMS
+        item = new DefaultMenuItem("Point_to_Point");
+        item.setCommand("#{menuView.pointToPoint}");
+        jmsMenu.addElement(item);
+
+        item = new DefaultMenuItem("Publish_Subscribe");
+        item.setCommand("#{menuView.publishSubscribe}");
+        jmsMenu.addElement(item);
+
         model.addElement(mainMenu);
         model.addElement(primeMenu);
         model.addElement(prettyMenu);
         model.addElement(dbMenu);
+        model.addElement(rmiMenu);
+        model.addElement(jmsMenu);
     }
 
     public MenuModel getModel() {
@@ -131,6 +149,16 @@ public class MenuView {
 
     public String  hql(){
         return "/ui/jsf/JPA_Hibernate/HQL";
+    }
+
+    //RMI
+    public String  clientServer() { return "/ui/jsf/RMI/Client_Server"; }
+
+    //JMS
+    public String  publishSubscribe() { return "/ui/jsf/JMS/Publish_Subscribe"; }
+
+    public String  pointToPoint(){
+        return "/ui/jsf/JMS/Point_to_Point";
     }
 
     //PrimeFaces

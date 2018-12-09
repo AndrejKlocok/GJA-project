@@ -7,6 +7,8 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <title>CRUD</title>
 </h:head>
 <h:body>
@@ -30,40 +32,40 @@
                         <br/>
                         Príklad s využitím transakcie (podobným štýlom try catch sú riešené všetky dotazy):
                     </p>
-                    <textarea rows="20" cols="100" style="border:none">
-                        public boolean inserStudent(Student student) {
-                            EntityTransaction tr = em.getTransaction();
+                    <pre><code class="java">
+public boolean inserStudent(Student student) {
+    EntityTransaction tr = em.getTransaction();
 
-                            try {
-                                tr.begin();
-                                em.persist(student);
-                                tr.commit();
-                                addMessage("Success", "Entry created");
-                                return true;
-                            }
-                            catch (Exception e) {
-                                tr.rollback();
-                                e.printStackTrace();
-                                addMessage("Failure", "Entry was not created");
-                                return false;
-                            }
-                    </textarea>
+    try {
+        tr.begin();
+        em.persist(student);
+        tr.commit();
+        addMessage("Success", "Entry created");
+        return true;
+    }
+    catch (Exception e) {
+        tr.rollback();
+        e.printStackTrace();
+        addMessage("Failure", "Entry was not created");
+        return false;
+    }
+                    </code></pre>
                     <h2>Remove</h2>
                     <p>
                         Odstránenie študenta z db prebieha podobne, pričom najskôr nájdeme instanciu pomocou
                         query dotazu a až potom zmažeme. V prípde, že dané id nie je v db, query nám vráti null. <br/>
                         Alternatíva môže byť aj volanie <b>delete()</b> od <i>Session</i>.
                     </p>
-                    <textarea rows="10" cols="100" style="border:none" >
-                        Student student = getStudent(login);
-                        if(student == null){
-                            addMessage("Failure 404", "Entry not found");
-                            return  false;
-                        }
-                        tr.begin();
-                        em.remove(student);
-                        tr.commit();
-                    </textarea>
+                    <pre><code class="java">
+Student student = getStudent(login);
+if(student == null){
+    addMessage("Failure 404", "Entry not found");
+    return  false;
+}
+tr.begin();
+em.remove(student);
+tr.commit();
+                    </code></pre>
                     <h2>Merge</h2>
                     <p>
                         Persist vyžijeme keď chceme vložiť objekt do db a súčasne ho pripojiť do entity managera
@@ -71,12 +73,12 @@
                         tak vráti pripojený objekt a k nie tak ho vloži do databazy.
                     </p>
 
-                    <textarea rows="8" cols="100" style="border:none" >
-                        student = studentDAO.getStudent(login);
-                        tr.begin();
-                        em.merge(student);
-                        tr.commit();
-                    </textarea>
+                    <pre><code class="java">
+student = studentDAO.getStudent(login);
+tr.begin();
+em.merge(student);
+tr.commit();
+                    </code></pre>
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
                         <p:panelGrid columns="2">
@@ -134,5 +136,8 @@
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 </html>

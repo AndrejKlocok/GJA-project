@@ -1,0 +1,31 @@
+Setup:
+
+Download latest release of ActiveMQ (no installation needed):
+
+http://activemq.apache.org/download.html
+
+unpack it and in bin folder run:
+
+$ ./activemq start
+
+
+
+Build example:
+
+$ mvn compile
+
+Open two terminals and in one start receiver and then run multiple senders
+
+To start receiver in example root directory run:
+
+$ mvn exec:java@Receiver
+
+To start sender in example root directory run:
+
+$ mvn exec:java@Sender -Dexec.args='"Hello world!"'
+
+Or you can create jar packages and run receiver.jar or sender.jar:
+
+$ java -jar receiver.jar
+
+$ java -jar sender.jar "Hello world!"

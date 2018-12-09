@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>FIT</groupId>
-    <artifactId>JPA_HIBERNATE</artifactId>
+    <artifactId>GJA_Lectures</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>JPA_HIBERNATE</name>
+    <name>GJA_Lectures</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

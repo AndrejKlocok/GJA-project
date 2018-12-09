@@ -7,6 +7,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <title>OneToOne</title>
 </h:head>
 <h:body>
@@ -27,82 +29,82 @@
                         pričom toto riešenie sa takmer zhoduje s využitím väzby N-N.
                     </p>
                     <p:panelGrid columns="2">
-                        <textarea rows="20" cols="70" style="border: none">
-                            @Entity
-                            public class Faculty {
-                                @Id
-                                @GeneratedValue(strategy = GenerationType.IDENTITY)
-                                @Column( nullable=false, unique=true)
-                                private Long id_faculty;
+                        <pre><code class="java">
+@Entity
+public class Faculty {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( nullable=false, unique=true)
+    private Long id_faculty;
 
-                                @Column( nullable=false)
-                                private String name;
+    @Column( nullable=false)
+    private String name;
 
-                                @OneToMany( orphanRemoval = true, cascade = CascadeType.ALL)
-                                @JoinTable(name = "Faculty_Subject",
-                                        joinColumns = {@JoinColumn(name = "fk_faculty",
-                                            referencedColumnName = "id_faculty")},
-                                        inverseJoinColumns = {@JoinColumn(name = "fk_subject",
-                                            referencedColumnName = "id_subject")}
-                                )
-                        </textarea>
-                        <textarea rows="26" cols="70" style="border: none">
-                            @Entity
-                            public class Subject {
-                                @Id
-                                @GeneratedValue(strategy = GenerationType.IDENTITY)
-                                @Column( nullable=false, unique=true)
-                                private Long id_subject;
+    @OneToMany( orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinTable(name = "Faculty_Subject",
+            joinColumns = {@JoinColumn(name = "fk_faculty",
+                referencedColumnName = "id_faculty")},
+            inverseJoinColumns = {@JoinColumn(name = "fk_subject",
+                referencedColumnName = "id_subject")}
+    )
+                        </code></pre>
+                        <pre><code class="java">
+@Entity
+public class Subject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( nullable=false, unique=true)
+    private Long id_subject;
 
-                                @Column( nullable=false)
-                                private String name;
+    @Column( nullable=false)
+    private String name;
 
-                                @Column( nullable=false)
-                                private Date created;
+    @Column( nullable=false)
+    private Date created;
 
-                                @ManyToOne
-                                @JoinTable(name = "Faculty_Subject",
-                                        joinColumns = {@JoinColumn(name = "fk_subject",
-                                                insertable = false,
-                                                updatable = false,
-                                                referencedColumnName = "id_subject")},
-                                        inverseJoinColumns = {@JoinColumn(name = "fk_faculty",
-                                                insertable = false,
-                                                updatable = false,
-                                                referencedColumnName = "id_faculty")}
-                                )
-                                private Faculty subjectFaculty;
-                        </textarea>
+    @ManyToOne
+    @JoinTable(name = "Faculty_Subject",
+            joinColumns = {@JoinColumn(name = "fk_subject",
+                    insertable = false,
+                    updatable = false,
+                    referencedColumnName = "id_subject")},
+            inverseJoinColumns = {@JoinColumn(name = "fk_faculty",
+                    insertable = false,
+                    updatable = false,
+                    referencedColumnName = "id_faculty")}
+    )
+    private Faculty subjectFaculty;
+                        </code></pre>
                         <p>
                             Pridanie predmetu do fakulty:
                         </p>
-                        <textarea rows="30" cols="120">
-                            //zistime meno fakulty
-                            Faculty f = facultyDAO.getFaculty(facultyName);
-                            if(f == null){
-                                return;
-                            }
+                        <pre><code class="java">
+//zistime meno fakulty
+Faculty f = facultyDAO.getFaculty(facultyName);
+if(f == null){
+    return;
+}
 
-                            Subject subject ;
-                            subject = subjectDAO.getSubject(subjectName);
+Subject subject ;
+subject = subjectDAO.getSubject(subjectName);
 
-                            //zistime ci uz predmet existuje
-                            if(subject != null){
-                                addMessage("Failure", "Subject already exists");
-                                return;
-                            }
+//zistime ci uz predmet existuje
+if(subject != null){
+    addMessage("Failure", "Subject already exists");
+    return;
+}
 
-                            //vytvorim predmet
-                            subject = new Subject(subjectName);
-                            subjectDAO.insert(subject);
+//vytvorim predmet
+subject = new Subject(subjectName);
+subjectDAO.insert(subject);
 
-                            //aktualizujem vztahy
-                            subject.setSubjectFaculty(f);
-                            f.addSubject(subject);
+//aktualizujem vztahy
+subject.setSubjectFaculty(f);
+f.addSubject(subject);
 
-                            //mergnem fakultu
-                            facultyDAO.update(f);
-                        </textarea>
+//mergnem fakultu
+facultyDAO.update(f);
+                        </code></pre>
                     </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
@@ -157,5 +159,8 @@
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 </html>
