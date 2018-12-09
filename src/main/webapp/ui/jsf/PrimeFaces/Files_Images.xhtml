@@ -11,6 +11,9 @@
 </h:head>
 <h:body>
     <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/primefaces.png" style="margin: auto; display: block"/>
+        </div>
         <div class="ui-g-12 ui-md-2">
             <ui:include src="/ui/components/menu.xhtml"/>
         </div>
@@ -18,11 +21,74 @@
             <div class="ui-g-12 ui-g-nopad">
                 <div class="box">
                     <h1>Files and Images</h1>
+                    <h2>Upload image</h2>
+                    <p>
+                        Nahranie obrázku na server pomocou primefaces. Pomocou dialogu vyberieme obrázok(gif|jpe?g|png) a
+                        následne ho nahráme na server. Obrázok neuložíme do WAR deploy miesta, pretože pri redeploy sa odstránia.
+                        Vhodné je si určiť cestu, kde sa majú uložiť. V tomto prípade je to <b>/tmp</b>
+                    </p>
+                    <p>
+                        V xhtml súbore využijeme komponentu <i>fileUpload</i> s obmedzením na velkosť, počet súborov a regex. V beane
+                        máme metódu <i>handleFileUpload</i>, ktorá súracuje obrázok.
+                    </p>
+
+                    <textarea rows="25" cols="140">
+                        &lt;p:fileUpload fileUploadListener= "{FileImagesBean.handleFileUpload}" mode="advanced"
+                                      sizeLimit="100000" fileLimit="3"
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /&gt;
+
+
+                        public void handleFileUpload(FileUploadEvent event) {
+                            uploadedFile = event.getFile();
+
+                            //if chosen file is not null
+                            if(uploadedFile != null) {
+                                FacesMessage msg = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
+                                String filePath = "/tmp/" + uploadedFile.getFileName();
+
+                                try {
+                                    //save desired file to /tmp directory
+                                    FileOutputStream out = new FileOutputStream(new File(filePath));
+                                    out.write(uploadedFile.getContents());
+                                    out.flush();
+                                    out.close();
+                    </textarea>
+
                     <h:form>
                         <p:growl id="messages" showDetail="true" />
 
-                        <p:fileUpload fileUploadListener="#{FileImagesBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
-                                      update="messages" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                        <p:panelGrid columns="1" style="width: 600px">
+                            <p:fileUpload fileUploadListener="#{FileImagesBean.handleFileUpload}" mode="advanced"
+                                          update="messages" sizeLimit="100000" fileLimit="3"
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                        </p:panelGrid>
+                    </h:form>
+
+                    <h2>Download Image</h2>
+                    <p>
+                        Stiahnutie obrázku zo serveru pomocou primefaces. Využijeme komponentu <i>fileDownload</i>
+                        vnorenú uprostred <i>command buttonu</i>. V beane sa ihned po jeho vytvoreni ( @PostConstruct) načíta
+                        obrázok z resources.
+                    </p>
+
+                    <textarea rows="20" cols="140">
+                        &lt;p:commandButton value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down"&gt;
+                                &lt;p:fileDownload value="{FileImagesBean.downloadFile}" /&gt;
+                            &lt;/p:commandButton&gt;
+
+                        @PostConstruct
+                        public void Load() {
+                            InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/resources/pictures/jayZ.jpg");
+                            downloadFile = new DefaultStreamedContent(stream, "image/jpg", "jayZ.jpg");
+                        }
+
+                    </textarea>
+                    <h:form>
+                        <p:panelGrid columns="1" style="width: 600px;">
+                            <p:commandButton value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">
+                                <p:fileDownload value="#{FileImagesBean.downloadFile}" />
+                            </p:commandButton>
+                        </p:panelGrid>
                     </h:form>
                 </div>
             </div>
