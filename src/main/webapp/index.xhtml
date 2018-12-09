@@ -7,6 +7,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <title>GJA-Tutorial</title>
 </h:head>
 <h:body>
@@ -48,15 +50,18 @@
                     <p>
                         Priložený skript inicializuje databazu GJA.
                     </p>
-                    <textarea rows="15" cols="100" style="border:none">
-                        CREATE USER user69@localhost IDENTIFIED BY 'heslo';
-                        GRANT ALL PRIVILEGES ON mydatabase.* TO 'user69'@'localhost';
-                        FLUSH PRIVILEGES;
+                    <pre><code class="sql">
+CREATE USER user69@localhost IDENTIFIED BY 'heslo';
+GRANT ALL PRIVILEGES ON mydatabase.* TO 'user69'@'localhost';
+FLUSH PRIVILEGES;
 
-                    </textarea>
+                    </code></pre>
                 </div>
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 </html>

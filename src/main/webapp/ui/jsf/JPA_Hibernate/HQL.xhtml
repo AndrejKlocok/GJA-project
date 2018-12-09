@@ -8,6 +8,8 @@
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <title>HQL</title>
 </h:head>
 <h:body>
@@ -26,19 +28,19 @@
                     <p>
                         Dotaz na získanie všetkých objektov <i>Subject</i>
                     </p>
-                    <textarea rows="12" cols="120">
-                        Session session = sessionFactory.getCurrentSession();
-                        List&lt;Subject&gt; subjects = new ArrayList&lt;&gt;();
-                        Transaction tr = session.getTransaction();
-                        String hql = "FROM Subject AS S";
-                        Query query = session.createQuery(hql);
-                        try {
-                            tr.begin();
-                            subjects =  query.setMaxResults(50).list();
-                            tr.commit();
-                            return subjects;
-                        }
-                    </textarea>
+                    <pre><code class="java">
+Session session = sessionFactory.getCurrentSession();
+List&lt;Subject&gt; subjects = new ArrayList&lt;&gt;();
+Transaction tr = session.getTransaction();
+String hql = "FROM Subject AS S";
+Query query = session.createQuery(hql);
+try {
+    tr.begin();
+    subjects =  query.setMaxResults(50).list();
+    tr.commit();
+    return subjects;
+}
+                    </code></pre>
 
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
@@ -57,23 +59,24 @@
                     <p>
                         Vyhladanie počtu predmetov v danej fakulte. Vzťah fakulty a predmetu je reprezentovaný väzobnou tabulkou.
                     </p>
-                    <textarea rows="20" cols="120">
-                        Session session = sessionFactory.getCurrentSession();
-                        Transaction tr = session.getTransaction();
-                        String hql = "Select count(*) AS subjects From Faculty F Join Faculty_Subject FS " +
-                                "ON(F.id_faculty=FS.fk_faculty) Join Subject S ON(S.id_subject=FS.fk_subject)"+
-                                "where F.name = :name  Group By F.name";
-                        Query query = session.createQuery(hql).setParameter("name", faculty);
-                        int count = 0;
+
+                    <pre><code class="java">
+Session session = sessionFactory.getCurrentSession();
+Transaction tr = session.getTransaction();
+String hql = "Select count(*) AS subjects From Faculty F Join Faculty_Subject FS " +
+        "ON(F.id_faculty=FS.fk_faculty) Join Subject S ON(S.id_subject=FS.fk_subject)"+
+        "where F.name = :name  Group By F.name";
+Query query = session.createQuery(hql).setParameter("name", faculty);
+int count = 0;
 
 
-                        try {
-                            tr.begin();
-                            count = (int) query.getSingleResult();
-                            tr.commit();
-                            return count;
-                        }
-                    </textarea>
+try {
+    tr.begin();
+    count = (int) query.getSingleResult();
+    tr.commit();
+    return count;
+}
+                    </code></pre>
                     <h:form>
                         <p:panelGrid columns="2">
                             <p:outputLabel value="Subj count" />
@@ -89,19 +92,19 @@
                     <p>
                         Dotaz na študentov, ktorí majú ISIC, zoradený podľa mena.
                     </p>
-                    <textarea rows="20" cols="120">
-                        Session session = sessionFactory.getCurrentSession();
-                        Transaction tr = session.getTransaction();
-                        List&lt;Student&gt; students = new ArrayList&lt;&gt;();
+                    <pre><code class="java">
+Session session = sessionFactory.getCurrentSession();
+Transaction tr = session.getTransaction();
+List&lt;Student&gt; students = new ArrayList&lt;&gt;();
 
-                        try {
-                            tr.begin();
-                            Criteria cr = session.createCriteria(Student.class);
-                            cr.add(Restrictions.isNotNull("isic"));
-                            cr.addOrder(Order.asc("name"));
-                            students = cr.list();
-                            tr.commit();
-                    </textarea>
+try {
+    tr.begin();
+    Criteria cr = session.createCriteria(Student.class);
+    cr.add(Restrictions.isNotNull("isic"));
+    cr.addOrder(Order.asc("name"));
+    students = cr.list();
+    tr.commit();
+                    </code></pre>
                     <h:form>
                         <p:dataTable id="table2" value="#{HQL.students}" var="student" style="width: 800px">
                             <p:column headerText="Login">
@@ -120,20 +123,19 @@
                         Dotaz na získanie počtu študentov, ktorí majú rôzne meno a ich login začína na x.
                     </p>
 
-                    <textarea rows="15" cols="120" >
+                    <pre><code class="java">
+Session session = sessionFactory.getCurrentSession();
+Transaction tr = session.getTransaction();
+Long count = 0L;
 
-                        Session session = sessionFactory.getCurrentSession();
-                        Transaction tr = session.getTransaction();
-                        Long count = 0L;
-
-                        try {
-                            tr.begin();
-                            Criteria cr = session.createCriteria(Student.class);
-                            cr.setProjection(Projections.countDistinct("name"));
-                            cr.add(Restrictions.ilike("login", "x%"));
-                            cr.addOrder(Order.asc("login"));
-                            count = (Long) cr.uniqueResult();
-                    </textarea>
+try {
+    tr.begin();
+    Criteria cr = session.createCriteria(Student.class);
+    cr.setProjection(Projections.countDistinct("name"));
+    cr.add(Restrictions.ilike("login", "x%"));
+    cr.addOrder(Order.asc("login"));
+    count = (Long) cr.uniqueResult();
+                    </code></pre>
 
                     <h:form>
                         <p:panelGrid columns="2">
@@ -145,6 +147,9 @@
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 
 </html>

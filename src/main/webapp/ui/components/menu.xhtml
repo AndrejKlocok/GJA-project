@@ -31,6 +31,13 @@
                 <p:menuitem value="OneToMany" action="#{menuView.oneToMany}" />
                 <p:menuitem value="HQL" action="#{menuView.hql}"  />
             </p:submenu>
+            <p:submenu label="RMI">
+                <p:menuitem value="Client -> Server" action="#{menuView.clientServer}" />
+            </p:submenu>
+            <p:submenu label="JMS">
+                <p:menuitem value="Point to Point" action="#{menuView.pointToPoint}" />
+                <p:menuitem value="Publish Subscribe" action="#{menuView.publishSubscribe}" />
+            </p:submenu>
         </p:menu>
     </h:form>
 </ui:composition>

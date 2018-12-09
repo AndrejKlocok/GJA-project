@@ -7,6 +7,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <title>OneToOne</title>
 </h:head>
 <h:body>
@@ -23,38 +25,38 @@
                         a pridáme triedu ISIC.
                     </p>
                     <p:panelGrid columns="2">
-                        <textarea rows="15" cols="70" style="border: none">
-                            @Entity
-                            ...
-                            public class Student implements Serializable {
-                                ...
-                                @Id
-                                @GeneratedValue(strategy = GenerationType.IDENTITY)
-                                @Column( nullable=false, unique=true)
-                                private Long id;
-                                ...
-                                @OneToOne
-                                @JoinColumn(name = "isic_id")
-                                private ISIC isic;
-                        </textarea>
-                        <textarea rows="17" cols="70" style="border: none">
-                            @Entity
-                            public class ISIC {
-                                ...
-                                @Id
-                                @GeneratedValue(strategy = GenerationType.IDENTITY)
-                                @Column( nullable=false, unique=true)
-                                private Long id;
+                        <pre><code class="java">
+@Entity
+...
+public class Student implements Serializable {
+    ...
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( nullable=false, unique=true)
+    private Long id;
+    ...
+    @OneToOne
+    @JoinColumn(name = "isic_id")
+    private ISIC isic;
+                        </code></pre>
+                        <pre><code class="java">
+@Entity
+public class ISIC {
+    ...
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( nullable=false, unique=true)
+    private Long id;
 
-                                @Column( nullable=false, unique=true)
-                                private String isic_number;
+    @Column( nullable=false, unique=true)
+    private String isic_number;
 
-                                @Column( nullable = true, unique = false)
-                                private String faculty;
+    @Column( nullable = true, unique = false)
+    private String faculty;
 
-                                @Column( nullable=false, unique=false)
-                                private Date creation;
-                        </textarea>
+    @Column( nullable=false, unique=false)
+    private Date creation;
+                        </code></pre>
                     </p:panelGrid>
 
                     <h:form>
@@ -103,5 +105,8 @@
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 </html>

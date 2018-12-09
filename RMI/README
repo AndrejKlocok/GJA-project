@@ -1,0 +1,8 @@
+Run build.sh. Then start RMI Registry from from this directory (RMI Registry must have interfaces in the classpath!).
+
+$ rmiregistry &
+
+Finally run Server and try Client:
+
+$ java Server &
+$ java Client

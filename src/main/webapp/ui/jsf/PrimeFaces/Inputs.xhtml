@@ -6,6 +6,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <title>Inputs</title>
 </h:head>
 <h:body>
@@ -25,33 +27,33 @@
                     <p>
                         Príklad takejto služby v <i>StudentDAO</i> objekte:
                     </p>
-                    <textarea rows="20" cols="120">
-                        //Pop Up message
-                        public void addMessage(String summary, String detail) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
+                    <pre><code class="java">
+//Pop Up message
+public void addMessage(String summary, String detail) {
+    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
+    FacesContext.getCurrentInstance().addMessage(null, message);
+}
 
-                        ...
+...
 
-                        public Student getStudent(String loginParam) {
-                            ...
+public Student getStudent(String loginParam) {
+    ...
 
-                            if(student == null){
-                                addMessage("Not found", "Entity not found");
-                            }
-                            ...
-                        }
-                    </textarea>
+    if(student == null){
+        addMessage("Not found", "Entity not found");
+    }
+    ...
+}
+                    </code></pre>
                     <p>
                         Následne v .xhtml súbore stačí pridať:
                     </p>
-                    <textarea rows="5" cols="120">
-                        &lt;h:form&gt;
-                            &lt;p:growl id="messages" showDetail="true"/&gt;
-                            ...
-                        &lt;/h:form&gt;
-                    </textarea>
+                    <pre><code class="xml">
+&lt;h:form&gt;
+    &lt;p:growl id="messages" showDetail="true"/&gt;
+    ...
+&lt;/h:form&gt;
+                    </code></pre>
                     <h2>Input Mask</h2>
                     <p>
                         Validuje vstupné dáta, používa niečo ako "regulárny" výraz.
@@ -69,36 +71,36 @@
                     <p>
                         Validácia pomocou Managed Beanu, ktorý obsahuje anotované vlastnosti. Napríklad:
                     </p>
-                    <textarea rows="20" cols="120">
-                        @ManagedBean(name = "ValidationBean")
-                        public class ValidationBean {
-                            @Size(min = 1, max = 10)
-                            private String field;
-                            @Min(0) @Max(100)
-                            private int intVal;
-                            @Digits(integer = 2, fraction = 2)
-                            private double percent;
-                            @Future
-                            private Date dateVal;
-                            @Pattern(regexp = "^x[a-z]{5}\\d{2}$")
-                            private String regex;
-                            @NotNull
-                            private Boolean radioBtn;
-                    </textarea>
+                    <pre><code class="java">
+@ManagedBean(name = "ValidationBean")
+public class ValidationBean {
+    @Size(min = 1, max = 10)
+    private String field;
+    @Min(0) @Max(100)
+    private int intVal;
+    @Digits(integer = 2, fraction = 2)
+    private double percent;
+    @Future
+    private Date dateVal;
+    @Pattern(regexp = "^x[a-z]{5}\\d{2}$")
+    private String regex;
+    @NotNull
+    private Boolean radioBtn;
+                    </code></pre>
                     <p>
                         Na tento bean môžeme jednoducho namapovať odpovedajúce .xhtml. Následne overenie formulára
                         pomocou <i>CommandButtona</i>.
                     </p>
-                    <textarea rows="10" cols="120">
-                        &lt;h:form&gt;
-                        &lt;p:panel header="Inputs" style="width: 600px"&gt;
-                            &lt;p:outputLabel for="@next" value="String @Size" /&gt;
-                            &lt;p:inputText value="#{ValidationBean.field}" label="string"/&gt;
-                            &lt;p:message for="@previous" / &gt;
-                            ....
-                            &lt;p:commandButton value="Check" ajax="false" validateClient="true"/&gt;
+                    <pre><code class="xml">
+&lt;h:form&gt;
+&lt;p:panel header="Inputs" style="width: 600px"&gt;
+    &lt;p:outputLabel for="@next" value="String @Size" /&gt;
+    &lt;p:inputText value="#{ValidationBean.field}" label="string"/&gt;
+    &lt;p:message for="@previous" / &gt;
+    ....
+    &lt;p:commandButton value="Check" ajax="false" validateClient="true"/&gt;
 
-                    </textarea>
+                    </code></pre>
                     <h:form>
                         <p:panel header="Inputs" style="width: 600px">
                             <p:outputLabel for="@next" value="String @Size" />
@@ -140,22 +142,24 @@
                         za vložený text. (Niektoré znaky boli odstránené aby to preprocesor mohol zobrať...)
                     </p>
 
-                    <textarea rows="20" cols="170">
-                        public List&lt;String&gt; autoComplete(String text) {
-                            List&lt;String&gt; output = new ArrayList&lt;String&gt;();
-                            for(int i = 0; i &lt; 10; i++) {
-                                output.add(text + i);
-                            }
-                            return output;
-                        }
+                    <pre><code class="java">
+public List&lt;String&gt; autoComplete(String text) {
+    List&lt;String&gt; output = new ArrayList&lt;String&gt;();
+    for(int i = 0; i &lt; 10; i++) {
+        output.add(text + i);
+    }
+    return output;
+}
+                    </code></pre>
 
-                        &lt;h:form&gt;
-                        &lt;p:growl id="msgs" showDetail="true" /&gt;
-                        &lt;h:panelGrid columns="2" cellpadding="5"&gt;
-                            &lt;p:outputLabel value="LimitedResults:" for="limited" /&gt;
-                            &lt;p:autoComplete id="limited" maxResults="4" value= ValidationBean.autocomplete1 completeMethod= ValidationBean.autoComplete /&gt;
+                    <pre><code class="xml">
+&lt;h:form&gt;
+&lt;p:growl id="msgs" showDetail="true" /&gt;
+&lt;h:panelGrid columns="2" cellpadding="5"&gt;
+    &lt;p:outputLabel value="LimitedResults:" for="limited" /&gt;
+    &lt;p:autoComplete id="limited" maxResults="4" value= ValidationBean.autocomplete1 completeMethod= ValidationBean.autoComplete /&gt;
 
-                    </textarea>
+                    </code></pre>
 
                     <h:form>
                         <p:growl id="msgs" showDetail="true" />
@@ -189,6 +193,9 @@
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 
 </html>

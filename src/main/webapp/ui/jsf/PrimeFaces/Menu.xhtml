@@ -7,6 +7,8 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
     <title>Menu</title>
 </h:head>
 <h:body>
@@ -25,59 +27,62 @@
                         JSF vyzerá následovne:
                     </p>
 
-                    <textarea rows="19" cols="120">
-                        &lt;h:form&gt;
-                            &lt;p:menu&gt;
-                            &lt;p:submenu label="Main"&gt;
-                                &lt;p:menuitem value="Home" action=menuView.home_welcome /&gt;
-                                &lt;p:menuitem value="Setup" action=menuView.home_setUp /&gt;
-                            &lt;/p:submenu&gt;
-                            &lt;p:submenu label="PrimeFaces"&gt;
-                                &lt;p:menuitem value="Inputs" action=menuView.inputs /&gt;
-                                ...
-                                &lt;p:menuitem value="Files/Images" action=menuView.filesImages /&gt;
-                            &lt;/p:submenu&gt;
-                            ...
-                            &lt;/p:menu&gt;
-                        &lt;/h:form&gt;
-                    </textarea>
+                    <pre><code class="xml">
+&lt;h:form&gt;
+    &lt;p:menu&gt;
+    &lt;p:submenu label="Main"&gt;
+        &lt;p:menuitem value="Home" action=menuView.home_welcome /&gt;
+        &lt;p:menuitem value="Setup" action=menuView.home_setUp /&gt;
+    &lt;/p:submenu&gt;
+    &lt;p:submenu label="PrimeFaces"&gt;
+        &lt;p:menuitem value="Inputs" action=menuView.inputs /&gt;
+        ...
+        &lt;p:menuitem value="Files/Images" action=menuView.filesImages /&gt;
+    &lt;/p:submenu&gt;
+    ...
+    &lt;/p:menu&gt;
+&lt;/h:form&gt;
+                    </code></pre>
                     <p>
                         Java bean obshujúci volané metódy, ktoré vracajú cestu na odkazovanú java server faces. Hneď po vytvorení
                         beanu zavoláme funkciu <i>init</i> a vytvoríme Menu model.
                     </p>
-                    <textarea rows="34" cols="120">
-                        private MenuModel model;
+                    <pre><code class="java">
+private MenuModel model;
 
-                        @PostConstruct
-                        public void init() {
-                            model = new DefaultMenuModel();
-                            //create defaut item
-                            DefaultMenuItem item;
+@PostConstruct
+public void init() {
+    model = new DefaultMenuModel();
+    //create defaut item
+    DefaultMenuItem item;
 
-                            //create submenus
-                            DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
-                            DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
-                            ...
+    //create submenus
+    DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
+    DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
+    ...
 
-                            //MAIN
-                            item = new DefaultMenuItem("Home_Welcome");
-                            item.setCommand(...);
-                            mainMenu.addElement(item);
+    //MAIN
+    item = new DefaultMenuItem("Home_Welcome");
+    item.setCommand(...);
+    mainMenu.addElement(item);
 
-                            item = new DefaultMenuItem("Home_SetUP");
-                            item.setCommand(...);
-                            mainMenu.addElement(item);
-                            ...
-                        }
-                        //Main Menu
-                        public String  home_welcome(){ return "/index"; }
+    item = new DefaultMenuItem("Home_SetUP");
+    item.setCommand(...);
+    mainMenu.addElement(item);
+    ...
+}
+//Main Menu
+public String  home_welcome(){ return "/index"; }
 
-                        public String  home_setUp(){ return "/ui/jsf/Home_Setup"; }
-                    </textarea>
+public String  home_setUp(){ return "/ui/jsf/Home_Setup"; }
+                    </code></pre>
                     <ui:include src="/ui/components/menu.xhtml"/>
                 </div>
             </div>
         </div>
     </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
 </h:body>
 </html>

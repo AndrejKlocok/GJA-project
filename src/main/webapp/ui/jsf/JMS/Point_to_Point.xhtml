@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>JMS Point to Point</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>JMS Point to Point</h1>
+
+                    <p>
+                        Java Message Service je soušástí Java Enterprise Edition.
+                        Je to definice API pro komunikaci (zasílání zpráv) mezi dvěmi aplikacemi.
+                        Pro samotnou komunikaci lze využít více protokolů, které definují formát zpráv.
+                        V tomto příkladě se používá JMS nad AMQP protokolem.
+                        Implementaci AMQP a vlastní předávání zpráv aplikacím musí zprostředkovávat messsage broker.
+                        V tomto příkladě byl využit samostatný message broker ActiveMQ, který není potřeba instalovat.
+                    </p>
+
+                    <h2>Info</h2>
+
+                    <p>
+                        Nejjednodušší způsob komunikace mezi dvěmi aplikacemi je point to point.
+                        Pro výměnu zpráv se používá fronta (queue) a aplikace, která zprávy vkládá do fronty se nazývá Sender a příjmající aplikace se nazývá Receiver.
+                        Správu fronty zajištuje message broker, ke kterému se musí aplikace připojit přes JMS.
+                        Celá implementace komunikace je velmi jednoduchá, pro pochopení je naprosto dostačující následující okomentovaný příklad implementace.
+                    </p>
+
+                    <p>
+                        Celý příklad s návodem ke spuštění je umístěn ve složce JMS-P2P.
+                    </p>
+
+                    <h2>Receiver</h2>
+
+                    <pre><code class="java">
+public class Receiver {
+
+    public static void main(String[] args) {
+
+        try {
+            // Create a ConnectionFactory. Default broker URL is : tcp://localhost:61616".
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnectionFactory.DEFAULT_BROKER_URL);
+
+            // Create a Connection
+            Connection connection = connectionFactory.createConnection();
+
+            // Message delivery doesn't begin until you start the connection
+            connection.start();
+
+            // Create a Session. The first argument (false in this case) means that the session is not transacted.
+            // The second argument means that the session will automatically acknowledge messages when they have
+            // been received successfully
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+            // Create the destination (Queue)
+            Queue queue = session.createQueue("TEST.Queue");
+
+            // Create a MessageConsumer from the Session and destination (Queue)
+            MessageConsumer consumer = session.createConsumer(queue);
+
+            // Wait for a message synchronous. You can specify timeout by passing number as argument.
+            // If asynchronous communication is desired, instantiate a MessageListener object and register it with
+            // a MessageConsumer object. In order to avoid missing messages, the start() method should be called on
+            // the connection after the listener has been registered.
+            Message message = consumer.receive();
+
+            if (message instanceof TextMessage) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                System.out.println("Received: " + text);
+            } else {
+                System.out.println("Received: " + message);
+            }
+
+            consumer.close();
+            session.close();
+            connection.close();
+
+        } catch (Exception e) {
+            System.out.println("Caught: " + e);
+            e.printStackTrace();
+        }
+    }
+}
+                    </code></pre>
+
+                    <h2>Sender</h2>
+
+                    <pre><code class="java">
+public class Sender {
+
+    // Warnings are suppressed because Sender and Receiver use the same init code
+    @SuppressWarnings("Duplicates")
+    public static void main(String[] args) {
+
+        try {
+            // Create a ConnectionFactory. Default broker URL is : tcp://localhost:61616".
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnectionFactory.DEFAULT_BROKER_URL);
+
+            // Create a Connection
+            Connection connection = connectionFactory.createConnection();
+
+            // Message delivery doesn't begin until you start the connection
+            connection.start();
+
+            // Create a Session. The first argument (false in this case) means that the session is not transacted.
+            // The second argument means that the session will automatically acknowledge messages when they have
+            // been received successfully
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+            // Create the destination (Queue)
+            Queue queue = session.createQueue("TEST.Queue");
+
+            // Create a MessageProducer from the Session and destination (Queue)
+            MessageProducer producer = session.createProducer(queue);
+
+            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+
+            // Pass first argument as message or send default message
+            String message;
+            if (args.length > 0) {
+                message = args[0];
+            } else {
+                message = "Hello world!";
+            }
+
+            // Create a message
+            TextMessage textMessage = session.createTextMessage(message);
+
+            // Tell the producer to send the message
+            System.out.println("Sent message: " + textMessage.hashCode());
+            producer.send(textMessage);
+
+            // Clean up
+            producer.close();
+            session.close();
+            connection.close();
+
+        } catch (Exception e) {
+            System.out.println("Caught: " + e);
+            e.printStackTrace();
+        }
+    }
+}
+                    </code></pre>
+
+                    <h3>Další info:</h3>
+                    <a href="https://www.oracle.com/technetwork/articles/java/introjms-1577110.html">https://www.oracle.com/technetwork/articles/java/introjms-1577110.html</a>
+                    <br/>
+                    <a href="https://www.javatpoint.com/jms-tutorial">https://www.javatpoint.com/jms-tutorial</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>
