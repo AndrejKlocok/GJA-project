@@ -4,22 +4,13 @@ import cz.vutbr.fit.DAO.StudentDAO;
 import cz.vutbr.fit.models.Student;
 
 import javax.faces.bean.ManagedBean;
+import java.util.Date;
 
 /**
  * Managed bean for CRUD page
  */
 @ManagedBean(name = "StudentDelete")
-public class StudentDelete {
-    private StudentDAO studentDAO = new StudentDAO();
-    private String login;
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
+public class StudentDelete extends StudentBean{
 
     public void deleteStudent(){
         Student student = studentDAO.getStudent(login);

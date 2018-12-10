@@ -86,66 +86,6 @@ try {
                             <p:outputLabel value= "#{HQL.subjCount}" />
                         </p:panelGrid>
                     </h:form>
-
-                    <h2>Hibernate criteria</h2>
-                    <p>
-                        Hibernate criteria je API, pomocou ktorého môžeme vytvárať selekty do databáze objektovým spôsobom.
-                    </p>
-
-                    <p>
-                        Dotaz na študentov, ktorí majú ISIC, zoradený podľa mena.
-                    </p>
-                    <pre><code class="java">
-Session session = sessionFactory.getCurrentSession();
-Transaction tr = session.getTransaction();
-List&lt;Student&gt; students = new ArrayList&lt;&gt;();
-
-try {
-    tr.begin();
-    Criteria cr = session.createCriteria(Student.class);
-    cr.add(Restrictions.isNotNull("isic"));
-    cr.addOrder(Order.asc("name"));
-    students = cr.list();
-    tr.commit();
-                    </code></pre>
-                    <h:form>
-                        <p:dataTable id="table2" value="#{HQL.students}" var="student" style="width: 800px">
-                            <p:column headerText="Login">
-                                <h:outputText  value="#{student.login}"/>
-                            </p:column>
-                            <p:column headerText="Name">
-                                <h:outputText  value="#{student.name}"/>
-                            </p:column>
-                            <p:column headerText="ISIC">
-                                <h:outputText  value="#{student.isic.isic_number}"/>
-                            </p:column>
-                        </p:dataTable>
-                    </h:form>
-
-                    <p>
-                        Dotaz na získanie počtu študentov, ktorí majú rôzne meno a ich login začína na x.
-                    </p>
-
-                    <pre><code class="java">
-Session session = sessionFactory.getCurrentSession();
-Transaction tr = session.getTransaction();
-Long count = 0L;
-
-try {
-    tr.begin();
-    Criteria cr = session.createCriteria(Student.class);
-    cr.setProjection(Projections.countDistinct("name"));
-    cr.add(Restrictions.ilike("login", "x%"));
-    cr.addOrder(Order.asc("login"));
-    count = (Long) cr.uniqueResult();
-                    </code></pre>
-
-                    <h:form>
-                        <p:panelGrid columns="2">
-                            <p:outputLabel value="Students count" />
-                            <p:outputLabel value= "#{HQL.studCount}" />
-                        </p:panelGrid>
-                    </h:form>
                 </div>
             </div>
         </div>

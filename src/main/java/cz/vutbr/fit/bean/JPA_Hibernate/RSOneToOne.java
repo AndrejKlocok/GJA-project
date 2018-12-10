@@ -69,7 +69,7 @@ public class RSOneToOne {
         isicDAO.deleteIsic(isic.getIsic_number());
     }
 
-    //Getters setters
+    //getters and setters of properties
     public String getLogin() {
         return login;
     }

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Criteria</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/hibernate.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Hibernate criteria</h1>
+                    <p>
+                        Hibernate criteria je API, pomocou ktorého môžeme vytvárať selekty do databáze objektovým spôsobom.
+                        V súčasnosti je označené ako @Deprecated.
+                    </p>
+
+                    <p>
+                        Dotaz na študentov, ktorí majú ISIC, zoradený podľa mena.
+                    </p>
+                    <pre><code class="java">
+public List&lt;Student&gt; getStudentsWithIsic(){
+    Session session = sessionFactory.getCurrentSession();
+    Transaction tr = session.getTransaction();
+    List&lt;Student&gt; students = new ArrayList&lt;&gt;();
+
+    try {
+        tr.begin();
+        Criteria cr = session.createCriteria(Student.class);
+        cr.add(Restrictions.isNotNull("isic"));
+        cr.addOrder(Order.asc("name"));
+        students = cr.list();
+        tr.commit();
+        tr.commit();
+        return students;
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+        return students;
+    }
+}
+                    </code></pre>
+                    <h:form>
+                        <p:dataTable id="table2" value="#{Criteria.students}" var="student" style="width: 800px">
+                            <p:column headerText="Login">
+                                <h:outputText  value="#{student.login}"/>
+                            </p:column>
+                            <p:column headerText="Name">
+                                <h:outputText  value="#{student.name}"/>
+                            </p:column>
+                            <p:column headerText="ISIC">
+                                <h:outputText  value="#{student.isic.isic_number}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <p>
+                        Dotaz na získanie počtu študentov, ktorí majú rôzne meno a ich login začína na x.
+                    </p>
+
+                    <pre><code class="java">
+public Long getDiscNameCount(){
+    Session session = sessionFactory.getCurrentSession();
+    Transaction tr = session.getTransaction();
+    Long count = 0L;
+
+    try {
+        tr.begin();
+        Criteria cr = session.createCriteria(Student.class);
+        cr.setProjection(Projections.countDistinct("name"));
+        cr.add(Restrictions.ilike("login", "x%"));
+        cr.addOrder(Order.asc("login"));
+        count = (Long) cr.uniqueResult();
+        tr.commit();
+        return count;
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+        return count;
+    }
+}
+                    </code></pre>
+                    <h:form>
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="Students count" />
+                            <p:outputLabel value= "#{Criteria.studCount}" />
+                        </p:panelGrid>
+                    </h:form>
+                    <h2>JPA Criteria</h2>
+                    <p>
+                        Namiesto Hibernate criteria môže byť  JPA criteria API, čo tiež alternatíva k JPQL query. Tieto
+                        niesú označené ako @Deprecated.
+                    </p>
+                    <p>
+                        Dotaz na získanie všetkých študentov, ktorí majú login začínajúci na x, zoradený podľa loginu.
+                    </p>
+                    <pre><code class="java">
+public List&lt;Student&gt; getStudentsWithXlogin(){
+    //get transaction
+    EntityTransaction tr = em.getTransaction();
+    //init list
+    List&lt;Student&gt; students = new ArrayList&lt;&gt;();
+    //get criteria builder
+    CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+    //create query on object Student
+    CriteriaQuery&lt;Student&gt; criteriaQuery = criteriaBuilder.createQuery(Student.class);
+    try {
+        tr.begin();
+        //create root from class
+        Root&lt;Student&gt; root = criteriaQuery.from(Student.class);
+        //JPA criteria query
+        criteriaQuery.select(root).where(criteriaBuilder.like(root.get("login"),"x%"))
+                .orderBy(criteriaBuilder.asc(root.get("login")));
+        //create query
+        students = em.createQuery(criteriaQuery).getResultList();
+        tr.commit();
+        return students;
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+        return students;
+    }
+}
+                    </code></pre>
+                    <h:form>
+                        <p:dataTable id="table3" value="#{Criteria.studentsWithXlogin}" var="student" style="width: 800px">
+                            <p:column headerText="Login">
+                                <h:outputText  value="#{student.login}"/>
+                            </p:column>
+                            <p:column headerText="Name">
+                                <h:outputText  value="#{student.name}"/>
+                            </p:column>
+                            <p:column headerText="ISIC">
+                                <h:outputText  value="#{student.isic.isic_number}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+
+</html>

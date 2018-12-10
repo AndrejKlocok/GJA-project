@@ -1,7 +1,7 @@
 package cz.vutbr.fit.DAO;
 
 import cz.vutbr.fit.models.Subject;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

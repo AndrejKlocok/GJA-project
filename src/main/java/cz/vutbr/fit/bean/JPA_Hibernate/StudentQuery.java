@@ -16,7 +16,5 @@ public class StudentQuery extends StudentUpdate{
      */
     public void fixStudentvalues(){
         studentDAO.namedUpdate();
-        RequestContext.getCurrentInstance().update("table1");
-
     }
 }

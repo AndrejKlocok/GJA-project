@@ -61,9 +61,9 @@ public Student getStudent(String loginParam) {
                     <p>
                         Validuje vstupné dáta, používa niečo ako "regulárny" výraz.
                     </p>
-                    <textarea rows="5" cols="120">
-                        &lt;p:inputMask id="phone" value="#{ValidationBean.telephoneString}" mask="9999-999-999"/&lt;
-                    </textarea>
+                    <pre><code class="xml">
+&lt;p:inputMask id="phone" value="{ValidationBean.telephoneString}" mask="9999-999-999"/&lt;
+                    </code></pre>
                     <h:form>
                         <h:panelGrid columns="2" cellpadding="5">
                             <p:outputLabel for="phone" value="Phone:" />

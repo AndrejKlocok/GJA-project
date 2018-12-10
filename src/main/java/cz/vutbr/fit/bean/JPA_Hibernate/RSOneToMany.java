@@ -116,7 +116,7 @@ public class RSOneToMany {
         facultyDAO.update(f);
     }
 
-    //getters and setters
+    //getters and setters of properties
 
     public String getFacultyName() {
         return facultyName;

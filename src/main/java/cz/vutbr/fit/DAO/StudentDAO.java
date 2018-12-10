@@ -12,7 +12,11 @@ import org.hibernate.criterion.Restrictions;
 import org.primefaces.push.annotation.Singleton;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -86,6 +90,7 @@ public class StudentDAO extends DAO{
 
         try{
             tr.begin();
+            student.setSigned(new Date(System.currentTimeMillis()));
             em.merge(student);
             tr.commit();
 
@@ -195,4 +200,31 @@ public class StudentDAO extends DAO{
         }
     }
 
+
+    public List<Student> getStudentsWithXlogin(){
+        //get transaction
+        EntityTransaction tr = em.getTransaction();
+        //init list
+        List<Student> students = new ArrayList<>();
+        //get criteria builder
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        //create query on object Student
+        CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
+        try {
+            tr.begin();
+            //create root from class
+            Root<Student> root = criteriaQuery.from(Student.class);
+            //JPA criteria query
+            criteriaQuery.select(root).where(criteriaBuilder.like(root.get("login"),"x%"))
+                    .orderBy(criteriaBuilder.asc(root.get("login")));
+            //create query
+            students = em.createQuery(criteriaQuery).getResultList();
+            tr.commit();
+            return students;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return students;
+        }
+    }
 }

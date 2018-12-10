@@ -110,23 +110,31 @@ tr.commit();
                     <h:form>
                         <p:panelGrid columns="2">
                             <p:panelGrid columns="2">
-                                <p:outputLabel for="login" value="Student login:" />
-                                <p:inputText id="login" value="#{StudentUpdate.login}" >
+                                <p:outputLabel for="loginFind" value="Student login:" />
+                                <p:inputText id="loginFind" value="#{StudentFind.login}" >
                                     <f:validateLength maximum="8" />
                                 </p:inputText>
 
-                                <p:commandButton value="Find" icon="ui-icon-star" action="#{StudentUpdate.findStudent}" ajax="false"/>
+                                <p:commandButton value="Find" icon="ui-icon-star" action="#{StudentFind.findStudent}" ajax="false"/>
                             </p:panelGrid>
-
                             <p:panelGrid columns="2">
-                                <p:outputLabel for="login" value="Student login:" />
-                                <p:outputLabel for="login" value="#{StudentUpdate.login}" />
-
-                                <p:outputLabel for="name" value="Student name:" />
-                                <p:inputText id="name" value="#{StudentUpdate.name}" />
-
-                                <p:commandButton value="Update" icon="ui-icon-star" action="#{StudentUpdate.updateStudent}" ajax="false"/>
+                                <p:outputLabel value="Student name:" />
+                                <p:outputLabel value="#{StudentFind.name}" />
+                                <p:outputLabel value="Student login:" />
+                                <p:outputLabel value="#{StudentFind.login}" />
                             </p:panelGrid>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="Student login:" />
+                            <p:inputText value="#{StudentUpdate.login}" >
+                                <f:validateLength maximum="8" />
+                            </p:inputText>
+
+                            <p:outputLabel for="nameUpdate" value="Student name:" />
+                            <p:inputText id="nameUpdate" value="#{StudentUpdate.name}" />
+
+                            <p:commandButton value="Update" icon="ui-icon-star" action="#{StudentUpdate.updateStudent}" ajax="false"/>
                         </p:panelGrid>
                     </h:form>
                     <h2>GET</h2>

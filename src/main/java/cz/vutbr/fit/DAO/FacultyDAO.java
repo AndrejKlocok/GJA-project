@@ -1,9 +1,6 @@
 package cz.vutbr.fit.DAO;
 
 import cz.vutbr.fit.models.Faculty;
-import org.hibernate.Query;
-import org.hibernate.Transaction;
-
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
