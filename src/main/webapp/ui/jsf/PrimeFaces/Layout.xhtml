@@ -21,20 +21,32 @@
     </style>
 
     <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/primefaces.png" style="margin: auto; display: block"/>
+        </div>
         <div class="ui-g-12 ui-md-2">
             <ui:include src="/ui/components/menu.xhtml"/>
         </div>
         <div class="ui-g-12 ui-md-10 ui-g-nopad">
             <div class="ui-g-12 ui-g-nopad">
-                <div class="myPage" style="width: 700px">
+                <div class="myPage" style="width: 800px">
                     <h1>Layouts</h1>
                     <h2>AccordionPanel</h2>
                     <p>
-                        Príklad statického panelu:
+                        Využijeme primefaces komponentu <i>accordionPanel</i>.
                     </p>
-
                     <h3>Viacnásobný výber</h3>
-
+                    <p>
+                        V celku jednoduché:
+                    </p>
+                    <textarea rows="10" cols="120">
+                        &lt;p:accordionPanel multiple="true" &gt;
+                            &lt;p:tab title="Header1"&gt;
+                                &lt;h:panelGrid columns="2" cellpadding="10"&gt;
+                                    &lt;h:outputText value="text" /&gt;
+                                    &lt;h:outputText value="Lorem Ipsum a tak dalej" /&gt;
+                                &lt;/h:panelGrid&gt;
+                    </textarea>
                     <h:form>
                         <p:accordionPanel multiple="true" >
                             <p:tab title="Header1">
@@ -60,8 +72,19 @@
 
                     <h3>DataModel</h3>
                     <p>
-                        Lepšie využitie ako data model s backing beanom. Využijeme <i>Hibernate</i> a model <i>Faculty</i>
+                        Lepšie využitie ako data model s beanom. Využijeme <i>Hibernate</i> a model <i>Faculty</i>, kde
+                        zobrazíme jednotlivé predmety fakulty pomocou <i>accordionPanel</i>. Príklad kódu vyzerá nasledovne:
                     </p>
+                    <textarea rows="10" cols="120">
+                        &lt;p:accordionPanel value="{LayoutBean.faculties}" var="faculty"&gt;
+                            &lt;p:tab title="{faculty.name}"&gt;
+                                &lt;p:dataTable var="subject" value="{faculty.subjectList}" style="width: 300px"&gt;
+                                    &lt;f:facet name="header"&gt;
+                                        &lt;h:outputText value="{faculty.name}" /&gt;
+                                    &lt;/f:facet&gt;
+                                    ...
+
+                    </textarea>
                     <h:form>
                         <p:accordionPanel value="#{LayoutBean.faculties}" var="faculty">
                             <p:tab title="#{faculty.name}">
@@ -80,7 +103,56 @@
                         </p:accordionPanel>
                     </h:form>
 
-                    <h2>Toggle able panel</h2>
+                    <h2>Toggleable panel</h2>
+                    <p>
+                        Zložitejší panel, na ktorom si môžeme predviesť ajax dotazy na server (close/toggle). Panel
+                        označíme pomocou <i><h:outputLink value="http://blog.hatemalimam.com/intro-to-primefaces-widgetvar/">
+                        widgetVar</h:outputLink></i>, nastavíme toggable, closable na true.
+                    </p>
+                    <textarea rows="5" cols="120">
+                        &lt;p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="420"
+                                 closeSpeed="420" widgetVar="panel" &gt;
+                    </textarea>
+                    <p>
+                        Namapujeme eventy na listenery:
+                    </p>
+                    <textarea rows="5" cols="120">
+                        &lt;p:ajax event="close" listener="{LayoutBean.onClose}" update="messages" /&gt;
+                        &lt;p:ajax event="toggle" listener="{LayoutBean.onToggle}" update="messages" /&gt;
+                    </textarea>
+                    <p>
+                        Následne vytvoríme menu <i>Settings</i>, kde môžeme namapovať onClick eventy. Napríklad"
+                    </p>
+                    <textarea rows="3" cols="120">
+                        &lt;p:menuitem value="Toggle" url="#" icon="pi pi-clone" onclick="PF('panel').toggle()" /&gt;
+                    </textarea>
+                    <p>
+                        Celá komponenta:
+                    </p>
+                    <textarea rows="25" cols="120">
+                        &lt;p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="420"
+                                 closeSpeed="420" widgetVar="panel" &gt;
+
+                            &lt;p:ajax event="close" listener="{LayoutBean.onClose}" update="messages" /&gt;
+                            &lt;p:ajax event="toggle" listener="{LayoutBean.onToggle}" update="messages" /&gt;
+
+                            &lt;h:panelGrid columns="2" cellpadding="10"&gt;
+                                &lt;h:outputText value="text" /&gt;
+                                &lt;h:outputText value="Lorem Ipsum a tak dalej" /&gt;
+                            &lt;/h:panelGrid&gt;
+
+                            &lt;f:facet name="options"&gt;
+                                &lt;p:menu&gt;
+                                    &lt;p:submenu label="Settings"&gt;
+                                        &lt;p:menuitem value="Toggle" url="#" icon="pi pi-clone"
+                                                onclick="PF('panel').toggle()" /&gt;
+                                        &lt;p:menuitem value="Remove" url="#" icon="pi pi-times"
+                                                onclick="PF('panel').close()" /&gt;
+                                    &lt;/p:submenu&gt;
+                                &lt;/p:menu&gt;
+                            &lt;/f:facet&gt;
+                        &lt;/p:panel&gt;
+                    </textarea>
                     <h:form>
                         <p:growl id="messages" showDetail="true" />
                         <p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="420"
@@ -106,16 +178,20 @@
                     </h:form>
 
                     <h2>Sample layout CSS</h2>
+                    <p>
+                        Podobný layout využíva táto aplikácia. Jednotlivé elementy <b>div</b> dedia primefaces triedy, vďaka
+                        ktorím sa elementy pozicujú.
+                    </p>
                     <div class="ui-g layout">
                         <div class="ui-g-12">
-                            Header
+                            Logo
                         </div>
                         <div class="ui-g-12 ui-md-2">
-                            Left Bar
+                            Menu
                         </div>
                         <div class="ui-g-12 ui-md-10 ui-g-nopad">
                             <div class="ui-g-12">
-                                Menu
+                                Main Title
                             </div>
                             <div class="ui-g-12 ui-g-nopad">
                                 <div class="ui-g">

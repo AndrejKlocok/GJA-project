@@ -1,24 +1,74 @@
 package cz.vutbr.fit.bean.PrimeFaces;
 
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import java.io.*;
+
+import static com.mysql.cj.conf.PropertyKey.PATH;
 
 @ManagedBean(name = "FileImagesBean")
 public class File_ImagesBean {
-    UploadedFile uploadedFile;
+    private UploadedFile uploadedFile;
 
+    private StreamedContent downloadFile;
 
+    /**
+     * Post construct initialize download image from resources
+     */
+    @PostConstruct
+    public void Load() {
+        InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/resources/pictures/jayZ.jpg");
+        downloadFile = new DefaultStreamedContent(stream, "image/jpg", "jayZ.jpg");
+    }
+
+    /**
+     * Method hadnles image upload event and saves image to /tmp directory
+     * @param event upload event
+     */
     public void handleFileUpload(FileUploadEvent event) {
         uploadedFile = event.getFile();
 
-        if(uploadedFile != null) {
-            FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+        //if chosen file is null return
+        if (uploadedFile == null) {
+            return;
+        }
+
+        FacesMessage msg = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
+        String filePath = "/tmp/" + uploadedFile.getFileName();
+
+        try {
+            //save desired file to /tmp directory
+            FileOutputStream out = new FileOutputStream(new File(filePath));
+            out.write(uploadedFile.getContents());
+            out.flush();
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            msg = new FacesMessage("Failure", "File not found");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            msg = new FacesMessage("Failure", "Error during write");
+        }
+        finally {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
+    }
+
+    public StreamedContent getDownloadFile() {
+        return downloadFile;
+    }
+
+    public void setDownloadFile(StreamedContent downloadFile) {
+        this.downloadFile = downloadFile;
     }
 
     public UploadedFile getUploadedFile() {

@@ -13,6 +13,9 @@
 </h:head>
 <h:body>
     <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/primefaces.png" style="margin: auto; display: block"/>
+        </div>
         <div class="ui-g-12 ui-md-2">
             <ui:include src="/ui/components/menu.xhtml"/>
         </div>
@@ -20,9 +23,28 @@
             <div class="ui-g-12 ui-g-nopad">
                 <div class="box">
                     <h1>Data</h1>
+                    <p>
+                        Na zobrazovanie dát, napríklad z databáze, je vhodné vužiť "vhodnú" komponentu. Primefaces nám
+                        ponúkajú napríklad DataTable, DataGrid...
+
+                    </p>
                     <h2>Classic data table</h2>
+                    <p>
+                        Použitie komponenty <i>dataTable</i> je celkom jednoduché, stačí do atribúti value umiestniť odkaz
+                        do beanu na list. Ďalej sa pracuje priamo s objektom.
+                    </p>
+                    <textarea rows="10" cols="120">
+                        &lt;p:dataTable id="table1" value="{DataBean.students}" var="student" style="width: 800px"&gt;
+                            &lt;p:column headerText="Login"&gt;
+                                &lt;h:outputText  value="{student.login}"/&gt;
+                            &lt;/p:column&gt;
+                        &lt;p:column headerText="Name"&gt;
+                                &lt;h:outputText  value="{student.name}"/&gt;
+                            &lt;/p:column&gt;
+                        &lt;/p:dataTable&gt;
+                    </textarea>
                     <h:form>
-                        <p:dataTable id="table1" value="#{DataBean.students}" var="student" style="width: 800px">
+                        <p:dataTable value="#{DataBean.students}" var="student" style="width: 800px">
                             <p:column headerText="Login">
                                 <h:outputText  value="#{student.login}"/>
                             </p:column>
@@ -33,6 +55,55 @@
                     </h:form>
 
                     <h2>Dynamic edit</h2>
+                    <p>
+                        Zmena hodnôt tabulky sa zíde pri rôznych administrátorských úpravách. Využije sa spomínaná komponenta
+                        <i>dataTable</i>. Pomocou ajax namapujeme eventy na príslušné listenery v beane.
+                    </p>
+                    <textarea rows="5" cols="120">
+                        &lt;p:ajax event="rowEdit" listener="{DataBean.onRowEdit}" update=":form:msgs" /&gt;
+                        &lt;p:ajax event="rowEditCancel" listener="{DataBean.onRowCancel}" update=":form:msgs" /&gt;
+                    </textarea>
+                    <p>
+                        V stĺpci tabulky použijeme komponentu <i>cellEditor</i>, kde klasicky využijeme output a input komponenty.
+                    </p>
+                    <textarea rows="14" cols="120">
+                        &lt;p:column headerText="Login"&gt;
+                                &lt;p:cellEditor&gt;
+                                    &lt;f:facet name="output">&lt;h:outputText value="{student.login}" /&gt;&lt;/f:facet&gt;
+                                    &lt;f:facet name="input"&gt;
+                                        &lt;p:inputText value="{student.login}" style="width:100%" label="Login"/&gt;
+                                    &lt;/f:facet&gt;
+                                &lt;/p:cellEditor&gt;
+                            &lt;/p:column&gt;
+                            ...
+                        &lt;p:column style="width:32px"&gt;
+                                &lt;p:rowEditor /&gt;
+                            &lt;/p:column&gt;
+                    </textarea>
+                    <p>
+                        Celký kód:
+                    </p>
+                    <textarea rows="20" cols="120">
+                        &lt;p:dataTable var="student" value="{DataBean.students}"
+                                     editable="true" style="margin-bottom:20px;width: 800px"&gt;
+
+                            &lt;p:ajax event="rowEdit" listener="{DataBean.onRowEdit}" update=":form:msgs" /&gt;
+                            &lt;p:ajax event="rowEditCancel" listener="{DataBean.onRowCancel}" update=":form:msgs" /&gt;
+
+                            &lt;p:column headerText="Login"&gt;
+                                &lt;p:cellEditor&gt;
+                                    &lt;f:facet name="output">&lt;h:outputText value="{student.login}" /&gt;&lt;/f:facet&gt;
+                                    &lt;f:facet name="input"&gt;
+                                        &lt;p:inputText value="{student.login}" style="width:100%" label="Login"/&gt;
+                                    &lt;/f:facet&gt;
+                                &lt;/p:cellEditor&gt;
+                            &lt;/p:column&gt;
+                            ...
+                        &lt;p:column style="width:32px"&gt;
+                                &lt;p:rowEditor /&gt;
+                            &lt;/p:column&gt;
+                        &lt;/p:dataTable&gt;
+                    </textarea>
                     <h:form id="form">
                         <p:growl id="msgs" showDetail="true"/>
 
@@ -69,6 +140,54 @@
                             </p:column>
                         </p:dataTable>
                     </h:form>
+                    <h2>DataGrid</h2>
+                    <p>
+                        Z primefaces môžeme využiť komponentu dataGrid, ktorá zobrazuje objekty z listu v gride.
+
+                    </p>
+                    <textarea rows="25" cols="120">
+                        &lt;p:dataGrid var="subject" value="{DataBean.subjects}" columns="2" layout="grid"
+                                    rows="3" paginator="true"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                    rowsPerPageTemplate="4,8,12" style="width: 800px"&gt;
+
+                            &lt;f:facet name="header"&gt;
+                                Subjects of VUT
+                            &lt;/f:facet&gt;
+
+                            &lt;p:panel header="{subject.id_subject}" style="text-align:center"&gt;
+                                &lt;h:panelGrid columns="2" style="width:100%"&gt;
+                                    &lt;h:outputText value="Name:"/&gt;
+                                    &lt;h:outputText value="{subject.name}"/&gt;
+                                    &lt;h:outputText value="Faculty:"/&gt;
+                                    &lt;h:outputText value="{subject.subjectFaculty.name}"/&gt;
+                                    &lt;h:outputText value="Created:"/&gt;
+                                    &lt;h:outputText value="{subject.created}"/&gt;
+                                &lt;/h:panelGrid&gt;
+                            &lt;/p:panel&gt;
+                        &lt;/p:dataGrid&gt;
+                    </textarea>
+                    <p:dataGrid var="subject" value="#{DataBean.subjects}" columns="2" layout="grid"
+                                rows="3" paginator="true"
+                                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="4,8,12" style="width: 800px">
+
+                        <f:facet name="header">
+                            Subjects of VUT
+                        </f:facet>
+
+                        <p:panel header="#{subject.id_subject}" style="text-align:center">
+                            <h:panelGrid columns="2" style="width:100%">
+                                <h:outputText value="Name:"/>
+                                <h:outputText value="#{subject.name}"/>
+                                <h:outputText value="Faculty:"/>
+                                <h:outputText value="#{subject.subjectFaculty.name}"/>
+                                <h:outputText value="Created:"/>
+                                <h:outputText value="#{subject.created}"/>
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:dataGrid>
                 </div>
             </div>
         </div>

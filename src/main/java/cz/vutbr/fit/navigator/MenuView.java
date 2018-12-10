@@ -23,18 +23,18 @@ public class MenuView {
         DefaultSubMenu rmiMenu = new DefaultSubMenu("RMI");
         DefaultSubMenu jmsMenu = new DefaultSubMenu("JMS");
         DefaultSubMenu primeMenu = new DefaultSubMenu("Primefaces");
-        DefaultSubMenu prettyMenu = new DefaultSubMenu("Prettyfaces");
 
         //MAIN
         item = new DefaultMenuItem("Home_Welcome");
         item.setCommand("#{menuView.home_welcome}");
         mainMenu.addElement(item);
 
-        item = new DefaultMenuItem("Home_SetUP");
-        item.setCommand("#{menuView.home_setUp}");
-        mainMenu.addElement(item);
-
         //Primefaces
+        item = new DefaultMenuItem("PR_Setup");
+        item.setCommand("#{menuView.pr_setup}");
+        primeMenu.addElement(item);
+
+
         item = new DefaultMenuItem("Inputs");
         item.setCommand("#{menuView.inputs}");
         primeMenu.addElement(item);
@@ -55,24 +55,11 @@ public class MenuView {
         item.setCommand("#{menuView.filesImages}");
         primeMenu.addElement(item);
 
-        //PrettyFaces
-        item = new DefaultMenuItem("DragDrop");
-        item.setCommand("#{menuView.dragDrop}");
-        primeMenu.addElement(item);
-
-        item = new DefaultMenuItem("Push");
-        item.setCommand("#{menuView.push}");
-        primeMenu.addElement(item);
-
-        item = new DefaultMenuItem("RC");
-        item.setCommand("#{menuView.rc}");
-        primeMenu.addElement(item);
-
-        item = new DefaultMenuItem("Charts");
-        item.setCommand("#{menuView.charts}");
-        primeMenu.addElement(item);
-
         //JPA_Hibernate
+        item = new DefaultMenuItem("DB_SetUP");
+        item.setCommand("#{menuView.db_setUp}");
+        mainMenu.addElement(item);
+
         item = new DefaultMenuItem("Entity");
         item.setCommand("#{menuView.entity}");
         dbMenu.addElement(item);
@@ -113,7 +100,6 @@ public class MenuView {
 
         model.addElement(mainMenu);
         model.addElement(primeMenu);
-        model.addElement(prettyMenu);
         model.addElement(dbMenu);
         model.addElement(rmiMenu);
         model.addElement(jmsMenu);
@@ -126,10 +112,10 @@ public class MenuView {
     //Main Menu
     public String  home_welcome(){ return "/index"; }
 
-    public String  home_setUp(){ return "/ui/jsf/Home_Setup"; }
-
     //JPA_Hibernate
     public String  entity() { return "/ui/jsf/JPA_Hibernate/Entity"; }
+
+    public String  db_setUp(){ return "/ui/jsf/JPA_Hibernate/DB_Setup"; }
 
     public String  oneToOne(){
         return "/ui/jsf/JPA_Hibernate/OneToOne";
@@ -172,12 +158,5 @@ public class MenuView {
 
     public String filesImages(){ return "/ui/jsf/PrimeFaces/Files_Images";}
 
-    //PrettyFaces
-    public String charts(){ return "/ui/jsf/PrettyFaces/Charts";}
-
-    public String dragDrop(){ return "/ui/jsf/PrettyFaces/Drag_Drop";}
-
-    public String push(){ return "/ui/jsf/PrettyFaces/Push";}
-
-    public String rc(){ return "/ui/jsf/PrettyFaces/RemoteCommand";}
+    public String pr_setUp(){ return "/ui/jsf/PrimeFaces/PrimeFaces_SetUp";}
 }
