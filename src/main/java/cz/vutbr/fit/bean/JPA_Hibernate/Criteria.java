@@ -26,7 +26,6 @@ public class Criteria {
         this.students = students;
     }
 
-
     public Long getStudCount() {
         this.studCount = studentDAO.getDiscNameCount();
         return studCount;

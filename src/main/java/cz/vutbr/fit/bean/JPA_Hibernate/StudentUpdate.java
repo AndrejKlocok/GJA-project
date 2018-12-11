@@ -14,14 +14,23 @@ import java.util.List;
  */
 @ManagedBean(name = "StudentUpdate")
 public class StudentUpdate extends StudentFind {
-
+    /**
+     * Method update student state to database
+     */
     public void  updateStudent(){
+        //get student from db
         Student s = studentDAO.getStudent(login);
+        //if student does not exist
         if(s == null){
+            addMessage("Failure", "Entity was not found");
             return;
         }
+        //update properties
         s.setName(name);
-
-        studentDAO.updateStudent(s);
+        //call service
+        if(!studentDAO.updateStudent(s)){
+            addMessage("Failure", "Entity was not updated");
+        }
+        addMessage("Success", "Entity was updated");
     }
 }

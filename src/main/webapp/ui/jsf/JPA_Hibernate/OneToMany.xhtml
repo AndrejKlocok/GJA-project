@@ -31,7 +31,7 @@
                         , ktoré sú cudzími klúčami do spomínaných tabuliek (označené ako <i>fk_fakulty</i> a <i>fk_subject</i>).
                         pričom toto riešenie sa takmer zhoduje s využitím väzby N-N.
                     </p>
-                    <p:panelGrid columns="2">
+                    <p:panelGrid columns="1">
                         <pre><code class="java">
 @Entity
 public class Faculty {
@@ -82,62 +82,130 @@ public class Subject {
                             Pridanie predmetu do fakulty:
                         </p>
                         <pre><code class="java">
-//zistime meno fakulty
-Faculty f = facultyDAO.getFaculty(facultyName);
-if(f == null){
-    return;
+/**
+ * Method adds subject to faculty
+ */
+public void addSubjectToFaculty(){
+    //get faculty by name
+    Faculty f = facultyDAO.getFaculty(toFacultyAddSubj);
+    if(f == null){
+        addMessage("Faculty was not found", "");
+        return;
+    }
+
+    Subject subject ;
+    //get subject by name
+    subject = subjectDAO.getSubject(subjectName);
+
+    //if subject does not exists
+    if(subject != null){
+        addMessage("Failure", "Subject already exists");
+        return;
+    }
+
+    //create new subject
+    subject = new Subject(subjectName);
+    if(!subjectDAO.insert(subject)){
+        addMessage("Subject was not created", "");
+    }
+
+    //update associations
+    subject.setSubjectFaculty(f);
+    f.addSubject(subject);
+
+    //merge faculty new state
+    if(!facultyDAO.update(f)){
+        addMessage("Faculty was not updated", "");
+    }
+    //notify
+    addMessage("Success", "");
 }
+                        </code></pre>
+                        <p>
+                            Zmazanie predmetu
+                        </p>
+                        <pre><code class="java">
+/**
+ * Method deletes subject
+ */
+public void removeSubject(){
+    Faculty faculty;
+    Subject subject;
 
-Subject subject ;
-subject = subjectDAO.getSubject(subjectName);
+    //get subject by name
+    subject = subjectDAO.getSubject(subjectNameDel);
+    if(subject == null){
+        addMessage("Subject was not found", "");
+        return;
+    }
+    //get faculty from association between subj and faculty
+    faculty = subject.getSubjectFaculty();
 
-//zistime ci uz predmet existuje
-if(subject != null){
-    addMessage("Failure", "Subject already exists");
-    return;
+    //update associations
+    faculty.removeSubject(subject);
+    subject.setSubjectFaculty(null);
+
+    //merge faculty`s new state
+    if(!facultyDAO.update(faculty)){
+        addMessage("Faculty was not updated", "");
+    }
+
+    //remove subject
+    if(!subjectDAO.delete(subject.getName())){
+        addMessage("Subject was not created", "");
+    }
+    //notify
+    addMessage("Success", "");
 }
-
-//vytvorim predmet
-subject = new Subject(subjectName);
-subjectDAO.insert(subject);
-
-//aktualizujem vztahy
-subject.setSubjectFaculty(f);
-f.addSubject(subject);
-
-//mergnem fakultu
-facultyDAO.update(f);
                         </code></pre>
                     </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
 
                         <p:panelGrid columns="2">
+                            <f:facet name = "header">
+                                <h:outputText value = "Faculty"/>
+                            </f:facet>
                             <p:outputLabel for="facultyName" value="Faculty name:" />
                             <p:inputText id="facultyName" value="#{RSOneToMany.facultyName}" />
-
-                            <p:commandButton value="Create" icon="ui-icon-star" action="#{RSOneToMany.createFaculty}" ajax="false"/>
-                            <p:commandButton value="Remove Faculty" icon="ui-icon-star" action="#{RSOneToMany.removeFaculty}" ajax="false"/>
+                            <f:facet name = "footer">
+                                <h:panelGroup style = "display:block; text-align:center">
+                                    <p:commandButton value="Create" icon="ui-icon-star" action="#{RSOneToMany.createFaculty}" ajax="false"/>
+                                    <p:commandButton value="Remove Faculty" icon="ui-icon-star" action="#{RSOneToMany.removeFaculty}" ajax="false"/>
+                                </h:panelGroup>
+                            </f:facet>
                         </p:panelGrid>
 
 
                         <p:panelGrid columns="2">
                             <p:panelGrid columns="2">
+                                <f:facet name = "header">
+                                    <h:outputText value = "Add subject"/>
+                                </f:facet>
                                 <p:outputLabel for="subjectName" value="Subject name:" />
                                 <p:inputText id="subjectName" value="#{RSOneToMany.subjectName}"/>
 
                                 <p:outputLabel for="facultyNameAdd" value="Faculty name:" />
                                 <p:inputText id="facultyNameAdd" value="#{RSOneToMany.toFacultyAddSubj}" />
-
-                                <p:commandButton value="AddSubject" icon="ui-icon-star" action="#{RSOneToMany.addSubjectToFaculty}" ajax="false"/>
+                                <f:facet name = "footer">
+                                    <h:panelGroup style = "display:block; text-align:center">
+                                        <p:commandButton value="AddSubject" icon="ui-icon-star" action="#{RSOneToMany.addSubjectToFaculty}" ajax="false"/>
+                                    </h:panelGroup>
+                                </f:facet>
                             </p:panelGrid>
 
                             <p:panelGrid columns="2">
+                                <f:facet name = "header">
+                                    <h:outputText value = "Delete subject"/>
+                                </f:facet>
                                 <p:outputLabel for="subjectNameDelete" value="Subject name:" />
                                 <p:inputText id="subjectNameDelete" value="#{RSOneToMany.subjectNameDel}"/>
-                                <p:commandButton value="RemoveSubject" icon="ui-icon-star" action="#{RSOneToMany.removeSubject}" ajax="false"/>
+                                <f:facet name = "footer">
+                                    <h:panelGroup style = "display:block; text-align:center">
+                                        <p:commandButton value="RemoveSubject" icon="ui-icon-star" action="#{RSOneToMany.removeSubject}" ajax="false"/>
+                                    </h:panelGroup>
+                                </f:facet>
                             </p:panelGrid>
-
                         </p:panelGrid>
                     </h:form>
                     <h:form>

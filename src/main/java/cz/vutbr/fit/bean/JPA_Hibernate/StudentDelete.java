@@ -12,10 +12,23 @@ import java.util.Date;
 @ManagedBean(name = "StudentDelete")
 public class StudentDelete extends StudentBean{
 
+    /**
+     * Method deletes student from database if he exists
+     */
     public void deleteStudent(){
+        //get student from database
         Student student = studentDAO.getStudent(login);
-        if(student!=null){
-            studentDAO.deleteStudent(student);
+        //if exists
+        if (student == null) {
+            addMessage("Failure", "Entity was not found");
+            return;
         }
+
+        if(!studentDAO.deleteStudent(student)){
+            addMessage("Failure", "Entity was not deleted");
+        }
+
+        //notify gui
+        addMessage("Success", "Entity was deleted");
     }
 }

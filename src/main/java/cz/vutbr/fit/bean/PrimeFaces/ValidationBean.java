@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Managed bean for Validation page
+ */
 @ManagedBean(name = "ValidationBean")
 public class ValidationBean {
+    //managed properties with constrains
     @Size(min = 1, max = 10)
     private String field;
     @Min(0) @Max(100)
@@ -33,7 +37,11 @@ public class ValidationBean {
     private String colorInline;
     private int sliderNumber;
 
-
+    /**
+     *
+     * @param text
+     * @return
+     */
     public List<String> autoComplete(String text) {
         List<String> output = new ArrayList<String>();
         for(int i = 0; i < 10; i++) {
@@ -42,21 +50,36 @@ public class ValidationBean {
         return output;
     }
 
+    /**
+     * Method is listener to Rate event from rating component
+     * @param rateEvent rateEvent
+     */
     public void onRate(RateEvent rateEvent) {
+        //notify gui with faces message
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Rate Event", "You rated:" + ((Integer) rateEvent.getRating()).intValue());
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
+    /**
+     * Method is listener to on cancel event from rating component
+     */
     public void onCancel() {
+        //notify gui with faces message
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cancel Event", "Rate Reset");
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
+    /**
+     * Method is listener to on input change event from slider component
+     * @param event
+     */
     public void onInputChanged(ValueChangeEvent event) {
+        //notify gui with faces message
         FacesMessage message = new FacesMessage("Input Changed", "Value: " + event.getNewValue());
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
+    //Getters and setters
     public int getSliderNumber() {
         return sliderNumber;
     }

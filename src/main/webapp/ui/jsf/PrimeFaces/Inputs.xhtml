@@ -30,7 +30,8 @@
                     <p>
                         Príklad takejto služby v <i>StudentDAO</i> objekte:
                     </p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 //Pop Up message
 public void addMessage(String summary, String detail) {
     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
@@ -47,23 +48,28 @@ public Student getStudent(String loginParam) {
     }
     ...
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Následne v .xhtml súbore stačí pridať:
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;h:form&gt;
     &lt;p:growl id="messages" showDetail="true"/&gt;
     ...
 &lt;/h:form&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h2>Input Mask</h2>
                     <p>
                         Validuje vstupné dáta, používa niečo ako "regulárny" výraz.
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:inputMask id="phone" value="{ValidationBean.telephoneString}" mask="9999-999-999"/&lt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <h:panelGrid columns="2" cellpadding="5">
                             <p:outputLabel for="phone" value="Phone:" />
@@ -74,8 +80,9 @@ public Student getStudent(String loginParam) {
                     <p>
                         Validácia pomocou Managed Beanu, ktorý obsahuje anotované vlastnosti. Napríklad:
                     </p>
+                    <p:panelGrid columns="1">
                     <pre><code class="java">
-@ManagedBean(name = "ValidationBean")
+@ManagedBean(name =     "ValidationBean")
 public class ValidationBean {
     @Size(min = 1, max = 10)
     private String field;
@@ -89,12 +96,14 @@ public class ValidationBean {
     private String regex;
     @NotNull
     private Boolean radioBtn;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Na tento bean môžeme jednoducho namapovať odpovedajúce .xhtml. Následne overenie formulára
                         pomocou <i>CommandButtona</i>.
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;h:form&gt;
 &lt;p:panel header="Inputs" style="width: 600px"&gt;
     &lt;p:outputLabel for="@next" value="String @Size" /&gt;
@@ -103,7 +112,8 @@ public class ValidationBean {
     ....
     &lt;p:commandButton value="Check" ajax="false" validateClient="true"/&gt;
 
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:panel header="Inputs" style="width: 600px">
                             <p:outputLabel for="@next" value="String @Size" />
@@ -144,8 +154,8 @@ public class ValidationBean {
                         Autocomplete má za vstup reťazec, na ktorý môžeme adekvátne reagovať. Napríklad jednoduché pridávanie čísel
                         za vložený text. (Niektoré znaky boli odstránené aby to preprocesor mohol zobrať...)
                     </p>
-
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 public List&lt;String&gt; autoComplete(String text) {
     List&lt;String&gt; output = new ArrayList&lt;String&gt;();
     for(int i = 0; i &lt; 10; i++) {
@@ -153,17 +163,17 @@ public List&lt;String&gt; autoComplete(String text) {
     }
     return output;
 }
-                    </code></pre>
+                        </code></pre>
 
-                    <pre><code class="xml">
+                        <pre><code class="xml">
 &lt;h:form&gt;
 &lt;p:growl id="msgs" showDetail="true" /&gt;
 &lt;h:panelGrid columns="2" cellpadding="5"&gt;
     &lt;p:outputLabel value="LimitedResults:" for="limited" /&gt;
     &lt;p:autoComplete id="limited" maxResults="4" value= ValidationBean.autocomplete1 completeMethod= ValidationBean.autoComplete /&gt;
 
-                    </code></pre>
-
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:growl id="msgs" showDetail="true" />
                         <h:panelGrid columns="2" cellpadding="5">

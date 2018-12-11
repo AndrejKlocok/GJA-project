@@ -31,8 +31,6 @@ public class HQL {
         this.subjects = subjects;
     }
 
-
-
     public void setSubjCount(Long subjCount) {
         this.subjCount = subjCount;
     }

@@ -39,7 +39,8 @@
                     <p>
                         V celku jednoduché:
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:accordionPanel multiple="true" &gt;
     &lt;p:tab title="Header1"&gt;
         &lt;h:panelGrid columns="2" cellpadding="10"&gt;
@@ -49,7 +50,8 @@
     &lt;/p:tab&gt;
     ...
 &lt;/p:accordionPanel&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:accordionPanel multiple="true" >
                             <p:tab title="Header1">
@@ -78,7 +80,8 @@
                         Lepšie využitie ako data model s beanom. Využijeme <i>Hibernate</i> a model <i>Faculty</i>, kde
                         zobrazíme jednotlivé predmety fakulty pomocou <i>accordionPanel</i>. Príklad kódu vyzerá nasledovne:
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:accordionPanel value="{LayoutBean.faculties}" var="faculty"&gt;
     &lt;p:tab title="{faculty.name}"&gt;
         &lt;p:dataTable var="subject" value="{faculty.subjectList}" style="width: 300px"&gt;
@@ -92,7 +95,8 @@
         &lt;/p:dataTable&gt;
     &lt;/p:tab&gt;
 &lt;/p:accordionPanel&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:accordionPanel value="#{LayoutBean.faculties}" var="faculty">
                             <p:tab title="#{faculty.name}">
@@ -117,27 +121,34 @@
                         označíme pomocou <i><h:outputLink value="http://blog.hatemalimam.com/intro-to-primefaces-widgetvar/">
                         widgetVar</h:outputLink></i>, nastavíme toggable, closable na true.
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="420"
          closeSpeed="420" widgetVar="panel" &gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Namapujeme eventy na listenery:
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:ajax event="close" listener="{LayoutBean.onClose}" update="messages" /&gt;
 &lt;p:ajax event="toggle" listener="{LayoutBean.onToggle}" update="messages" /&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Následne vytvoríme menu <i>Settings</i>, kde môžeme namapovať onClick eventy. Napríklad"
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:menuitem value="Toggle" url="#" icon="pi pi-clone" onclick="PF('panel').toggle()" /&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Celá komponenta:
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="420"
          closeSpeed="420" widgetVar="panel" &gt;
 
@@ -160,7 +171,8 @@
         &lt;/p:menu&gt;
     &lt;/f:facet&gt;
 &lt;/p:panel&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true" />
                         <p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="420"

@@ -31,7 +31,8 @@
                     <p>
                         Príklad použitého presistence.xml
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;persistence-unit name=&quot;StudentsPU&quot; transaction-type=&quot;RESOURCE_LOCAL&quot;&gt;
     &lt;provider&gt;org.hibernate.jpa.HibernatePersistenceProvider&lt;/provider&gt;
     &lt;class&gt;cz.vutbr.fit.models.Student&lt;/class&gt;
@@ -45,17 +46,18 @@
         &lt;property name=&quot;javax.persistence.jdbc.password&quot; value=&quot;heslo&quot; /&gt;
     &lt;/properties&gt;
 &lt;/persistence-unit&gt;
-                    </code></pre>
-
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Vytvorenie <i>entity manager</i> s ktorým môžeme pracovať s perzistentnými objektami.
                     </p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 //JPA
 protected EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
 protected EntityManager em = factory.createEntityManager();
-                    </code></pre>
-
+                        </code></pre>
+                    </p:panelGrid>
                     <h2>Hibernate</h2>
                     <p>
                         Hibernate používa konfiguračný súbor <i>hibernate.cfg.xml </i>. Tento súbor treba umiestniť do adresára
@@ -64,7 +66,8 @@ protected EntityManager em = factory.createEntityManager();
                     <p>
                         Príklad použitého <i>hibernate.cfg.xml </i>.
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;session-factory&gt;
     &lt;!-- Database connection settings --&gt;
     &lt;property name=&quot;connection.driver_class&quot;&gt;com.mysql.jdbc.Driver&lt;/property&gt;
@@ -92,18 +95,22 @@ protected EntityManager em = factory.createEntityManager();
     &lt;mapping class=&quot;cz.vutbr.fit.models.Subject&quot;/&gt;
     &lt;mapping class=&quot;cz.vutbr.fit.models.Faculty&quot;/&gt;
 &lt;/session-factory&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Hibernate využíva <i>Session</i>  pre správu perzistentných objektov.
                     </p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 //Hibernate
 protected SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Vytvorenie <i>Session Factory</i> z konfiguračného súboru môže vypadať nasledovne:
                     </p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 // Vytvorenie serviceRegistry z configuracneho subora hibernate.cfg.xml
 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()//
         .configure("hibernate.cfg.xml").build();
@@ -112,7 +119,8 @@ ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()//
 Metadata metadata = new MetadataSources(serviceRegistry).getMetadataBuilder().build();
 
 return metadata.getSessionFactoryBuilder().build();
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                 </div>
             </div>
         </div>

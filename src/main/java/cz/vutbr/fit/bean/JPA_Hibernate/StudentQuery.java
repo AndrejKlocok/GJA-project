@@ -16,5 +16,7 @@ public class StudentQuery extends StudentUpdate{
      */
     public void fixStudentvalues(){
         studentDAO.namedUpdate();
+        //notify
+        addMessage("Success", "Query run completed");
     }
 }

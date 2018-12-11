@@ -11,11 +11,21 @@ import java.util.Date;
  */
 @ManagedBean(name = "StudentInsert")
 public class StudentInsert extends StudentBean{
-
+    /**
+     * Add student to database
+     */
     public void addStudent(){
+        //Create student
         Student student = new Student(name, login);
+        //insert student to database
+        if(!studentDAO.inserStudent(student)){
+            //notify
+            addMessage("Failure", "Entity was not created");
+            return;
+        }
+        //notify
+        addMessage("Success", "Entity was created");
 
-        studentDAO.inserStudent(student);
     }
 
 }

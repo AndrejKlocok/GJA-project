@@ -53,12 +53,14 @@
                     <p>
                         Priložený skript inicializuje databazu GJA.
                     </p>
-                    <pre><code class="sql">
+                    <p:panelGrid columns="1">
+                        <pre><code class="sql">
 CREATE USER user69@localhost IDENTIFIED BY 'heslo';
 GRANT ALL PRIVILEGES ON mydatabase.* TO 'user69'@'localhost';
 FLUSH PRIVILEGES;
 
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                 </div>
             </div>
         </div>

@@ -33,13 +33,13 @@
                         V xhtml súbore využijeme komponentu <i>fileUpload</i> s obmedzením na velkosť, počet súborov a regex. V beane
                         máme metódu <i>handleFileUpload</i>, ktorá súracuje obrázok.
                     </p>
-
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:fileUpload fileUploadListener= "{FileImagesBean.handleFileUpload}" mode="advanced"
               sizeLimit="100000" fileLimit="3"
               allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /&gt;
-                    </code></pre>
-                    <pre><code class="java">
+                        </code></pre>
+                        <pre><code class="java">
 public void handleFileUpload(FileUploadEvent event) {
     uploadedFile = event.getFile();
 
@@ -73,8 +73,8 @@ public void handleFileUpload(FileUploadEvent event) {
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 }
-                    </code></pre>
-
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true" />
 
@@ -91,14 +91,14 @@ public void handleFileUpload(FileUploadEvent event) {
                         vnorenú uprostred <i>command buttonu</i>. V beane sa ihned po jeho vytvoreni ( @PostConstruct) načíta
                         obrázok z resources.
                     </p>
-
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:commandButton value="Download" ajax="false"
     onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down"&gt;
         &lt;p:fileDownload value="{FileImagesBean.downloadFile}" /&gt;
     &lt;/p:commandButton&gt;
-                    </code></pre>
-                    <pre><code class="java">
+                        </code></pre>
+                        <pre><code class="java">
 @PostConstruct
 public void Load() {
     InputStream stream = FacesContext.getCurrentInstance()
@@ -107,7 +107,8 @@ public void Load() {
     downloadFile = new DefaultStreamedContent(stream, "image/jpg", "jayZ.jpg");
 }
 
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:panelGrid columns="1" style="width: 600px;">
                             <p:commandButton value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">

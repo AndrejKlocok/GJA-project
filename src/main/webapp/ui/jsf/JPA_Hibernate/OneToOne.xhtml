@@ -62,10 +62,90 @@ public class ISIC {
                         </code></pre>
                     </p:panelGrid>
 
+                    <p>
+                        Databázové objekty fungujú podobne ako sme spomínali v kapitole CRUD. Ukážeme si implementáciu
+                        beanov.
+                    </p>
+                    <p>
+                        Pridanie ISIC študentovi:
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    /**
+     * Method adds isic to Student
+     */
+    public void addIsicToStudent(){
+        Student s;
+        ISIC isic;
+
+        //find instance in db
+        s = studentDAO.getStudent(login);
+        //if it doesnot exist create it
+        if(s == null){
+            addMessage("Entity already exists", "");
+            return;
+        }
+        //One to one association
+        isic = new ISIC(isicNumb, faculty);
+        //insert isic into db
+        if(!isicDAO.inserIsic(isic)){
+            addMessage("Isic was not created", "");
+        }
+        //One to one association
+        s.setIsic(isic);
+
+        //update student
+        if(!studentDAO.updateStudent(s)){
+            addMessage("Student was not updated", "");
+        }
+        //notify
+        addMessage("Success", "");
+    }
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Odstánenie ISIC:
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+  /**
+     * Method removes isic
+     */
+    public void removeIsic(){
+        ISIC isic;
+        Student student;
+
+        //get student obj by isic number
+        student = studentDAO.getStudentByISIC(isicNumbDel);
+        if(student == null){
+            addMessage("Student not found", "");
+            return;
+        }
+        //get isic from student obj
+        isic = student.getIsic();
+
+        //update association
+        student.setIsic(null);
+        if(!studentDAO.updateStudent(student)){
+            addMessage("Student was not updated", "");
+        }
+
+        //delete obj
+        if(!isicDAO.deleteIsic(isic.getIsic_number())){
+            addMessage("Isic was not deleted", "");
+        }
+        //notify
+        addMessage("Success", "");
+    }
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
                         <p:panelGrid columns="2">
                             <p:panelGrid columns="2">
+                                <f:facet name = "header">
+                                    <h:outputText value = "Add isic to Student"/>
+                                </f:facet>
                                 <p:outputLabel for="login" value="Student login:" />
                                 <p:inputText id="login" value="#{RSOneToOne.login}" />
 
@@ -78,6 +158,9 @@ public class ISIC {
                                 <p:commandButton value="AddIsic" icon="ui-icon-star" action="#{RSOneToOne.addIsicToStudent}" ajax="false"/>
                                 </p:panelGrid>
                             <p:panelGrid columns="2">
+                                <f:facet name = "header">
+                                    <h:outputText value = "Remove Isic"/>
+                                </f:facet>
                                 <p:outputLabel for="isicNumbRemove" value="Isic:" />
                                 <p:inputText id="isicNumbRemove" value="#{RSOneToOne.isicNumbDel}" />
                                 <p:commandButton value="RemoveIsic" icon="ui-icon-star" action="#{RSOneToOne.removeIsic}" ajax="false"/>
@@ -85,8 +168,12 @@ public class ISIC {
                             </p:panelGrid>
                         </p:panelGrid>
                     </h:form>
+
                     <h:form>
                         <p:dataTable id="table1" value="#{StudentView.students}" var="student" style="width: 800px">
+                            <f:facet name = "header">
+                                <h:outputText value = "Students with ISIC"/>
+                            </f:facet>
                             <p:column headerText="Login">
                                 <h:outputText  value="#{student.login}"/>
                             </p:column>

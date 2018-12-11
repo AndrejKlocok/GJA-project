@@ -15,7 +15,7 @@ import java.util.List;
  * Managed bean for OneToMany page
  */
 @ManagedBean(name = "RSOneToMany")
-public class RSOneToMany {
+public class RSOneToMany extends NotifyGui{
     //db objects
     private FacultyDAO facultyDAO = new FacultyDAO();
     private SubjectDAO subjectDAO = new SubjectDAO();
@@ -32,7 +32,11 @@ public class RSOneToMany {
      */
     public void createFaculty(){
         Faculty faculty = new Faculty(facultyName);
-        facultyDAO.insert(faculty);
+
+        if(!facultyDAO.insert(faculty)){
+            addMessage("Faculty was not created", "");
+        }
+        addMessage("Success", "");
     }
 
     /**
@@ -44,10 +48,14 @@ public class RSOneToMany {
         //get faculty object by name
         faculty = facultyDAO.getFaculty(facultyName);
         if(faculty == null){
+            addMessage("Faculty was not found", "");
             return;
         }
 
-        facultyDAO.delete(faculty.getName());
+        if(!facultyDAO.delete(faculty.getName())){
+            addMessage("Faculty was not deleted", "");
+        }
+        addMessage("Success", "");
     }
 
     /**
@@ -55,7 +63,11 @@ public class RSOneToMany {
      */
     public void createSubject(){
         Subject subject = new Subject(subjectName);
-        subjectDAO.insert(subject);
+
+        if(!subjectDAO.insert(subject)){
+            addMessage("Subject was not created", "");
+        }
+        addMessage("Success", "");
     }
 
     /**
@@ -68,6 +80,7 @@ public class RSOneToMany {
         //get subject by name
         subject = subjectDAO.getSubject(subjectNameDel);
         if(subject == null){
+            addMessage("Subject was not found", "");
             return;
         }
         //get faculty from association between subj and faculty
@@ -78,10 +91,16 @@ public class RSOneToMany {
         subject.setSubjectFaculty(null);
 
         //merge faculty`s new state
-        facultyDAO.update(faculty);
+        if(!facultyDAO.update(faculty)){
+            addMessage("Faculty was not updated", "");
+        }
 
         //remove subject
-        subjectDAO.delete(subject.getName());
+        if(!subjectDAO.delete(subject.getName())){
+            addMessage("Subject was not created", "");
+        }
+        //notify
+        addMessage("Success", "");
     }
 
     /**
@@ -91,6 +110,7 @@ public class RSOneToMany {
         //get faculty by name
         Faculty f = facultyDAO.getFaculty(toFacultyAddSubj);
         if(f == null){
+            addMessage("Faculty was not found", "");
             return;
         }
 
@@ -106,14 +126,20 @@ public class RSOneToMany {
 
         //create new subject
         subject = new Subject(subjectName);
-        subjectDAO.insert(subject);
+        if(!subjectDAO.insert(subject)){
+            addMessage("Subject was not created", "");
+        }
 
         //update associations
         subject.setSubjectFaculty(f);
         f.addSubject(subject);
 
         //merge faculty new state
-        facultyDAO.update(f);
+        if(!facultyDAO.update(f)){
+            addMessage("Faculty was not updated", "");
+        }
+        //notify
+        addMessage("Success", "");
     }
 
     //getters and setters of properties

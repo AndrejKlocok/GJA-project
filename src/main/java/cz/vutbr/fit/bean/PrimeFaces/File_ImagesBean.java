@@ -12,11 +12,13 @@ import javax.faces.context.FacesContext;
 import java.io.*;
 
 import static com.mysql.cj.conf.PropertyKey.PATH;
-
+/**
+ * Managed bean for Files and imagespage
+ */
 @ManagedBean(name = "FileImagesBean")
 public class File_ImagesBean {
+    //files
     private UploadedFile uploadedFile;
-
     private StreamedContent downloadFile;
 
     /**

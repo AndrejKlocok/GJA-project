@@ -31,23 +31,45 @@
                     <p>
                         Dotaz na získanie všetkých objektov <i>Subject</i>
                     </p>
-                    <pre><code class="java">
-Session session = sessionFactory.getCurrentSession();
-List&lt;Subject&gt; subjects = new ArrayList&lt;&gt;();
-Transaction tr = session.getTransaction();
-String hql = "FROM Subject AS S";
-Query query = session.createQuery(hql);
-try {
-    tr.begin();
-    subjects =  query.setMaxResults(50).list();
-    tr.commit();
-    return subjects;
-}
-                    </code></pre>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+/**
+ * Method returns list of all subjects in db
+ * @return list of subjects
+ */
+public List&lt;Subject&gt; getAll(){
+    //get session
+    Session session = sessionFactory.getCurrentSession();
+    //init list
+    List&lt;Subject&gt; subjects = new ArrayList&lt;&gt;();
+    //get transaction
+    Transaction tr = session.getTransaction();
+    //query
+    String hql = "FROM Subject AS S";
 
+    try {
+        //begin transaction
+        tr.begin();
+        //create query
+        Query query = session.createQuery(hql);
+        //execute query and get results
+        subjects =  query.setMaxResults(50).list();
+        tr.commit();
+        return subjects;
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+        return subjects;
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
                         <p:dataTable id="table1" value="#{HQL.subjects}" var="subj" style="max-width: 800px">
+                            <f:facet name = "header">
+                                <h:outputText value = "Subjects"/>
+                            </f:facet>
                             <p:column headerText="Id">
                                 <h:outputText  value="#{subj.id_subject}"/>
                             </p:column>
@@ -62,26 +84,41 @@ try {
                     <p>
                         Vyhladanie počtu predmetov v danej fakulte. Vzťah fakulty a predmetu je reprezentovaný väzobnou tabulkou.
                     </p>
-
-                    <pre><code class="java">
-Session session = sessionFactory.getCurrentSession();
-Transaction tr = session.getTransaction();
-String hql = "Select count(*) AS subjects From Faculty F Join Faculty_Subject FS " +
-        "ON(F.id_faculty=FS.fk_faculty) Join Subject S ON(S.id_subject=FS.fk_subject)"+
-        "where F.name = :name  Group By F.name";
-Query query = session.createQuery(hql).setParameter("name", faculty);
-int count = 0;
-
-
-try {
-    tr.begin();
-    count = (int) query.getSingleResult();
-    tr.commit();
-    return count;
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+/**
+ * Method returns count of all subjects
+ * @return Long count
+ */
+public Long getSubjectCount(){
+    //get session
+    Session session = sessionFactory.getCurrentSession();
+    //get transaction
+    Transaction tr = session.getTransaction();
+    //query
+    String hql = "Select count(*) AS subjects From Subject ";
+    //count
+    Long count = 0L;
+    try {
+        //begin transaction
+        tr.begin();
+        //create query
+        Query query = session.createQuery(hql);
+        //execute query and get single result
+        count = (Long) query.getSingleResult();
+        tr.commit();
+        return count;
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+        return count;
+    }
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:panelGrid columns="2">
+
                             <p:outputLabel value="Subj count" />
                             <p:outputLabel value= "#{HQL.subjCount}" />
                         </p:panelGrid>

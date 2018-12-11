@@ -32,7 +32,8 @@
                     <p>
                         Dotaz na študentov, ktorí majú ISIC, zoradený podľa mena.
                     </p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 public List&lt;Student&gt; getStudentsWithIsic(){
     Session session = sessionFactory.getCurrentSession();
     Transaction tr = session.getTransaction();
@@ -53,9 +54,13 @@ public List&lt;Student&gt; getStudentsWithIsic(){
         return students;
     }
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:dataTable id="table2" value="#{Criteria.students}" var="student" style="width: 800px">
+                            <f:facet name = "header">
+                                <h:outputText value = "Students"/>
+                            </f:facet>
                             <p:column headerText="Login">
                                 <h:outputText  value="#{student.login}"/>
                             </p:column>
@@ -71,8 +76,8 @@ public List&lt;Student&gt; getStudentsWithIsic(){
                     <p>
                         Dotaz na získanie počtu študentov, ktorí majú rôzne meno a ich login začína na x.
                     </p>
-
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 public Long getDiscNameCount(){
     Session session = sessionFactory.getCurrentSession();
     Transaction tr = session.getTransaction();
@@ -93,7 +98,8 @@ public Long getDiscNameCount(){
         return count;
     }
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:panelGrid columns="2">
                             <p:outputLabel value="Students count" />
@@ -108,7 +114,8 @@ public Long getDiscNameCount(){
                     <p>
                         Dotaz na získanie všetkých študentov, ktorí majú login začínajúci na x, zoradený podľa loginu.
                     </p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 public List&lt;Student&gt; getStudentsWithXlogin(){
     //get transaction
     EntityTransaction tr = em.getTransaction();
@@ -135,9 +142,13 @@ public List&lt;Student&gt; getStudentsWithXlogin(){
         return students;
     }
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:dataTable id="table3" value="#{Criteria.studentsWithXlogin}" var="student" style="width: 800px">
+                            <f:facet name = "header">
+                                <h:outputText value = "Students"/>
+                            </f:facet>
                             <p:column headerText="Login">
                                 <h:outputText  value="#{student.login}"/>
                             </p:column>

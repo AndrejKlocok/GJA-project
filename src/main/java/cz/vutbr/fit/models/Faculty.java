@@ -21,7 +21,6 @@ public class Faculty {
             joinColumns = {@JoinColumn(name = "fk_faculty", referencedColumnName = "id_faculty")},
             inverseJoinColumns = {@JoinColumn(name = "fk_subject", referencedColumnName = "id_subject")}
     )
-
     private List<Subject> subjectList = new ArrayList<>();
 
     public Faculty(){}

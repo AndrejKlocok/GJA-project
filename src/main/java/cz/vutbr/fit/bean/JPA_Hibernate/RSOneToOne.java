@@ -12,7 +12,7 @@ import java.util.Date;
  * Managed bean for RSOneToOne page
  */
 @ManagedBean(name = "RSOneToOne")
-public class RSOneToOne {
+public class RSOneToOne extends NotifyGui{
     //db repositories
     private StudentDAO studentDAO = new StudentDAO();
     private IsicDAO isicDAO = new IsicDAO();
@@ -34,16 +34,24 @@ public class RSOneToOne {
         s = studentDAO.getStudent(login);
         //if it doesnot exist create it
         if(s == null){
+            addMessage("Entity already exists", "");
             return;
         }
         //One to one association
         isic = new ISIC(isicNumb, faculty);
         //insert isic into db
-        isicDAO.inserIsic(isic);
+        if(!isicDAO.inserIsic(isic)){
+            addMessage("Isic was not created", "");
+        }
         //One to one association
         s.setIsic(isic);
 
-        studentDAO.updateStudent(s);
+        //update student
+        if(!studentDAO.updateStudent(s)){
+            addMessage("Student was not updated", "");
+        }
+        //notify
+        addMessage("Success", "");
     }
 
     /**
@@ -56,6 +64,7 @@ public class RSOneToOne {
         //get student obj by isic number
         student = studentDAO.getStudentByISIC(isicNumbDel);
         if(student == null){
+            addMessage("Student not found", "");
             return;
         }
         //get isic from student obj
@@ -63,10 +72,16 @@ public class RSOneToOne {
 
         //update association
         student.setIsic(null);
-        studentDAO.updateStudent(student);
+        if(!studentDAO.updateStudent(student)){
+            addMessage("Student was not updated", "");
+        }
 
         //delete obj
-        isicDAO.deleteIsic(isic.getIsic_number());
+        if(!isicDAO.deleteIsic(isic.getIsic_number())){
+            addMessage("Isic was not deleted", "");
+        }
+        //notify
+        addMessage("Success", "");
     }
 
     //getters and setters of properties

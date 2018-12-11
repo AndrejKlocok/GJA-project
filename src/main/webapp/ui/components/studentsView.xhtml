@@ -8,6 +8,9 @@
 
         <h:form>
             <p:dataTable id="table1" value="#{StudentView.students}" var="student" style="width: 800px">
+                <f:facet name = "header">
+                    <h:outputText value = "Students"/>
+                </f:facet>
                 <p:column headerText="Id">
                     <h:outputText  value="#{student.id}"/>
                 </p:column>
