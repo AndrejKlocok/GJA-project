@@ -84,6 +84,10 @@ public class MenuView {
         item.setCommand("#{menuView.hql}");
         dbMenu.addElement(item);
 
+        item = new DefaultMenuItem("Criteria");
+        item.setCommand("#{menuView.criteria}");
+        dbMenu.addElement(item);
+
         //RMI
         item = new DefaultMenuItem("Client_Server");
         item.setCommand("#{menuView.clientServer}");
@@ -136,6 +140,8 @@ public class MenuView {
     public String  hql(){
         return "/ui/jsf/JPA_Hibernate/HQL";
     }
+
+    public String criteria() {return "/ui/jsf/JPA_Hibernate/Criteria"; }
 
     //RMI
     public String  clientServer() { return "/ui/jsf/RMI/Client_Server"; }

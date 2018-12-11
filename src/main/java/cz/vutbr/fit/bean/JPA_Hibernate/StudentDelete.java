@@ -4,27 +4,31 @@ import cz.vutbr.fit.DAO.StudentDAO;
 import cz.vutbr.fit.models.Student;
 
 import javax.faces.bean.ManagedBean;
+import java.util.Date;
 
 /**
  * Managed bean for CRUD page
  */
 @ManagedBean(name = "StudentDelete")
-public class StudentDelete {
-    private StudentDAO studentDAO = new StudentDAO();
-    private String login;
+public class StudentDelete extends StudentBean{
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
+    /**
+     * Method deletes student from database if he exists
+     */
     public void deleteStudent(){
+        //get student from database
         Student student = studentDAO.getStudent(login);
-        if(student!=null){
-            studentDAO.deleteStudent(student);
+        //if exists
+        if (student == null) {
+            addMessage("Failure", "Entity was not found");
+            return;
         }
+
+        if(!studentDAO.deleteStudent(student)){
+            addMessage("Failure", "Entity was not deleted");
+        }
+
+        //notify gui
+        addMessage("Success", "Entity was deleted");
     }
 }

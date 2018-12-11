@@ -10,6 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+/**
+ * Parent class that holds connections through JPA and Hibernate
+ */
 public class DAO {
     //JPA
     protected EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
@@ -18,9 +21,4 @@ public class DAO {
     //Hibernate
     protected SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
 
-    //Pop Up message
-    public void addMessage(String summary, String detail) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
 }

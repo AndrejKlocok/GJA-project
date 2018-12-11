@@ -29,8 +29,8 @@
                         aby zistilo cestu ku chcenej stránke.<br/>
                         JSF vyzerá následovne:
                     </p>
-
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;h:form&gt;
     &lt;p:menu&gt;
     &lt;p:submenu label="Main"&gt;
@@ -45,12 +45,14 @@
     ...
     &lt;/p:menu&gt;
 &lt;/h:form&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Java bean obshujúci volané metódy, ktoré vracajú cestu na odkazovanú java server faces. Hneď po vytvorení
                         beanu zavoláme funkciu <i>init</i> a vytvoríme Menu model.
                     </p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 private MenuModel model;
 
 @PostConstruct
@@ -78,7 +80,8 @@ public void init() {
 public String  home_welcome(){ return "/index"; }
 
 public String  home_setUp(){ return "/ui/jsf/Home_Setup"; }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <ui:include src="/ui/components/menu.xhtml"/>
                 </div>
             </div>

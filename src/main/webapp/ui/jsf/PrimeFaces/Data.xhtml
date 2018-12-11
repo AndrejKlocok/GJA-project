@@ -33,7 +33,9 @@
                         Použitie komponenty <i>dataTable</i> je celkom jednoduché, stačí do atribúti value umiestniť odkaz
                         do beanu na list. Ďalej sa pracuje priamo s objektom.
                     </p>
-                    <pre><code class="xml">
+
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:dataTable id="table1" value="{DataBean.students}" var="student" style="width: 800px"&gt;
     &lt;p:column headerText="Login"&gt;
         &lt;h:outputText  value="{student.login}"/&gt;
@@ -42,7 +44,10 @@
         &lt;h:outputText  value="{student.name}"/&gt;
     &lt;/p:column&gt;
 &lt;/p:dataTable&gt;
-                    </code></pre>
+
+                        </code></pre>
+                    </p:panelGrid>
+
                     <h:form>
                         <p:dataTable value="#{DataBean.students}" var="student" style="width: 800px">
                             <p:column headerText="Login">
@@ -59,14 +64,18 @@
                         Zmena hodnôt tabulky sa zíde pri rôznych administrátorských úpravách. Využije sa spomínaná komponenta
                         <i>dataTable</i>. Pomocou ajax namapujeme eventy na príslušné listenery v beane.
                     </p>
-                    <pre><code class="xml">
+
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:ajax event="rowEdit" listener="{DataBean.onRowEdit}" update=":form:msgs" /&gt;
 &lt;p:ajax event="rowEditCancel" listener="{DataBean.onRowCancel}" update=":form:msgs" /&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         V stĺpci tabulky použijeme komponentu <i>cellEditor</i>, kde klasicky využijeme output a input komponenty.
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:column headerText="Login"&gt;
         &lt;p:cellEditor&gt;
             &lt;f:facet name="output">&lt;h:outputText value="{student.login}" /&gt;&lt;/f:facet&gt;
@@ -79,11 +88,14 @@
 &lt;p:column style="width:32px"&gt;
         &lt;p:rowEditor /&gt;
     &lt;/p:column&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <p>
                         Celký kód:
                     </p>
-                    <pre><code class="xml">
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+
 &lt;p:dataTable var="student" value="{DataBean.students}"
              editable="true" style="margin-bottom:20px;width: 800px"&gt;
 
@@ -103,7 +115,9 @@
         &lt;p:rowEditor /&gt;
     &lt;/p:column&gt;
 &lt;/p:dataTable&gt;
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
+
                     <h:form id="form">
                         <p:growl id="msgs" showDetail="true"/>
 
@@ -145,7 +159,9 @@
                         Z primefaces môžeme využiť komponentu dataGrid, ktorá zobrazuje objekty z listu v gride.
 
                     </p>
-                    <pre><code class="xml">
+
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
 &lt;p:dataGrid var="subject" value="{DataBean.subjects}" columns="2" layout="grid"
             rows="3" paginator="true"
             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -166,7 +182,10 @@
         &lt;/h:panelGrid&gt;
     &lt;/p:panel&gt;
 &lt;/p:dataGrid&gt;
-                    </code></pre>
+
+                        </code></pre>
+                    </p:panelGrid>
+
                     <p:dataGrid var="subject" value="#{DataBean.subjects}" columns="2" layout="grid"
                                 rows="3" paginator="true"
                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"

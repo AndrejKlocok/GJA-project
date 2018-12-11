@@ -12,11 +12,13 @@ import javax.faces.context.FacesContext;
 import java.io.*;
 
 import static com.mysql.cj.conf.PropertyKey.PATH;
-
+/**
+ * Managed bean for Files and imagespage
+ */
 @ManagedBean(name = "FileImagesBean")
 public class File_ImagesBean {
+    //files
     private UploadedFile uploadedFile;
-
     private StreamedContent downloadFile;
 
     /**
@@ -39,15 +41,18 @@ public class File_ImagesBean {
         if (uploadedFile == null) {
             return;
         }
-
+        //create default faces message
         FacesMessage msg = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
+        //output directory for file
         String filePath = "/tmp/" + uploadedFile.getFileName();
 
         try {
             //save desired file to /tmp directory
             FileOutputStream out = new FileOutputStream(new File(filePath));
             out.write(uploadedFile.getContents());
+            //flush content
             out.flush();
+            //close file
             out.close();
 
         } catch (FileNotFoundException e) {
@@ -62,7 +67,7 @@ public class File_ImagesBean {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
-
+    //Getters and setters
     public StreamedContent getDownloadFile() {
         return downloadFile;
     }

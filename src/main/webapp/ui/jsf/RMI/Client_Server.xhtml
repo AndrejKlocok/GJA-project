@@ -48,7 +48,8 @@
                     Toto rozhraní musí dědit Remote a všechny metody v tomto rozhraní musí vyhazovat výjimku RemoteException.
                     </p>
 
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 /**
 * Remote interface
 */
@@ -56,7 +57,8 @@ public interface DeepThoughtInterface extends Remote {
 
     public String getAnswerToLifeTheUniversAndEverything() throws RemoteException;
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
 
                     <h2>Implementace vzdáleného rozhraní</h2>
                     <p>
@@ -64,8 +66,8 @@ public interface DeepThoughtInterface extends Remote {
                     Dědíme od UnicastRemoteObject, což způsobí automatické exportování objektu (objekt bude dostupný klientům).
                     Aby vše fungovalo správně, musíme zavolat v konstruktoru rodičovský konstruktor.
                     </p>
-
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 /**
 * Remote interface implementation
 */
@@ -80,15 +82,16 @@ public class DeepThought extends UnicastRemoteObject implements DeepThoughtInter
         return "42";
     }
 }
-                    </code></pre>
-
+                        </code></pre>
+                    </p:panelGrid>
                     <h2>Vytvoření serverového programu</h2>
                     <p>
                     Předchozí implementaci musíme na serveru spustit, aby mohla odpovídat na dotazy od klientů.
                     Vytvoříme tedy spouštěcí program a zaregistrujeme naší instanci v RMI Registry.
                     </p>
 
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 /**
 * Server
 */
@@ -127,11 +130,13 @@ public class Server {
 
     }
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
 
                     <h2>Vytvoření klientského programu</h2>
 
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 /**
 * Client
 */
@@ -154,7 +159,8 @@ public class Client {
 
     }
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
 
                     <h3>Další info:</h3>
                     <a href="https://docs.oracle.com/javase/tutorial/rmi/">https://docs.oracle.com/javase/tutorial/rmi/</a>

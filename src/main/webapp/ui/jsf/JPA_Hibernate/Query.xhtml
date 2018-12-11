@@ -37,29 +37,81 @@
                     <p>
                         Jednoduchý dotaz na vrátenie maximálne 50 riadkov z dabulky.
                     </p>
-                    <pre><code class="java">
-List&lt;Student&gt; students = new ArrayList&lt;&gt;();
-students = em.createQuery("Select s FROM Student s").setMaxResults(50).getResultList();
-                    </code></pre>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+/**
+ * Method returns list of all students in db
+ * @return  list of all students
+ */
+public List&lt;Student&gt; getAll(){
+    //init list
+    List&lt;Student&gt; students = new ArrayList&lt;&gt;();
+    //get transaction
+    EntityTransaction tr = em.getTransaction();
+
+    try {
+        //begin transaction
+        tr.begin();
+        //query that returns 50 results
+        students = em.createQuery("Select s FROM Student s").setMaxResults(50).getResultList();
+        tr.commit();
+        return students;
+    }
+    catch (Exception e) {
+        tr.rollback();
+        e.printStackTrace();
+        return students;
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
                     <ui:include src="/ui/components/studentsView.xhtml"/>
                     <p>
                         Dotaz na vrátenie inštancie študenta s daným loginom, ktorý je predaný dotazu ako parameter.
                     </p>
-                    <pre><code class="java">
-Student  student = (Student) em.createQuery(
-                    "SELECT s from Student s where s.login = :login")
-                    .setParameter("login", loginParam)
-                    .getSingleResult();
-                    </code></pre>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+/**
+ * Method returns single object of Student
+ * @param loginParam    given unique property
+ * @return Student object
+ */
+public Student getStudent(String loginParam) {
+    //get transaction
+    EntityTransaction tr = em.getTransaction();
+    try {
+        //begin transaction
+        tr.begin();
+        //execute query that returns single result
+        Student  student = (Student) em.createQuery(
+                "SELECT s from Student s where s.login = :login")
+                .setParameter("login", loginParam)
+                .getSingleResult();
 
+        tr.commit();
+        return student;
+    }
+    catch (NoResultException e) {
+        tr.rollback();
+        return null;
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
                         <p:panelGrid columns="2">
                             <p:panelGrid columns="1">
+                                <f:facet name = "header">
+                                    <h:outputText value = "Find"/>
+                                </f:facet>
                                 <p:outputLabel for="login" value="Student login:" />
                                 <p:inputText id="login" value="#{StudentQuery.login}" />
                             </p:panelGrid>
                             <p:panelGrid columns="2">
+                                <f:facet name = "header">
+                                    <h:outputText value = "Student"/>
+                                </f:facet>
                                 <p:outputLabel value="Student id:" />
                                 <p:outputLabel value="#{StudentQuery.id}" />
                                 <p:outputLabel value="Student name:" />
@@ -69,7 +121,11 @@ Student  student = (Student) em.createQuery(
                                 <p:outputLabel value="Student signed:" />
                                 <p:outputLabel value="#{StudentQuery.signed}" />
                             </p:panelGrid>
-                            <p:commandButton value="Find" icon="ui-icon-star" action="#{StudentQuery.findStudent}" ajax="false"/>
+                            <f:facet name = "footer">
+                                <h:panelGroup style = "display:block; text-align:center">
+                                    <p:commandButton value="Find" icon="ui-icon-star" action="#{StudentQuery.findStudent}" ajax="false"/>
+                                </h:panelGroup>
+                            </f:facet>
                         </p:panelGrid>
                     </h:form>
 
@@ -83,21 +139,36 @@ Student  student = (Student) em.createQuery(
                     <p>
                         Použijeme pomenovaný dotaz na vykonanie hromadnej úpravy db (bulk update).
                     </p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 @Entity
 @NamedQuery(name="Student.updateBlankName", query = "UPDATE Student S SET S.name = 'MenoStudenta' WHERE S.name =''")
 public class Student implements Serializable {
 ...
+}
+/**
+ * Method performs named query which updates blank name properties
+ */
 public void namedUpdate(){
-    Transaction tr = session.getTransaction();
-
+    //get transaction
+    EntityTransaction tr = em.getTransaction();
     try{
+        //begin transaction
         tr.begin();
+        //create update named query from local
         Query q = em.createNamedQuery("Student.updateBlankName");
+        //execute
         q.executeUpdate();
+        //commit changes
         tr.commit();
-...
-                    </code></pre>
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+        tr.rollback();
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:commandButton value="FixEmpty" icon="ui-icon-star" action="#{StudentQuery.fixStudentvalues}" ajax="false"/>
                     </h:form>

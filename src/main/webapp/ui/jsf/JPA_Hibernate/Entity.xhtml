@@ -48,7 +48,8 @@
                     </p>
 
                     <p>Príklad:</p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 @Entity
 public class Student implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -68,10 +69,12 @@ public class Student implements Serializable {
     @Column(nullable=false, unique=false)
     private Date signed;
 }
-                    </code></pre>
+                        </code></pre>
+                    </p:panelGrid>
                     <h1>Service</h1>
                     <p> Pre túto triedu(<i>Student</i>) môžeme definovať službu, ktorá komunikuje s DB</p>
-                    <pre><code class="java">
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
 public class DAO {
     //JPA
     protected EntityManagerFactory factory = Persistence.createEntityManagerFactory("StudentsPU");
@@ -80,23 +83,36 @@ public class DAO {
     //Hibernate
     protected SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
 
-    //Pop Up message
-    public void addMessage(String summary, String detail)
     ...
 }
 
 @Singleton
 public class StudentDAO extends DAO{
+    /**
+     * Method returns single object of Student
+     * @param loginParam    given unique property
+     * @return Student object
+     */
+    public Student getStudent(String loginParam) {...}
 
-    public Student getStudent(String loginParam) {}
+    /**
+     * Method inserts student into database
+     * @param student   given student object
+     * @return true if entity was saved, false otherwise
+     */
+    public boolean inserStudent(Student student) {...}
 
-    public boolean inserStudent(Student student) {}
-
-    public boolean deleteStudent(Long id) {...}
-
+    /**
+     * Method deletes Student from database according to login property
+     * @param student   given student
+     * @return true if entity was removed, false otherwise
+     */
+    public boolean deleteStudent(Student student) {...}
     ...
 }
-                    </code></pre>
+
+                        </code></pre>
+                    </p:panelGrid>
                 </div>
             </div>
         </div>

@@ -33,29 +33,48 @@
                         V xhtml súbore využijeme komponentu <i>fileUpload</i> s obmedzením na velkosť, počet súborov a regex. V beane
                         máme metódu <i>handleFileUpload</i>, ktorá súracuje obrázok.
                     </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+&lt;p:fileUpload fileUploadListener= "{FileImagesBean.handleFileUpload}" mode="advanced"
+              sizeLimit="100000" fileLimit="3"
+              allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /&gt;
+                        </code></pre>
+                        <pre><code class="java">
+public void handleFileUpload(FileUploadEvent event) {
+    uploadedFile = event.getFile();
 
-                    <textarea rows="25" cols="140">
-                        &lt;p:fileUpload fileUploadListener= "{FileImagesBean.handleFileUpload}" mode="advanced"
-                                      sizeLimit="100000" fileLimit="3"
-                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /&gt;
+    //if chosen file is null return
+    if (uploadedFile == null) {
+        return;
+    }
+    //create default faces message
+    FacesMessage msg = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
+    //output directory for file
+    String filePath = "/tmp/" + uploadedFile.getFileName();
 
+    try {
+        //save desired file to /tmp directory
+        FileOutputStream out = new FileOutputStream(new File(filePath));
+        out.write(uploadedFile.getContents());
+        //flush content
+        out.flush();
+        //close file
+        out.close();
 
-                        public void handleFileUpload(FileUploadEvent event) {
-                            uploadedFile = event.getFile();
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+        msg = new FacesMessage("Failure", "File not found");
 
-                            //if chosen file is not null
-                            if(uploadedFile != null) {
-                                FacesMessage msg = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
-                                String filePath = "/tmp/" + uploadedFile.getFileName();
-
-                                try {
-                                    //save desired file to /tmp directory
-                                    FileOutputStream out = new FileOutputStream(new File(filePath));
-                                    out.write(uploadedFile.getContents());
-                                    out.flush();
-                                    out.close();
-                    </textarea>
-
+    } catch (IOException e) {
+        e.printStackTrace();
+        msg = new FacesMessage("Failure", "Error during write");
+    }
+    finally {
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:growl id="messages" showDetail="true" />
 
@@ -72,19 +91,24 @@
                         vnorenú uprostred <i>command buttonu</i>. V beane sa ihned po jeho vytvoreni ( @PostConstruct) načíta
                         obrázok z resources.
                     </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+&lt;p:commandButton value="Download" ajax="false"
+    onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down"&gt;
+        &lt;p:fileDownload value="{FileImagesBean.downloadFile}" /&gt;
+    &lt;/p:commandButton&gt;
+                        </code></pre>
+                        <pre><code class="java">
+@PostConstruct
+public void Load() {
+    InputStream stream = FacesContext.getCurrentInstance()
+                            .getExternalContext()
+                            .getResourceAsStream("/resources/pictures/jayZ.jpg");
+    downloadFile = new DefaultStreamedContent(stream, "image/jpg", "jayZ.jpg");
+}
 
-                    <textarea rows="20" cols="140">
-                        &lt;p:commandButton value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down"&gt;
-                                &lt;p:fileDownload value="{FileImagesBean.downloadFile}" /&gt;
-                            &lt;/p:commandButton&gt;
-
-                        @PostConstruct
-                        public void Load() {
-                            InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/resources/pictures/jayZ.jpg");
-                            downloadFile = new DefaultStreamedContent(stream, "image/jpg", "jayZ.jpg");
-                        }
-
-                    </textarea>
+                        </code></pre>
+                    </p:panelGrid>
                     <h:form>
                         <p:panelGrid columns="1" style="width: 600px;">
                             <p:commandButton value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">

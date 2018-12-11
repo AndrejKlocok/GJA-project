@@ -13,12 +13,13 @@ import java.util.List;
  */
 @ManagedBean(name = "StudentView")
 public class StudentView {
-
+    //db repositories
     protected StudentDAO studentDAO = new StudentDAO();
+    //page properties
     protected List<Student> students = new ArrayList<>();
 
+    //getters and setters of properties
     public void setStudents(List<Student> students) {
-
         this.students = students;
     }
 
