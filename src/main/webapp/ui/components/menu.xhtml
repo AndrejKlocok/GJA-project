@@ -9,7 +9,16 @@
             <p:submenu label="Main">
                 <p:menuitem value="Home" action="#{menuView.home_welcome}" />
             </p:submenu>
-            <p:submenu label="PrimeFaces">
+            <p:submenu label="EJB">
+                <p:menuitem value="Stateful" action="#{menuView.stateful}" />
+                <p:menuitem value="Stateless" action="#{menuView.stateless}" />
+            </p:submenu>
+            <p:submenu label="JavaServer Faces">
+                <p:menuitem value="Intro" action="#{menuView.jsf_intro}" />
+                <p:menuitem value="Simple examples" action="#{menuView.jsf_examples}" />
+                <p:menuitem value="Custom component" action="#{menuView.jsf_custom}" />
+            </p:submenu>
+             <p:submenu label="PrimeFaces">
                 <p:menuitem value="Setup" action="#{menuView.pr_setUp}" />
                 <p:menuitem value="Inputs" action="#{menuView.inputs}" />
                 <p:menuitem value="Layout" action="#{menuView.layout}" />
