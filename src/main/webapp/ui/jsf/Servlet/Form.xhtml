@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Java Servlet</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/servlets.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+
+                    <h1>Servlet Formulář</h1>
+                    <p>Ve složce <code>Servlet_Form</code> naleznete projekt s implementací HTML formuláře a jeho zpracování pomocí servletu.</p>
+
+                    <h2>Zdrojový soubor třídy <code class="java">FormServlet</code></h2>
+                    <p>V&nbsp;tomto servletu je přepsána metoda <code class="java">doGet</code> i <code class="java">doPost</code>. Obě metody mohou vytvářet zcela odlišené stránky, v&nbsp;tomto případě obě volají metodu <code class="java">doRequest</code>. Tato metoda vygeneruje formulář a pokud se jedná o metodu POST, vytiskne před formulářem odeslaná data (pro detekci HTTP metody je použita metoda <code class="java">getMethod</code> objektu požadavku). Všimněte si především získávání parametrů z&nbsp;objektu požadavku v&nbsp;metodě <code class="java">writeData</code>, která je volána z&nbsp;metody <code class="java">doRequest</code>.</p>
+                    <p>Je zde použita anotace třídy ke konfiguraci URL adresy servletu. K&nbsp;takto oanotovanému servletu již není nutné přidávat definice do souboru <code>web.xml</code>. Výhodou je, že definice URL adresy se nachází přímo u třídy. Nevýhodou je, že všechny URL adresy nejsou pohromadě v&nbsp;jednom souboru.</p>
+                    <p:panelGrid columns="1">
+                    <pre><code class="java">
+package cz.vutbr.fit.gja;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * FormServlet demonstrating form processing
+ */
+@WebServlet(name = "Form", urlPatterns = {"/form"}) // You can write annotation instead of writing it to file web.xml
+public class FormServlet extends HttpServlet
+{
+    /**
+     * Writes begging of HTML document
+     *
+     * @param out Object of PrintWriter
+     * @param title Title
+     */
+    private void writeBegin(PrintWriter out, String title) {
+        out.write("&lt;!DOCTYPE html&gt;&lt;head&gt;&lt;title&gt;");
+        out.write(title);
+        out.write("&lt;/title&gt;&lt;/head&gt;&lt;body&gt;");
+    }
+
+    /**
+     * Writes end of HTML document
+     *
+     * @param out Object of PrintWriter
+     */
+    private void writeEnd(PrintWriter out) {
+        out.write("&lt;/body&gt;&lt;/html&gt;");
+    }
+
+    /**
+     * Writes form to HTML document
+     *
+     * @param out Object of PrintWriter
+     */
+    private void writeForm(PrintWriter out) {
+        out.write("&lt;form action='form' method='POST'&gt;");
+        out.write("&lt;p&gt;&lt;label for='form_name'&gt;Jméno&lt;/label&gt; &lt;input type='text' id='form_name' name='name'&gt;&lt;/p&gt;");
+        out.write("&lt;p&gt;&lt;input type='checkbox' id='form_color_red' name='colors' value='red'&gt; &lt;label for='form_color_red'&gt;Červená&lt;/label&gt;&lt;/p&gt;");
+        out.write("&lt;p&gt;&lt;input type='checkbox' id='form_color_green' name='colors' value='green'&gt; &lt;label for='form_color_green'&gt;Zelená&lt;/label&gt;&lt;/p&gt;");
+        out.write("&lt;p&gt;&lt;input type='checkbox' id='form_color_blue' name='colors' value='blue'&gt; &lt;label for='form_color_blue'&gt;Modrá&lt;/label&gt;&lt;/p&gt;");
+        out.write("&lt;p&gt;&lt;button type='submit'&gt;Odeslat&lt;/button&gt;&lt;/p&gt;");
+        out.write("&lt;/form&gt;");
+    }
+
+    private void writeData(PrintWriter out, HttpServletRequest request) {
+
+        // Write name
+        String name = request.getParameter("name");
+        out.write("&lt;p&gt;Zadané jméno: ");
+        if (name == null || name.trim().isEmpty()) // Parameter missing or is empty
+            out.write("&lt;i&gt;nezadáno&lt;/i&gt;");
+        else
+            out.write("&lt;b&gt;" + name + "&lt;/b&gt;");
+        out.write("&lt;/p&gt;");
+
+        // Write colors
+        String[] colors = request.getParameterValues("colors");
+        out.write("&lt;p&gt;Zadané barvy: ");
+        if (colors == null || colors.length == 0)
+            out.write("&lt;i&gt;žádné&lt;/i&gt;");
+        else
+            out.write("&lt;b&gt;" + String.join(", ", colors) + "&lt;/b&gt;");
+        out.write("&lt;/p&gt;");
+    }
+
+    /**
+     * Called by doGet and doPost
+     *
+     * @param request Request object
+     * @param response Response object
+     *
+     * @throws IOException By PrintWriter
+     */
+    private void doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // HTTP method you can detect from request object.
+        boolean isPost = request.getMethod().equals("POST");
+
+        // Setting of HTTP header content-type (MIME type of response)
+        response.setContentType("text/html;charset=UTF-8");
+
+        // Creation of output stream
+        PrintWriter out = response.getWriter();
+
+        // Write document by private methods
+        writeBegin(out, "FormServlet");
+        if (isPost) // When you put data to GET parameters, it's no effect. If you delete this condition, servlet show parameters from both HTTP method (GET and POST).
+            writeData(out, request);
+        writeForm(out);
+        writeEnd(out);
+
+        // Closing of output stream
+        out.close();
+    }
+
+    /**
+     * Called on HTTP method GET
+     *
+     * @param request Request object
+     * @param response Response object
+     *
+     * @throws IOException By PrintWriter
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        doRequest(request, response);
+    }
+
+    /**
+     * Called on HTTP method POST
+     *
+     * @param request Request object
+     * @param response Response object
+     *
+     * @throws IOException By PrintWriter
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        doRequest(request, response);
+    }
+}
+                    </code></pre>
+                    </p:panelGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>
