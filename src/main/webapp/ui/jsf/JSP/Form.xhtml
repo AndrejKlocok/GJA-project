@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Java Servlet</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/jsp.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+
+                    <h1>Java Server Pages</h1>
+                    <p>Na většině stránek je více HTML kódu, než serverové logiky napsané v&nbsp;jazyce Java. A pokud tomu tak není, je vhodné tuto logiku oddělit do jiných tříd a v servletu tedy zůstane pouhé sestavování HTML, které není tímto způsobem moc pohodlné. Proto vznikly Java Server Pages (zkr. JSP). JSP na tuto problematiku jdou z&nbsp;druhého konce - nevytváří se Java kód, který obsahuje HTML, ale vytváří se HTML dokument, do kterého je vkládán Java kód. Takový soubor má příponu <code>.jsp</code> a je na serveru překládán na objekt servletu (JSP jsou postavené na servletech).</p>
+
+                    <h2>Závisloti</h2>
+                    <p>JSP mají stejné závislosti jako Servlety a navíc artefakt <code>javax.servlet.jsp-api</code> ze skupiny <code>javax.servlet.jsp</code>.</p>
+
+                    <h2>Ukázkový projekt</h2>
+                    <p>Tento projekt je identický s&nbsp;projektem Servlet_Form, ale napsaný pomocí JSP.</p>
+
+                    <h2>Zdrojový soubor stránky</h2>
+                    <p>V&nbsp;souboru <code>src/webapp/index.jsp</code> se nachází zdrový soubor stránky s&nbsp;formulářem. V&nbsp;tomto souboru je obsažen veškerý HTML i Java kód. Java kód se zapisuje do speciálních závorek připomínající tagy, které se zpracovávají na straně serveru a klientovi je posílán čistý HTML kód.</p>
+                    <p:panelGrid columns="1">
+                    <pre><code class="html">
+&lt;%@ page contentType="text/html;charset=UTF-8" %&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;JSP Form&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;%-- This comment IS NOT visible in HTML --%&gt;
+        &lt;!-- This comment IS visible in HTML --&gt;
+
+        &lt;%-- Parameter processing and printing --%&gt;
+        &lt;% if (request.getMethod().equals("POST")) { %&gt;
+
+        &lt;%-- Name --%&gt;
+        &lt;p&gt;
+            &lt;%-- Variable "request" is one of available variables in JSP. --%&gt;
+            &lt;% String name = request.getParameter("name"); %&gt;
+            Zadané jméno:
+            &lt;% if (name == null || name.trim().isEmpty()) { %&gt;
+            &lt;i&gt;nezadáno&lt;/i&gt;
+            &lt;% } else { %&gt;
+            &lt;b&gt;&lt;%= name %&gt;&lt;/b&gt;
+            &lt;% } %&gt;
+        &lt;/p&gt;
+
+        &lt;%-- Colors --%&gt;
+        &lt;p&gt;
+            &lt;% String[] colors = request.getParameterValues("colors"); %&gt;
+            Zadané barvy:
+            &lt;% if (colors == null || colors.length == 0) { %&gt;
+            &lt;i&gt;žádné&lt;/i&gt;
+            &lt;% } else { %&gt;
+            &lt;b&gt;&lt;%= String.join(", ", colors) %&gt;&lt;/b&gt;
+            &lt;% } %&gt;
+        &lt;/p&gt;
+
+        &lt;% } %&gt;
+
+        &lt;%-- Form --%&gt;
+        &lt;form action="index.jsp" method="POST"&gt;
+            &lt;p&gt;
+                &lt;label for="form_name"&gt;Jméno&lt;/label&gt;
+                &lt;input type="text" id="form_name" name="name"&gt;
+            &lt;/p&gt;
+            &lt;p&gt;
+                &lt;input type="checkbox" id="form_color_red" name="colors" value="red"&gt;
+                &lt;label for="form_color_red"&gt;Červená&lt;/label&gt;
+            &lt;/p&gt;
+            &lt;p&gt;
+                &lt;input type="checkbox" id="form_color_green" name="colors" value="green"&gt;
+                &lt;label for="form_color_green"&gt;Zelená&lt;/label&gt;
+            &lt;/p&gt;
+            &lt;p&gt;
+                &lt;input type="checkbox" id="form_color_blue" name="colors" value="blue"&gt;
+                &lt;label for="form_color_blue"&gt;Modrá&lt;/label&gt;
+            &lt;/p&gt;
+            &lt;p&gt;
+                &lt;button type="submit"&gt;Odeslat&lt;/button&gt;
+            &lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </code></pre>
+                    </p:panelGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>
