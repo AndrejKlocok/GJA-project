@@ -1,13 +1,9 @@
 package cz.vutbr.fit.gja.spring;
 
-import cz.vutbr.fit.gja.spring.bean.*;
+import cz.vutbr.fit.gja.spring.bean.xml.*;
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-
-import java.io.File;
 
 /**
  * @author Martin Kocour

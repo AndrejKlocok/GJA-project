@@ -1,8 +1,7 @@
-package cz.vutbr.fit.gja.spring.bean;
+package cz.vutbr.fit.gja.spring.bean.xml;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * @author Martin Kocour
