@@ -1,5 +1,6 @@
 package cz.vutbr.fit.gja;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,12 +13,20 @@ import java.io.PrintWriter;
  */
 public class HelloServlet extends HttpServlet
 {
-    // Class must override at least one method of doGet, doPost, doPut or doDelete.
+    // Class must override at least one method of doGet, doPost, doPut, doDelete, etc.
     // These methods correspond to HTTP methods GET, POST, PUT and DELETE.
 
-    // Called on HTTP method GET
+    /**
+     * Called on HTTP method GET
+     *
+     * @param request Request object
+     * @param response Response object
+     *
+     * @throws IOException By PrintWriter
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         // Setting of HTTP header content-type (MIME type of response)
         response.setContentType("text/html;charset=UTF-8");
 
