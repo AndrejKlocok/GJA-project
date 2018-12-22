@@ -2,9 +2,34 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       <!-- default-init-method = "init" -->
+       <!-- default-destroy-method = "destroy" -->
 
-    <bean name="helloWorld" class="cz.vutbr.fit.gja.spring.bean.HelloWorld">
+    <!-- Simple Hello world example. -->
+    <bean id="helloWorld" class="cz.vutbr.fit.gja.spring.bean.HelloWorld">
         <property name="message" value="Hello world!"/>
     </bean>
+
+    <!-- Lazy init example. -->
+    <bean id="lazy" class="cz.vutbr.fit.gja.spring.bean.LazyInitExample" lazy-init="true"
+          init-method="init" destroy-method="finish">
+        <constructor-arg value="Lazy"/>
+    </bean>
+    <bean id="normal" class="cz.vutbr.fit.gja.spring.bean.LazyInitExample" lazy-init="false"
+          init-method="init" destroy-method="finish">
+        <constructor-arg value="Normal"/>
+    </bean>
+
+    <!-- Scope example. -->
+    <bean id="singleton" class="cz.vutbr.fit.gja.spring.bean.ScopeExample" scope="singleton" >
+        <constructor-arg value="Singleton"/>
+    </bean>
+    <bean id="prototype" class="cz.vutbr.fit.gja.spring.bean.ScopeExample" scope="prototype" >
+        <constructor-arg value="Prototype"/>
+    </bean>
+
+    <!-- Lifecycle example -->
+    <bean class="cz.vutbr.fit.gja.spring.bean.LifecycleProcessor"/>
+    <bean id="lifecycleExample" class="cz.vutbr.fit.gja.spring.bean.LifecycleExample" lazy-init="true"/>
 
 </beans>
