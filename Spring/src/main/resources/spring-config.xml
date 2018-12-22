@@ -13,11 +13,11 @@
     <!-- Lazy init example. -->
     <bean id="lazy" class="cz.vutbr.fit.gja.spring.bean.LazyInitExample" lazy-init="true"
           init-method="init" destroy-method="finish">
-        <constructor-arg value="Lazy"/>
+        <constructor-arg name="name" value="Lazy"/>
     </bean>
     <bean id="normal" class="cz.vutbr.fit.gja.spring.bean.LazyInitExample" lazy-init="false"
           init-method="init" destroy-method="finish">
-        <constructor-arg value="Normal"/>
+        <constructor-arg name="name" value="Normal"/>
     </bean>
 
     <!-- Scope example. -->
@@ -31,5 +31,42 @@
     <!-- Lifecycle example -->
     <bean class="cz.vutbr.fit.gja.spring.bean.LifecycleProcessor"/>
     <bean id="lifecycleExample" class="cz.vutbr.fit.gja.spring.bean.LifecycleExample" lazy-init="true"/>
+
+    <!-- Dependency injection example -->
+    <bean id="engine" class="cz.vutbr.fit.gja.spring.bean.Engine"/>
+    <bean id="ac" class="cz.vutbr.fit.gja.spring.bean.AirCondition"/>
+    <bean id="car" class="cz.vutbr.fit.gja.spring.bean.Car">
+        <constructor-arg name="engine" ref="engine"/>
+        <constructor-arg name="steeringWheel">
+            <bean class="cz.vutbr.fit.gja.spring.bean.SteeringWheel">
+                <property name="brand" value="Recaro"/>
+            </bean>
+        </constructor-arg>
+        <!-- Collection examples -->
+        <constructor-arg name="wheels">
+            <list>
+                <value>Left front</value>
+                <value>Right front</value>
+                <value>Left rear</value>
+                <value>Right rear</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="seats">
+            <map>
+                <entry key="Left Front">
+                    <bean class="cz.vutbr.fit.gja.spring.bean.Seat">
+                        <constructor-arg type="cz.vutbr.fit.gja.spring.bean.AirCondition" ref="ac"/>
+                        <constructor-arg type="java.lang.String" value="Left Front"/>
+                    </bean>
+                </entry>
+                <entry key="Right Front">
+                    <bean class="cz.vutbr.fit.gja.spring.bean.Seat">
+                        <constructor-arg type="cz.vutbr.fit.gja.spring.bean.AirCondition" ref="ac"/>
+                        <constructor-arg type="java.lang.String" value="Right Front"/>
+                    </bean>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
 
 </beans>

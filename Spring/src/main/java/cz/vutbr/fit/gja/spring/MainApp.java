@@ -1,9 +1,6 @@
 package cz.vutbr.fit.gja.spring;
 
-import cz.vutbr.fit.gja.spring.bean.HelloWorld;
-import cz.vutbr.fit.gja.spring.bean.LazyInitExample;
-import cz.vutbr.fit.gja.spring.bean.LifecycleExample;
-import cz.vutbr.fit.gja.spring.bean.ScopeExample;
+import cz.vutbr.fit.gja.spring.bean.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -68,6 +65,11 @@ public class MainApp {
 
         System.out.println("\n\td) Lifecycle example");
         LifecycleExample lifecycleBean = (LifecycleExample) context.getBean("lifecycleExample");
+
+        System.out.println("\n\te) Dependency injection example");
+        Car car = (Car) context.getBean("car");
+        car.getSeat("Left Front").controlHeater(4);
+        System.out.println(car.toString());
 
         System.out.println("\nDestroy context...");
         context.destroy();
