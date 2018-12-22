@@ -1,3 +1,14 @@
+/*
+ * ----------------------------------------------------------------------------
+ * JMS Point to Point
+ *
+ * Author:       Tomáš Vlk
+ * Date:         2018-12-02
+ * File:         Sender.java
+ * Description:  Implementation JMS Sender
+ * ----------------------------------------------------------------------------
+ */
+
 package cz.vutbr.fit.gja;
 
 
@@ -12,6 +23,12 @@ import javax.jms.*;
  */
 public class Sender {
 
+    /**
+     * Main function
+     *
+     * @param args Command line arguments
+     * @param args
+     */
     // Warnings are suppressed because Sender and Receiver use the same init code
     @SuppressWarnings("Duplicates")
     public static void main(String[] args) {
