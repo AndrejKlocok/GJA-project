@@ -125,6 +125,11 @@ public class MenuView {
     //Servlets
     public String  servlets_hello(){ return "/ui/jsf/Servlet/Hello"; }
 
+    public String  servlets_form(){ return "/ui/jsf/Servlet/Form"; }
+
+    //JSP
+    public String  jsp_form(){ return "/ui/jsf/JSP/Form"; }
+
     //JPA_Hibernate
     public String  entity() { return "/ui/jsf/JPA_Hibernate/Entity"; }
 
