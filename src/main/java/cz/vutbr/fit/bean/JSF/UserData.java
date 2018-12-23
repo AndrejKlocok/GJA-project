@@ -5,6 +5,13 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+/**
+ * Managed Bean na priklásenie užívateľa, za účelom úkážky tvorby vlastnej komponenty JSF.
+ *
+ * @author  Michal Gabonay
+ * @version 1.0
+ * @since   2018-12-16
+ */
 @ManagedBean(name = "userData", eager = true)
 @SessionScoped
 public class UserData implements Serializable {

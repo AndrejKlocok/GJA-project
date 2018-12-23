@@ -5,6 +5,13 @@ import javax.faces.bean.RequestScoped;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Managed Bean implemetujúci jednoduchú kalkulačku, za účelom úkážky JSF.
+ *
+ * @author  Michal Gabonay
+ * @version 1.0
+ * @since   2018-12-18
+ */
 @ManagedBean (name = "kalkulackaBean")
 @RequestScoped
 public class KalkulackaBean {
@@ -22,6 +29,9 @@ public class KalkulackaBean {
         mozneOperacie.put("Vydel", "/");
     }
 
+    /**
+     * Táto metóda na základe zvolenej operácie a vloženích čísel vzráta výsledok.
+     */
     public void vypocitaj()
     {
         switch (operacia)

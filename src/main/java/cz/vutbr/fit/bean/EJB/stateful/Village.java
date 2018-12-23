@@ -3,6 +3,15 @@ package cz.vutbr.fit.bean.EJB.stateful;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 
+/**
+ * Stateful Java Bean,
+ * trieda Village, je jednoduchým príkladom pre ukážku udržania si stavu,
+ * použité pre veľmi jednuduchú "resource managment game".
+ *
+ * @author  Michal Gabonay
+ * @version 1.0
+ * @since   2018-12-18
+ */
 @Stateful (name = "village")
 @LocalBean
 public class Village {
@@ -16,15 +25,25 @@ public class Village {
 
     private String msg = "";
 
+    /**
+     * Táto trieda pridá drevo.
+     */
     public void addWood() {
         wood += 10*lumber;
         msg = "Vyťažené " + 10*lumber + " dreva.";
     }
+
+    /**
+     * Táto metóda pridá kameň.
+     */
     public void addStone() {
         stone += 5*quarry;
         msg = "Vyťažené " + 5*quarry + " kameňa.";
     }
 
+    /**
+     * Táto metóda vylepšuje kamenolom, tým že spotrebuje suroviny.
+     */
     public void lvlUpQuarry() {
         int wood_price = (quarry*10) + 20;
         int stone_price = (quarry*5) + 10;
@@ -39,6 +58,9 @@ public class Village {
         }
     }
 
+    /**
+     * Táto metóda vylepšuje drevorubača, tým že spotrebuje suroviny.
+     */
     public void lvlUpLumber() {
         int wood_price = (lumber*10) + 20;
         int stone_price = (lumber*5) + 10;
@@ -53,6 +75,9 @@ public class Village {
         }
     }
 
+    /**
+     * Táto metóda vylepšuje dom, tým že spotrebuje suroviny.
+     */
     public void lvlUpHouse() {
         int wood_price = (house*20) + 50;
         int stone_price = (house*10) + 30;
@@ -67,6 +92,7 @@ public class Village {
         }
     }
 
+    // GETTERS
     public int getWood() {
         return wood;
     }

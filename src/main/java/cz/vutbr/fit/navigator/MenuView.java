@@ -166,12 +166,16 @@ public class MenuView {
 
     public String pr_setUp(){ return "/ui/jsf/PrimeFaces/PrimeFaces_SetUp";}
 
-    //EJB
+    // EJB
     public String stateful(){ return "/ui/jsf/EJB/stateful";}
     public String stateless(){ return "/ui/jsf/EJB/stateless";}
 
-    //JSF
+    // JSF
     public String jsf_intro(){ return "/ui/jsf/JSF/jsf_intro";}
     public String jsf_examples(){ return "/ui/jsf/JSF/jsf_examples";}
     public String jsf_custom(){ return "/ui/jsf/JSF/jsf_custom";}
+
+    // Testing
+    public String junit(){ return "/ui/jsf/testing/junit";}
+    public String selenium(){ return "/ui/jsf/testing/selenium";}
 }
