@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Java Servlet</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/servlets.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+
+                    <h1>Java Servlet</h1>
+                    <p>Servlety jsou základním kamenem pro tvorbu webových aplikací v jazyce Java. Servlet je každá třída, která je odvozená od rozhraní <code class="java">javax.servlet.Servlet</code>. V&nbsp;praxi se používá protokol HTTP, pro který je připravena třída <code class="java">javax.servlet.http.HttpServlet</code>, ve které je podpora HTTP protokolu již připravena.</p>
+
+                    <h2>Závisloti</h2>
+                    <p>Pro použití Java Servletu stačí do Maven projektu přidat artefakt <code>javax.servlet-api</code> ze skupiny <code>javax.servlet</code>. Do souboru <code>pom.xml</code> je nutné přidat následující kód:</p>
+
+                    <p:panelGrid columns="1">
+                    <pre><code class="xml">
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+        &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+        &lt;version&gt;3.0.1&lt;/version&gt;
+        &lt;type&gt;jar&lt;/type&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Ukázkový projekt</h2>
+                    <p>Ve složce <code>Servlet_Hello</code> naleznete ukázkový projekt s minimální implementaci HTTP servletu, který nedělá nic jiného, než že zobrazuje stránku s&nbsp;textem <i>Hello world!</i>. Projekt obsahuje tři soubory:</p>
+                    <ul>
+                        <li><code>pom.xml</code><br />Soubor Maven projektu, ve kterém je přidána závislost <code>javax.servlet-api</code></li>
+                        <li><code>src/main/java/cz/vutbr/fit/gja/HelloServlet.java</code><br />Třída <code class="java">HelloServlet</code> odvozená od <code class="java">javax.servlet.http.HttpServlet</code></li>
+                        <li><code>src/webapp/WEB-INF/web.xml</code><br />Konfigurační soubor pro webserver</li>
+                    </ul>
+                    
+                    <h2>Zdrojový soubor třídy <code>HelloServlet</code></h2>
+                    <p>Třída má přetíženou metodu <code class="java">doGet</code>, která se stará o odbavení HTTP požadavků typu GET. Má dva parametry. Prvním je objekt obsahující informace o přijatém požadavku od klienta. Druhý obsahuje předpřipravený objekt pro odpověď, do kterého tato metoda zapisuje. Metoda nejdříve nastaví MIME typ odpovědi - HTML dokument a následně vytvoří <code class="java">PrintWriter</code>, pomocí které zapíše obsah dokumentu stejně, jako se vypisuje na standardní výstup objektem <code class="java">System.out</code>.</p>
+                    <p:panelGrid columns="1">
+                    <pre><code class="java">
+package cz.vutbr.fit.gja;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * HelloServlet for protocol HTTP
+ * Prints text "Hello world!"
+ */
+public class HelloServlet extends HttpServlet
+{
+    // Class must override at least one method of doGet, doPost, doPut, doDelete, etc.
+    // These methods correspond to HTTP methods GET, POST, PUT and DELETE.
+
+    /**
+     * Called on HTTP method GET
+     *
+     * @param request Request object
+     * @param response Response object
+     *
+     * @throws IOException By PrintWriter
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // Setting of HTTP header content-type (MIME type of response)
+        response.setContentType("text/html;charset=UTF-8");
+
+        // Creation of output stream
+        PrintWriter out = response.getWriter();
+
+        // Writing is same like for any output stream, e.g. System.out
+        // In practice, you must write whole HTML document including DOCTYPE and tags &lt;html&gt;, &lt;head&gt; and &lt;body&gt;.
+        out.write("&lt;p&gt;Hello world!&lt;/p&gt;");
+
+        // Closing of output stream
+        out.close();
+    }
+}
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Konfigurační soubor <code>web.xml</code></h2>
+                    <p>Tento soubor se nachází ve složce <code>WEB-INF</code>, která je spolu se zkompilovaným kódem kopírována na webový server. Tato složce není veřejně dostupná a obsahuje mapování URL adres na konkrétní servlety.</p>
+                    <p:panelGrid columns="1">
+                    <pre><code class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  &lt;web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1"&gt;
+    &lt;display-name&gt;HelloServlet&lt;/display-name&gt;
+
+    &lt;!-- Registration of servlet class --&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;Hello&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;cz.vutbr.fit.gja.HelloServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;!-- Mapping servlet to URL --&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;Hello&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+                    </code></pre>
+                    </p:panelGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

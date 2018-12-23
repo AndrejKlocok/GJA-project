@@ -1,9 +1,21 @@
+/*
+ * ----------------------------------------------------------------------------
+ * RMI example
+ *
+ * Author:       Tomáš Vlk
+ * Date:         2018-12-02
+ * File:         Server.java
+ * Description:  Server responding to client
+ * ----------------------------------------------------------------------------
+ */
+
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.net.MalformedURLException;
 
 /**
- * Server
+ * Server respoinding to clients.
+ * It just registers remote object in RMI Registry and wait for clients.
  */
 public class Server {
 
@@ -11,6 +23,9 @@ public class Server {
      * Main function
      *
      * @param args Command line arguments
+     * @param args
+     * @throws RemoteException
+     * @throws MalformedURLException
      */
     public static void main(String[] args) throws RemoteException, MalformedURLException {
 
