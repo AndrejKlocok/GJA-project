@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>CRUD</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/ejb.png" width="130" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>CRUD</h1>
+                        <p>
+                            V tejto časti využijeme JPA entity manager.
+                        </p>
+                    <h2>Persist</h2>
+                    <p>
+                        Pridanie študenta do databáze. Volá sa funkcia <i>insertStudent</i>, kde sa vytvorí transakcia
+                        a vrámci nej sa uloží instancia študenta.<br/>
+                        Alternatíva môže byť aj volanie <b>save()</b>. Podrobný popis je dostupný na
+                        <h:outputLink value="https://stackoverflow.com/questions/5862680/whats-the-advantage-of-persist-vs-save-in-hibernate">persist vs save</h:outputLink>
+                        <br/>
+                        Príklad s využitím transakcie (podobným štýlom try catch sú riešené všetky dotazy):
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    /**
+     * Method inserts student into database
+     * @param student   given student object
+     * @return true if entity was saved, false otherwise
+     */
+    public boolean inserStudent(Student student) {
+        //get transaction
+        EntityTransaction tr = em.getTransaction();
+        try {
+            //begin transaction
+            tr.begin();
+            //persit object
+            em.persist(student);
+            //commit changes
+            tr.commit();
+            return true;
+        }
+        catch (Exception e) {
+            tr.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+                        </code></pre>
+                    </p:panelGrid>
+                    <h2>Remove</h2>
+                    <p>
+                        Odstránenie študenta z db prebieha podobne, pričom najskôr nájdeme instanciu pomocou
+                        query dotazu a až potom zmažeme. V prípde, že dané id nie je v db, query nám vráti null. <br/>
+                        Alternatíva môže byť aj volanie <b>delete()</b> od <i>Session</i>.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    /**
+     * Method deletes Student from database according to login property
+     * @param student   given student
+     * @return true if entity was removed, false otherwise
+     */
+    public boolean deleteStudent(Student student) {
+        //get transaction
+        EntityTransaction tr = em.getTransaction();
+        try {
+            //begin transaction
+            tr.begin();
+            //remove object
+            em.remove(student);
+            //commit changes
+            tr.commit();
+            return true;
+        }
+        catch (Exception e) {
+            tr.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+                        </code></pre>
+                    </p:panelGrid>
+                    <h2>Merge</h2>
+                    <p>
+                        Persist vyžijeme keď chceme vložiť objekt do db a súčasne ho pripojiť do entity managera
+                        Merge najde existujuci objekt s daným identifikátorom (PK) a aktualizuje ho, ak existuje
+                        tak vráti pripojený objekt a k nie tak ho vloži do databazy.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    /**
+     * Method updates Student in database
+     * @param student   given student
+     * @return  true if entity was updated, false otherwise
+     */
+    public boolean updateStudent(Student student){
+        //get transaction
+        EntityTransaction tr = em.getTransaction();
+        try{
+            //begin transaction
+            tr.begin();
+            //update object
+            student.setSigned(new Date(System.currentTimeMillis()));
+            em.merge(student);
+            //commit changes
+            tr.commit();
+
+            return true;
+        }
+        catch (Exception e){
+            tr.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+                        </code></pre>
+                    </p:panelGrid>
+                    <h:form>
+                        <p:growl id="messages" showDetail="true"/>
+
+                        <p:panelGrid columns="2"  style="width: 400px">
+                            <f:facet name = "header">
+                                <h:outputText value = "Persist"/>
+                            </f:facet>
+                            <p:outputLabel for="name" value="Student name:" />
+                            <p:inputText id="name" value="#{StudentInsert.name}" />
+                            <p:outputLabel for="login" value="Student login:" />
+                            <p:inputText id="login" value="#{StudentInsert.login}" >
+                                <f:validateLength maximum="8" />
+                            </p:inputText>
+                            <f:facet name = "footer">
+                                <h:panelGroup style = "display:block; text-align:center">
+                                    <p:commandButton value="Persist" icon="ui-icon-star" action="#{StudentInsert.addStudent}" ajax="false"/>
+                                </h:panelGroup>
+                            </f:facet>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="2" style="width: 400px">
+                            <f:facet name = "header">
+                                <h:outputText value = "Remove"/>
+                            </f:facet>
+                            <p:outputLabel for="loginDel" value="Student login:" />
+                            <p:inputText id="loginDel" value="#{StudentDelete.login}" >
+                                <f:validateLength maximum="8" />
+                            </p:inputText>
+                            <f:facet name = "footer">
+                                <h:panelGroup style = "display:block; text-align:center">
+                                    <p:commandButton value="Remove" icon="ui-icon-star" action="#{StudentDelete.deleteStudent}" ajax="false"/>
+                                </h:panelGroup>
+                            </f:facet>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="2" >
+                            <p:panelGrid columns="2" style="width: 400px">
+                                <f:facet name = "header">
+                                    <h:outputText value = "Find"/>
+                                </f:facet>
+                                <p:outputLabel for="loginFind" value="Student login:" />
+                                <p:inputText id="loginFind" value="#{StudentFind.login}" >
+                                    <f:validateLength maximum="8" />
+                                </p:inputText>
+                                <f:facet name = "footer">
+                                    <h:panelGroup style = "display:block; text-align:center">
+                                        <p:commandButton value="Find" icon="ui-icon-star" action="#{StudentFind.findStudent}" ajax="false"/>
+                                    </h:panelGroup>
+                                </f:facet>
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" style="width: 400px">
+                                <f:facet name = "header">
+                                    <h:outputText value = "Student"/>
+                                </f:facet>
+                                <p:outputLabel value="Student name:" />
+                                <p:outputLabel value="#{StudentFind.name}" />
+                                <p:outputLabel value="Student login:" />
+                                <p:outputLabel value="#{StudentFind.login}" />
+                            </p:panelGrid>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="2" style="width: 400px">
+                            <f:facet name = "header">
+                                <h:outputText value = "Merge"/>
+                            </f:facet>
+                            <p:outputLabel value="Student login:" />
+                            <p:inputText value="#{StudentUpdate.login}" >
+                                <f:validateLength maximum="8" />
+                            </p:inputText>
+
+                            <p:outputLabel for="nameUpdate" value="Student name:" />
+                            <p:inputText id="nameUpdate" value="#{StudentUpdate.name}" />
+                            <f:facet name = "footer">
+                                <h:panelGroup style = "display:block; text-align:center">
+                                    <p:commandButton value="Merge" icon="ui-icon-star" action="#{StudentUpdate.updateStudent}" ajax="false"/>
+                                </h:panelGroup>
+                            </f:facet>
+                        </p:panelGrid>
+                    </h:form>
+                    <h2>GET</h2>
+                    <p>
+                        Zobrazenie všetkých študentov z DB pomocou query. Query uvedieme v ďalšej kapitole
+                    </p>
+                    <ui:include src="/ui/components/studentsView.xhtml" />
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

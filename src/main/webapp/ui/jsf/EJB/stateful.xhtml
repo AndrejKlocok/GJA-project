@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Stateless EJB</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/ejb.png" width="130" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Statefull EJB</h1>
+                        <p>
+                            V tejto časti ukážeme základ Statefull EJB.
+                        </p>
+                    <h2>Príklad: "klikacia" hra</h2>
+                    <p>
+                        Jednoduchý príklad klikacej budovatelskej hry.
+                    </p>
+                    <hr/>
+                    <h2>Ukážka</h2>
+                    <h:outputText value='#{VillageBean.village.msg}'/>
+                    <h:form>
+                        <h:panelGrid columns="2">
+                            <h:outputText value='Drevo: #{VillageBean.village.wood}'/>
+                            <h:commandButton action="#{VillageBean.village.addWood}" value="Vytaz drevo"/>
+                            <h:outputText value='Kamen: #{VillageBean.village.stone}'/>
+                            <h:commandButton action="#{VillageBean.village.addStone}" value="Vytaz kamen"/>
+                            <h:outputText value='Drevorubac: #{VillageBean.village.lumber}.level'/>
+                            <h:commandButton action="#{VillageBean.village.lvlUpLumber}" value="Drevorubac upgrade"/>
+                            <h:outputText value='Kamenolom: #{VillageBean.village.quarry}.level'/>
+                            <h:commandButton action="#{VillageBean.village.lvlUpQuarry}" value="Kamenolom upgrade"/>
+                            <h:outputText value='Dom: #{VillageBean.village.house}.level'/>
+                            <h:commandButton action="#{VillageBean.village.lvlUpHouse}" value="Dom upgrade"/>
+                        </h:panelGrid>
+                    </h:form>
+                    <hr/>
+
+                    <p>Ako prvé sa vytvorí EJB s anotáciou @Stateful. Táto EJB si uchováva svoj stav.</p>
+
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Stateful (name = "village")
+@LocalBean
+public class Village {
+
+    private int wood = 0;
+    private int stone = 0;
+
+    private int quarry = 1;
+    private int lumber = 1;
+    private int house = 1;
+
+    private String msg = "";
+
+    public void addWood() {
+        wood += 10*lumber;
+        msg = "Vyťažené " + 10*lumber + " dreva.";
+    }
+    public void addStone() {
+        stone += 5*quarry;
+        msg = "Vyťažené " + 5*quarry + " kameňa.";
+    }
+
+    public void lvlUpQuarry() {
+        ...
+    }
+
+    public void lvlUpLumber() {
+        ...
+    }
+
+    public void lvlUpHouse() {
+        ...
+    }
+
+    // GETTERS
+    ...
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>Následne sa použije injection Stateful EJB do Managed bean pomocou @EJB anotácie. Tiež je nutné použiť aotáciu @SessionScope.</p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@ManagedBean (name = "VillageBean")
+@SessionScoped
+public class VillageBean {
+
+    @EJB
+    private Village village;
+
+    public Village getVillage() {
+        return village;
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

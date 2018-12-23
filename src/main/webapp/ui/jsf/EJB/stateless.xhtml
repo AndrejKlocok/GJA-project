@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Stateless EJB</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/ejb.png" width="130" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Stateless EJB</h1>
+                    <p>
+                        V tejto časti ukážeme základ Stateless EJB.
+                    </p>
+                    <h2>Príklad: prirátanie daňe k cene</h2>
+                    <p>
+                        Na tomto jednoduchom príklade je ukázaná jednoduchá funkcionalita Stateless EJB, ktorá je injectnutá do Managed bean pre použitie v JSF.
+                    </p>
+                    <hr/>
+                    <h2>Ukážka</h2>
+                    <h:form>
+                        <h:panelGrid columns="2">
+                            <h:outputText value='Cena produktu:'/>
+                            <h:inputText value='#{TaxCalculatorBean.price}'/>
+                            <h:outputText value='Daňová sadzba:'/>
+                            <h:inputText value='#{TaxCalculatorBean.tax}'/>
+                            <h:commandButton action="#{TaxCalculatorBean.addTaxToPrice}" value="Vypočítať cenu s daňou"/>
+                        </h:panelGrid>
+                    </h:form>
+                    <h4><h:outputText value="Výsledná cena produktu s daňou je #{TaxCalculatorBean.result }"/></h4>
+                    <hr/>
+                    <p>Ako prvé sa vytvorí interface TaxCalculator, s anotáciou @Remote</p>
+
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Remote
+public interface TaxCalculator {
+    public double addTaxToPrice(double price, double tax);
+}
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <p>Následne pre vytvorenú remote interface pridáme implementáciu so samotnou Statless EJB.
+                        Tá je anotovaná pomocou @Stateless. Nepovinne je tiež oynačená ako @Remote (TaxCalculator.class)</p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Stateless (name = "Calculator")
+@Remote (TaxCalculator.class)
+public class TaxCalculatorImpl implements TaxCalculator {
+
+    @Override
+    public double addTaxToPrice(double price, double tax) {
+        return price + (price*(tax/100));
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>Injection do Managed bean JSF je pomocou anotácie @EJB. </p>
+
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@ManagedBean (name = "TaxCalculatorBean")
+public class TaxCalculatorBean {
+    // anotáciou @EJB sa definuje Enterprise java bean ktorá je injectnutá do Managed Bean
+    @EJB
+    TaxCalculator taxCalculator;
+    private double price;
+    private double tax;
+    private double result;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public double getTax() {
+        return tax;
+    }
+
+    public double getResult() {
+        return result;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
+    }
+
+    public void setResult(double result) {
+        this.result = result;
+    }
+
+    public String addTaxToPrice() {
+        result = taxCalculator.addTaxToPrice(price, tax);
+        return "success";
+    }
+
+}
+                        </code></pre>
+                    </p:panelGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:tp = "http://java.sun.com/jsf/composite/jsf_custom">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>JSF</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/jsf.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>JavaServer Faces</h1>
+                    <p>
+                        JSF umožnuje definovanie aj vlastných komponent, čo si ukážeme v tejto časti na jednoduchom príklade.
+                    </p>
+                    <hr/>
+                    <h2>Ukážka - Cusom Login komponenta</h2>
+
+
+                    <h:form>
+                        <tp:login_component
+                                usernameLabel = "Užívatelské meno: "
+                                usernameValue = "#{userData.name}"
+                                passwordLabel = "Heslo: "
+                                passwordValue = "#{userData.password}"
+                                loginButtonLabel = "Prihlásiť"
+                                loginButtonAction = "#{userData.login}" />
+                    </h:form>
+
+                    <hr/>
+
+                    <p>Pre vytvorenie vlastne komponenty sú potrebné tieto kroky:</p>
+                    <p>1. vytvoriť v resources zložku, ktorá bude obsahovať vlastné komponenty (napríklad /src/main/webapp/resources/jsf_custom).</p>
+                    <p>2. vo vyššie spomínanej zležke vytvoriť .xhtml súbor, ktorý bude obsahovať vlastnú komponentu.</p>
+                    <p>&nbsp;&nbsp;&nbsp;<b>login_component.xhtml:</b></p>
+                    <p:panelGrid columns="1">
+                        <pre><code>
+&lt;?xml version = "1.0" encoding = "UTF-8"?&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+
+&lt;html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:h = "http://java.sun.com/jsf/html"
+      xmlns:f = "http://java.sun.com/jsf/core"
+      xmlns:composite = "http://java.sun.com/jsf/composite"&gt;
+
+&lt;composite:interface&gt;
+    &lt;composite:attribute name = "usernameLabel" /&gt;
+    &lt;composite:attribute name = "usernameValue" /&gt;
+    &lt;composite:attribute name = "passwordLabel" /&gt;
+    &lt;composite:attribute name = "passwordValue" /&gt;
+    &lt;composite:attribute name = "loginButtonLabel" /&gt;
+    &lt;composite:attribute name = "loginButtonAction"
+                         method-signature = "java.lang.String login()" /&gt;
+&lt;/composite:interface&gt;
+
+&lt;composite:implementation&gt;
+    &lt;h:form&gt;
+        &lt;h:message for = "loginPanel" style = "color:red;" /&gt;
+
+        &lt;h:panelGrid columns = "2" id = "loginPanel"&gt;
+                            \#{cc.attrs.usernameLabel} :
+            &lt;h:inputText id = "username" value = "\#{cc.attrs.usernameValue}" /&gt;
+                            \#{cc.attrs.passwordLabel} :
+            &lt;h:inputSecret id = "password" value = "\#{cc.attrs.passwordValue}" /&gt;
+        &lt;/h:panelGrid&gt;
+
+        &lt;h:commandButton action = "\#{cc.attrs.loginButtonAction}"
+                         value = "\#{cc.attrs.loginButtonLabel}"/&gt;
+    &lt;/h:form&gt;
+&lt;/composite:implementation&gt;
+&lt;/html&gt;
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>3. Vytvori ManagedBean pre spracovanie dát</p>
+                    <p>&nbsp;&nbsp;&nbsp;<b>UserData.java:</b></p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@ManagedBean(name = "userData", eager = true)
+@SessionScoped
+public class UserData implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private String name;
+    private String password;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String login() {
+        return "result";
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <p>4. Vloženie custom componenty do faceletu xhtml.</p>
+                    <p>&nbsp;&nbsp;&nbsp;Vlastná komponenta sa definuje pridaním argumentu do html elementu</p>
+                    <p:panelGrid columns="1">
+                        <pre><code>
+xmlns:tp = "http://java.sun.com/jsf/composite/jsf_custom"
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>&nbsp;&nbsp;&nbsp;Následne sa daná komponenta vloží. Je vidieť, že vďaka tomu ako sa vztvorilsa daná vlastná komponenta je možné si prispôsobovať rôzne texty/parametre/atributy, ktoré sa do vztvorenej komponenty vložia a prispôsobia. </p>
+                    <p:panelGrid columns="1">
+                        <pre><code>
+&lt;h:form&gt;
+    &lt;tp:login_component
+            usernameLabel = "Užívatelské meno: "
+            usernameValue = "\#{userData.name}"
+            passwordLabel = "Heslo: "
+            passwordValue = "\#{userData.password}"
+            loginButtonLabel = "Prihlásiť"
+            loginButtonAction = "\#{userData.login}" /&gt;
+&lt;/h:form&gt;
+                        </code></pre>
+                    </p:panelGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

@@ -194,4 +194,17 @@ public class MenuView {
     public String gui() { return "/ui/jsf/GWT/GUI"; }
 
     public String rpc() { return "/ui/jsf/GWT/RPC"; }
+
+    // EJB
+    public String stateful(){ return "/ui/jsf/EJB/stateful";}
+    public String stateless(){ return "/ui/jsf/EJB/stateless";}
+
+    // JSF
+    public String jsf_intro(){ return "/ui/jsf/JSF/jsf_intro";}
+    public String jsf_examples(){ return "/ui/jsf/JSF/jsf_examples";}
+    public String jsf_custom(){ return "/ui/jsf/JSF/jsf_custom";}
+
+    // Testing
+    public String junit(){ return "/ui/jsf/testing/junit";}
+    public String selenium(){ return "/ui/jsf/testing/selenium";}
 }
