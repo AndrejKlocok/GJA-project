@@ -19,7 +19,7 @@ import javax.jms.*;
 
 /**
  * JMS ActiveMQ Sender
- * inspired by inspired by http://activemq.apache.org/hello-world.html
+ * @see http://activemq.apache.org/hello-world.html
  */
 public class Sender {
 

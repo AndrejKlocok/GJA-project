@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"/>
+    <h:outputStylesheet library="styles" name="highlight.min.css"/>
+    <title>GWT Archetype</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/gwt.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Archetype</h1>
+
+                    <p>
+                        Nejjednoduší jak začít s GWT je vygenerování si struktury projektu pomocí mavenu (archetype).
+                        K tomu použijeme archetypes z <a
+                            href="https://github.com/tbroyer/gwt-maven-archetypes/Archetype.xhtml">https://github.com/tbroyer/gwt-maven-archetypes/</a>, které by měly být dostupné v centrálním repozitáři a nebo mohou být nainstalovány manuálně.
+                        Poté pomocí vygenerujeme strukturu projektu:
+                    </p>
+
+                    <p:panelGrid columns="1">
+                    <pre><code class="bash">
+mvn archetype:generate \
+   -DarchetypeGroupId=net.ltgt.gwt.archetypes \
+   -DarchetypeVersion=LATEST \
+   -DarchetypeArtifactId=modular-webapp
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <p>Generování je interaktivní, takže stačí vyplňovat požadované údaje. Struktura projektu pak vypadá zhruba takto:</p>
+
+                    <p:panelGrid columns="1">
+                    <pre><code class="bash">
+├── GWT-Archetype-client
+│   ├── pom.xml
+│   ├── src
+│       └── main
+│           ├── java
+│           │   └── cz
+│           │       └── vutbr
+│           │           └── fit
+│           │               └── gja
+│           │                   └── App.java
+│           └── module.gwt.xml
+├── GWT-Archetype-server
+│   ├── pom.xml
+│   └── src
+│       └── main
+│           ├── java
+│           │   └── cz
+│           │       └── vutbr
+│           │           └── fit
+│           │               └── gja
+│           │                   └── GreetingServiceImpl.java
+│           ├── jettyconf
+│           │   └── context.xml
+│           ├── tomcatconf
+│           │   └── context.xml
+│           └── webapp
+│               ├── favicon.ico
+│               ├── GWT-Simple.css
+│               ├── index.html
+│               └── WEB-INF
+│                   └── web.xml
+├── GWT-Archetype-shared
+│   ├── pom.xml
+│   └── src
+│       └── main
+│           └── java
+│               └── cz
+│                   └── vutbr
+│                       └── fit
+│                           └── gja
+│                               ├── FieldVerifier.java
+│                               ├── GreetingResponse.java
+│                               ├── GreetingServiceAsync.java
+│                               └── GreetingService.java
+└── pom.xml
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <p>
+                        Supštění projektu je pak jednoduché (popis od vývojářů archetypu).
+
+                        <blockquote>
+                            Change directory to your generated project and issue the following commands:<br/>
+                            <br/>
+                            In one terminal window: mvn gwt:codeserver -pl *-client -am<br/>
+                            <br/>
+                            In another terminal window: mvn jetty:run -pl *-server -am -Denv=dev<br/>
+                            <br/>
+                            Or if you'd rather use Tomcat than Jetty, use mvn tomcat7:run instead of mvn jetty:run.<br/>
+                            Note that the -pl and -am are not strictly necessary, they just tell Maven not to build the client module when you're dealing with the server one, and vice versa.<br/>
+                        </blockquote>
+                    </p>
+
+                    <p>
+                        Na spuštěném code serveru pak můžeme najít návod jak vypnout/zapnout dev mod (localhost:9876).
+                        Případně můžeme jednoduše pomocí mvn package vytvořit war balíček a nasadit ho na jakýkoliv aplikační server.
+                    </p>
+
+                    <p>
+                        Celý nijak neupravený vygenrovaný projekt s návodem ke spuštění je umístěn ve složce GWT-Archetype.
+                        Ostatní příklady vycházejí z tohoto archetypu ale jsou upraveny a do zdrojových souborů byly přidány komentáře.
+                    </p>
+
+                    <h3>Další info:</h3>
+                    <a href="https://github.com/tbroyer/gwt-maven-archetypes/Archetype.xhtml">https://github.com/tbroyer/gwt-maven-archetypes/</a>
+                    <br/>
+                    <a href="http://www.gwtproject.org/doc/latest/tutorial/index.html">http://www.gwtproject.org/doc/latest/tutorial/index.html</a>
+                    <br/>
+                    <a href="https://www.tutorialspoint.com/gwt/gwt_overview.htm">https://www.tutorialspoint.com/gwt/gwt_overview.htm</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library="js" name="highlight.min.js"/>
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

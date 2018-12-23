@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>GWT GUI</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/gwt.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>GUI</h1>
+
+                    <p>
+                        V GWT můžeme vytvořit GUI aplikace podobně jako ve Swingu nebo pomocí UI Binder.
+                        Lze použít widgety dostupné v samotném GWT nebo definovat vlastní.
+                        Na této stránce je základní popis, podrobnější popis a použítí lze nalézt v přiloženém příkladu.
+                    </p>
+
+                    <p>
+                        Celý příklad s návodem ke spuštění je umístěn ve složce GWT-GUI.
+                        Příklad demonstruje několik standardních GWT widgetů a jednoduché použítí UI Binder.
+                        Struktura příkladu a jeho spouštění je stejné jako v případě GWT-Archetype.
+                    </p>
+
+                    <h2>HTML</h2>
+
+                    <p>
+                        Nejdříve je potřeba přidat do HTML aplikace sloty (containery).
+                        Tyto sloty bude to jediné co v HTML struktuře výsledné aplikace budeme muset vytvářet.
+                        GWT vytvoří celou HTML strukturu dynamicky pomocí JavaScriptu.
+                        Pro jednoduchost vytvoříme jenom jeden slot, do které umístíme všechny prvky uživatelského rozhraní.
+                    </p>
+
+                    <p:panelGrid columns="1">
+                    <pre><code class="html">
+&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=UTF-8&gt;
+      &lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;GWT-GUI.css&quot;&gt;
+      &lt;title&gt;GWT GUI&lt;/title&gt;
+      &lt;script src=&quot;app/app.nocache.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+
+    &lt;!-- We can have as many slots on page as needed. Here we use just one for simplicity. --&gt;
+    &lt;div id=&quot;mainContainer&quot;&gt;&lt;/div&gt;
+
+  &lt;/body&gt;
+&lt;/html&gt;
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Widgety</h2>
+
+                    <p>
+                        Při vytváření GUI v GWT vytváříme widgety, které pak můžeme seskupit do layoutů.
+                        Widget definuje vzhled a chovaní a layout rozmístění těchto prvků.
+                        Pokud bychom chtěli například vytvořit přihlašovací formulář, mohl bychom GUI definovat takto:
+                    </p>
+
+                    <p:panelGrid columns="1">
+                    <pre><code class="java">
+// Create components
+final TextBox loginField = new TextBox();
+final PasswordTextBox passwordField = new PasswordTextBox();
+final PushButton pushButton = new PushButton("Login");
+
+// Add components to layout
+VerticalPanel verticalPanel = new VerticalPanel();
+verticalPanel.add(loginFiled);
+verticalPanel.add(passwordField);
+verticalPanel.add(pushButton);
+
+// add layout to root panel
+RootPanel rootPanel = RootPanel.get("mainContainer");
+rootPanel.add(verticalPanel);
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <p>
+                        Nejdříve jsme vytvořili jednotlivé widgety (textová pole a tlačitko) a následné jsme je přidaly do layoutu (vertikální rozmístění).
+                        Nakonec jsme vložili celý layout do dříve vytvořeného slotu v HTML.
+                    </p>
+
+                    <p>
+                        Tento kód vložíme do metody <code>onModuleLoad()</code> ve tříde <code>App.java</code> (v klientské části).
+                    </p>
+
+                    <p>
+                        Přehled demonstrace všech prvků se zdrojovým kódem je dostupný na <a href="http://samples.gwtproject.org/samples/Showcase/Showcase.html">http://samples.gwtproject.org/samples/Showcase/Showcase.html</a>.
+                    </p>
+
+                    <h2>UI Binder</h2>
+
+                    <p>
+                        V GWT je UI Binder něco jako JSP pro Sevrlety. Nejdříve musíme zadefinovat UI pomocí XML:
+                    </p>
+
+                    <p:panelGrid columns="1">
+                    <pre><code class="xml">
+&lt;!DOCTYPE ui:UiBinder SYSTEM &quot;http://dl.google.com/gwt/DTD/xhtml.ent&quot;&gt;
+&lt;ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:gwt='urn:import:com.google.gwt.user.client.ui'&gt;
+    &lt;ui:with type=&quot;cz.vutbr.fit.gja.NameWidgetResources&quot; field=&quot;res&quot;&gt;
+    &lt;/ui:with&gt;
+    &lt;gwt:HTMLPanel&gt;
+        &lt;div align=&quot;center&quot;&gt;
+            &lt;gwt:VerticalPanel spacing=&quot;10&quot; styleName=&quot;{res.style.background}&quot;&gt;
+                &lt;gwt:Label text=&quot;Your name:&quot;/&gt;
+                &lt;gwt:TextBox ui:field=&quot;nameField&quot; styleName=&quot;{res.style.box}&quot;/&gt;
+                &lt;gwt:Label ui:field=&quot;responseLabel&quot; styleName=&quot;{res.style.greyText}&quot;/&gt;
+            &lt;/gwt:VerticalPanel&gt;
+        &lt;/div&gt;
+    &lt;/gwt:HTMLPanel&gt;
+&lt;/ui:UiBinder&gt;
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <p>
+                        Toto XML obsahuje strukturu UI a widgety se kterými budeme pracovat jsou označené ui:field="name".
+                        Widgety také mohou obsahovat styleName="styl" nebo v případě HTML prvků class="styl".
+                        V tomto příkladě máme externí CSS soubor jen pro toto XML a ten jsme zpřístupnili přes &lt;ui:with type=&quot;cz.vutbr.fit.gja.NameWidgetResources&quot; field=&quot;res&quot;&gt;.
+                        Tuto třídu vytvoříme později.
+                        Dále definujeme vlastní widget, který bude propojený s XML pomocí UI Binder anotací.
+                    </p>
+
+                    <p:panelGrid columns="1">
+                    <pre><code class="java">
+public class NameWidget extends Composite {
+
+    private static NameWidgetUiBinder uiBinder = GWT.create(NameWidgetUiBinder.class);
+
+    @UiTemplate("NameWidget.ui.xml")
+    interface NameWidgetUiBinder extends UiBinder&lt;Widget, NameWidget&gt; {
+    }
+
+    @UiField(provided = true)
+    final NameWidgetResources res;
+
+    public NameWidget() {
+        this.res = GWT.create(NameWidgetResources.class);
+        res.style().ensureInjected();
+        initWidget(uiBinder.createAndBindUi(this));
+    }
+
+    @UiField
+    TextBox nameField;
+
+    @UiField
+    Label responseLabel;
+
+    @UiHandler("nameField")
+    void handleNameFieldChange(KeyUpEvent event) {
+        if (!nameField.getText().isEmpty()) {
+            responseLabel.setText("Hello " + nameField.getText());
+        } else {
+            responseLabel.setText("");
+        }
+    }
+}
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <p>
+                        Widget má vlastní CSS resource a k tomu musíme vytvořit CSS soubor a odpovídající Java soubor.
+                    </p>
+
+                    <p:panelGrid columns="2">
+                        <p:panel style="border:none">
+                    <pre><code class="css">
+@CHARSET "UTF-8";
+
+.greyText {
+  font-family: Arial, Sans-serif;
+  color: #080808;
+  font-size: 11px;
+  text-align: left;
+}
+
+.box {
+  border: 1px solid #AACCEE;
+  display: block;
+  font-size: 12px;
+  margin: 005px;
+  padding: 3px;
+  width: 203px;
+}
+
+.background {
+  background-color: #999999;
+  border: 1px none transparent;
+  color: #000000;
+  font-size: 11px;
+  margin-left: -8px;
+  margin-top: 5px;
+  padding: 6px;
+}
+                    </code></pre>
+                        </p:panel>
+                        <p:panel style="border:none">
+                    <pre><code class="java">
+public interface NameWidgetResources extends ClientBundle {
+
+    interface MyCss extends CssResource {
+
+        String box();
+
+        String background();
+
+        String greyText();
+    }
+
+    @Source("NameWidget.css")
+    MyCss style();
+}
+                    </code></pre>
+                        </p:panel>
+                    </p:panelGrid>
+
+                    <h3>Další info:</h3>
+                    <a href="http://www.gwtproject.org/doc/latest/tutorial/index.html">http://www.gwtproject.org/doc/latest/tutorial/index.html</a>
+                    <br/>
+                    <a href="https://www.tutorialspoint.com/gwt/gwt_overview.htm">https://www.tutorialspoint.com/gwt/gwt_overview.htm</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

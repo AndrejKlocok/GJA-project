@@ -1,0 +1,27 @@
+@CHARSET "UTF-8";
+
+.greyText {
+  font-family: Arial, Sans-serif;
+  color: #080808;
+  font-size: 11px;
+  text-align: left;
+}
+
+.box {
+  border: 1px solid #AACCEE;
+  display: block;
+  font-size: 12px;
+  margin: 005px;
+  padding: 3px;
+  width: 203px;
+}
+
+.background {
+  background-color: #999999;
+  border: 1px none transparent;
+  color: #000000;
+  font-size: 11px;
+  margin-left: -8px;
+  margin-top: 5px;
+  padding: 6px;
+}

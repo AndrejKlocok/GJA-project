@@ -1,0 +1,16 @@
+/** Add css rules here for your application. */
+
+/** By default, the class name for each component is gwt-<classname>. */
+.gwt-Button {
+    font-style: italic;
+}
+
+/** Example of secondary style */
+.BackgroundBlue {
+    background: dodgerblue !important;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#greenButton {
+    background: #78A960;
+}
