@@ -39,6 +39,10 @@ public class Seat {
 
     @Override
     public String toString() {
-        return "Seat: " + name + "\n\t\tAC temp: " + airConditionControl.getTemp() + "C";
+        if (airConditionControl != null) {
+            return "Seat: " + name + "\n\t\tAC temp: " + airConditionControl.getTemp() + "C";
+        } else {
+            return "Seat: " + name;
+        }
     }
 }

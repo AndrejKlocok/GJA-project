@@ -61,7 +61,9 @@
                 </entry>
                 <entry key="Right Front">
                     <bean class="cz.vutbr.fit.gja.spring.bean.xml.Seat">
-                        <constructor-arg type="cz.vutbr.fit.gja.spring.bean.xml.AirCondition" ref="ac"/>
+                        <constructor-arg type="cz.vutbr.fit.gja.spring.bean.xml.AirCondition">
+                            <null/>
+                        </constructor-arg>
                         <constructor-arg type="java.lang.String" value="Right Front"/>
                     </bean>
                 </entry>

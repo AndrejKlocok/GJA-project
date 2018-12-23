@@ -1,7 +1,11 @@
 package cz.vutbr.fit.gja.spring;
 
+import cz.vutbr.fit.gja.spring.bean.annotation.Plane;
+import cz.vutbr.fit.gja.spring.bean.java.PlaneConfig;
 import cz.vutbr.fit.gja.spring.bean.xml.*;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -25,7 +29,7 @@ public class MainApp {
     /**
      * XML based configuration.
      *
-     * File spring-config.xml contains bean specification.
+     * File beans.xml contains bean specification.
      *
      * 1. Hello world show simple usage of spring's beans.
      *
@@ -36,10 +40,10 @@ public class MainApp {
      * 3. Scope example shows difference between prototype and singleton bean.
      */
     private static void showXMLBasedConfiguration() {
-        //Expects spring-config.xml on ClassPath
-        AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
+        //Expects beans.xml on ClassPath
+        AbstractApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
         //or use File systep XML app context with path to config xml
-//        AbstractApplicationContext context = new FileSystemXmlApplicationContext("./src/main/resources/spring-config.xml");
+//        AbstractApplicationContext context = new FileSystemXmlApplicationContext("./src/main/resources/beans.xml");
 
         System.out.println("\n\ta) Hello world example");
         HelloWorld helloBean = (HelloWorld) context.getBean("helloWorld");
@@ -75,11 +79,15 @@ public class MainApp {
      * Annotation based configuration
      */
     private static void showAnnotationBasedConfiguration() {
-
+        ApplicationContext context = new ClassPathXmlApplicationContext("annotation-beans.xml");
+        Plane plane = (Plane) context.getBean("plane");
+        System.out.println(plane.toString());
     }
 
 
     private static void showJavaBasedConfiguration() {
-
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PlaneConfig.class);
+        Plane plane = (Plane) context.getBean("plane1");
+        System.out.println(plane.toString());
     }
 }
