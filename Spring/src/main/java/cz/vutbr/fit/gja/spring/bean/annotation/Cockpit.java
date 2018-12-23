@@ -22,4 +22,8 @@ public class Cockpit {
         return "Captain: " + captain.toString() +
                 " Co-pilot: " + copilot.toString();
     }
+
+    public void init() {
+        System.out.println(Cockpit.class.getSimpleName() + ": Call init()");
+    }
 }

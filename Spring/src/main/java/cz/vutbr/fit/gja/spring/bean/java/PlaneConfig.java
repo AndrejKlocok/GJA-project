@@ -8,6 +8,7 @@ import cz.vutbr.fit.gja.spring.bean.xml.Car;
 import cz.vutbr.fit.gja.spring.bean.xml.Seat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,8 @@ public class PlaneConfig {
         return passengers;
     }
 
-    @Bean
+    @Bean(initMethod = "init")
+    @Scope("prototype")
     public Cockpit cockpit() {
         return new Cockpit(captain(), copilot());
     }
