@@ -1,11 +1,8 @@
 package cz.vutbr.fit.gja.spring.bean.annotation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
 
 /**
