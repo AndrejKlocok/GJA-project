@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>JSF</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/jsf.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>JavaServer Faces</h1>
+                    <p>
+                        V tejto časti ukážeme základy JavaServer Faces na jednoduchom príklade.
+                    </p>
+                    <hr/>
+                    <h2>Ukážka - kalkulačka</h2>
+                    <h:form>
+                        <h:messages style="color: red"></h:messages>
+                        <table>
+                            <tr>
+                                <td>
+                                    Číslo 1
+                                </td>
+                                <td>
+                                    <h:inputText required="true" value="#{kalkulackaBean.cislo1}" converterMessage="Zadajte číslo" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Číslo 2
+                                </td>
+                                <td>
+                                    <h:inputText required="true" value="#{kalkulackaBean.cislo2}" converterMessage="Zadajte číslo" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Operace
+                                </td>
+                                <td>
+                                    <h:selectOneMenu value="#{kalkulackaBean.operacia}">
+                                        <f:selectItems value="#{kalkulackaBean.mozneOperacie}" />
+                                    </h:selectOneMenu>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h:commandButton value="Odoslať" action="#{kalkulackaBean.vypocitaj}" />
+
+                    </h:form>
+                    <p style="font-size: 2em;">
+                        <h:outputText value="#{kalkulackaBean.vysledok}" />
+                    </p>
+                    <hr/>
+                    <p>Priklad sa skladá z prezentačnej vrstvy, čo je .xhtml dokument a datovej vrstvz čo je Managed Bean.</p>
+                    <p><b>XHTML:</b></p>
+                    <p>Je tu vidieť použitie JSF tagov. Za povšimnutie stojí tag messages, ktoré vypisuje chybovú hlášku, ktorý sa priamo definuje u pola inputText argumentom converterMessage.</p>
+                    <p>Menu sa generuje jednoduchšie pomocou komponenty SelectOneMenu, u ktorého sa vo value nastaví vlastnosť z beanu, ktorá sa ním nastavuje a samotne pomožky sa generujú pomocou elementu selectItems, kde zadáme hashmapu z beanu.</p>
+                    <p:panelGrid columns="1">
+                        <pre><code>
+&lt;h:form&gt;
+    &lt;h:messages style="color: red"&gt;&lt;/h:messages&gt;
+    &lt;table&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                Číslo 1
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;h:inputText required="true" value="{kalkulackaBean.cislo1}" converterMessage="Zadajte číslo" /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                Číslo 2
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;h:inputText required="true" value="{kalkulackaBean.cislo2}" converterMessage="Zadajte číslo" /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                Operace
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;h:selectOneMenu value="{kalkulackaBean.operacia}"&gt;
+                    &lt;f:selectItems value="{kalkulackaBean.mozneOperacie}" /&gt;
+                &lt;/h:selectOneMenu&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+
+    &lt;h:commandButton value="Odoslať" action="{kalkulackaBean.vypocitaj}" /&gt;
+
+&lt;/h:form&gt;
+                        </code></pre>
+                    </p:panelGrid>
+                    <p><b>ManagedBean:</b></p>
+                    <p>Anotuje sa pomocou @ManagedBean a pridá sa meno, ktorým sa bude volať (nepovinné, defaultne je rovnaké ako v príklade). @RequestScoped anotácia hovorí o tom, že data sú v nej platné v rámci jednej request operácie. V ManagedBean je potrebné dať Getter a Setter pre každú vlastnosť s ktorou sa má pracovať.</p>
+                    <p>Zoznam operácií je implementovaný ako hashmapa, pretože v HTML má položka select 2 hodnoty. Jedna ktorá sa zobrauje užívateľovi a druhá ktorá sa odosiela. Tá druhá nemôže obsahovať diakritiku.</p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@ManagedBean (name = "kalkulackaBean")
+@RequestScoped
+public class KalkulackaBean {
+    private double cislo1;
+    private double cislo2;
+    private double vysledok;
+    private String operacia;
+    private Map&lt;String, String&gt; mozneOperacie;
+
+    public KalkulackaBean() {
+        mozneOperacie = new LinkedHashMap&lt;&gt;();
+        mozneOperacie.put("Sčítaj", "+");
+        mozneOperacie.put("Odčítaj", "-");
+        mozneOperacie.put("Vynásob", "*");
+        mozneOperacie.put("Vydel", "/");
+    }
+
+    public void vypocitaj()
+    {
+        switch (operacia)
+        {
+            case "+":
+                vysledok = cislo1 + cislo2;
+                break;
+            case "-":
+                vysledok = cislo1 - cislo2;
+                break;
+            case "*":
+                vysledok = cislo1 * cislo2;
+                break;
+            case "/":
+                vysledok = cislo1 / cislo2;
+                break;
+        }
+
+    }
+
+    // GETTERS
+    ...
+
+    // SETTERS
+    ...
+}
+                        </code></pre>
+                    </p:panelGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

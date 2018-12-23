@@ -1,7 +1,6 @@
 <ui:composition
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
     <h:form>
@@ -9,8 +8,25 @@
             <p:submenu label="Main">
                 <p:menuitem value="Home" action="#{menuView.home_welcome}" />
             </p:submenu>
+            <p:submenu label="Testovanie">
+                <p:menuitem value="JUnit" action="#{menuView.junit}" />
+                <p:menuitem value="Selenium" action="#{menuView.selenium}" />
+            </p:submenu>
+            <p:submenu label="EJB">
+                <p:menuitem value="Stateful" action="#{menuView.stateful}" />
+                <p:menuitem value="Stateless" action="#{menuView.stateless}" />
+            </p:submenu>
+            <p:submenu label="JavaServer Faces">
+                <p:menuitem value="Intro" action="#{menuView.jsf_intro}" />
+                <p:menuitem value="Simple examples" action="#{menuView.jsf_examples}" />
+                <p:menuitem value="Custom component" action="#{menuView.jsf_custom}" />
+            </p:submenu>
             <p:submenu label="Servlets">
                 <p:menuitem value="Hello" action="#{menuView.servlets_hello}" />
+                <p:menuitem value="Form" action="#{menuView.servlets_form}" />
+            </p:submenu>
+            <p:submenu label="JSP">
+                <p:menuitem value="Form" action="#{menuView.jsp_form}" />
             </p:submenu>
             <p:submenu label="PrimeFaces">
                 <p:menuitem value="Setup" action="#{menuView.pr_setUp}" />
