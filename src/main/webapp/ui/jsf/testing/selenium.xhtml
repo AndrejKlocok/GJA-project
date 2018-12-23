@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Selenium</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/selenium.jpeg" height="150" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Selenium</h1>
+                    <p>
+                        V tejto časti ukážeme jednoduchý príklad na testovanie pomocou nástroja Selenium.
+                    </p>
+                    <p>Pre fungovanie príkladu a celkovo Selenium web serveru je nutné vzkonať nasledujúce kroky:</p>
+                    <ol>
+                        <li>Nainštalovať JDK.</li>
+                        <li>Nainštalovať Google chrome(prípadne iný prehliadač, ale v našom príklade je využitý google chrome.)</li>
+                        <li>Nainštalovať Chrome driver</li>
+                        <li>Stiahnuť <a href="https://www.seleniumhq.org/download/">Selenium Java Client Driver</a> </li>
+                        <li>Importovať stiahnuté Selenium knižnice do projektu.</li>
+                        <li>Následne už len použiť, napríklad ako v ukážke.</li>
+                    </ol>
+
+                    <h2>Ukážka - Selenium test titulky na stránke</h2>
+                    <p>Testo spustí prehliadač, otovrí webovú stránku, skontroluje title stránky a vráti výsledok.</p>
+                    <p>Preloží sa príkazom "mvn install"</p>
+                    <p>Spustí sa príkazom "mvn exec:java"</p>
+
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class SelWebDriver {
+
+    public static void main(String[] args) {
+        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+        WebDriver driver = new ChromeDriver();
+
+        String baseUrl = "https://www.seleniumhq.org/";
+        String expectedTitle = "Selenium - Web Browser Automation";
+        String actualTitle = "";
+
+        // spustí chrom a vojde na definovanú URL
+        driver.get(baseUrl);
+
+        // získa skutočný titulok stránky
+        actualTitle = driver.getTitle();
+
+
+        // Porovná skutočný title stránkz s očakávaným
+        if (actualTitle.contentEquals(expectedTitle)){
+            System.out.println("Test Passed!");
+        } else {
+            System.out.println("Test Failed");
+        }
+
+        // web driver sa zavrie
+        driver.quit();
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>
