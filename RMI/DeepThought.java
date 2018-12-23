@@ -14,7 +14,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Remote interface implementation.
- * This is defintion of what server return, when client invoke methods on DeepThoughtInterface.
+ * This is defintion of what server return, when client invoke methods on <code>DeepThoughtInterface</code>.
  */
 public class DeepThought extends UnicastRemoteObject implements DeepThoughtInterface {
 

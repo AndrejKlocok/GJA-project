@@ -24,6 +24,7 @@ public class MenuView {
         DefaultSubMenu rmiMenu = new DefaultSubMenu("RMI");
         DefaultSubMenu jmsMenu = new DefaultSubMenu("JMS");
         DefaultSubMenu primeMenu = new DefaultSubMenu("Primefaces");
+        DefaultSubMenu gwtMenu = new DefaultSubMenu("GWT");
 
         //MAIN
         item = new DefaultMenuItem("Home_Welcome");
@@ -108,6 +109,13 @@ public class MenuView {
         item.setCommand("#{menuView.publishSubscribe}");
         jmsMenu.addElement(item);
 
+        //GWT
+        item = new DefaultMenuItem("GWT");
+        item.setCommand("#{menuView.archetype}");
+        item.setCommand("#{menuView.gui}");
+        item.setCommand("#{menuView.rpc}");
+        gwtMenu.addElement(item);
+
         model.addElement(mainMenu);
         model.addElement(primeMenu);
         model.addElement(dbMenu);
@@ -179,4 +187,11 @@ public class MenuView {
     public String filesImages(){ return "/ui/jsf/PrimeFaces/Files_Images";}
 
     public String pr_setUp(){ return "/ui/jsf/PrimeFaces/PrimeFaces_SetUp";}
+
+    //GWT
+    public String archetype() { return "/ui/jsf/GWT/Archetype"; }
+
+    public String gui() { return "/ui/jsf/GWT/GUI"; }
+
+    public String rpc() { return "/ui/jsf/GWT/RPC"; }
 }

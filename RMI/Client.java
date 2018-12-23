@@ -16,7 +16,7 @@ import java.net.MalformedURLException;
 
 /**
  * Simple RMI client usable from command line.
- * At first client finds stub for DeepThought in RMI Registry via JNDI and then it call its method with RPC.
+ * At first client finds stub for <code>DeepThought</code> in RMI Registry via JNDI and then it call its method with RPC.
  * Everything is synchrounous and looks like local method call.
  */
 public class Client {
