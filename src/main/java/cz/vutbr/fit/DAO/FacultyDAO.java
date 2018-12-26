@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class is database service to Faculty model stored in database
+ * Class is database service to Faculty model (Persistent object)
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 public class FacultyDAO extends DAO {
 

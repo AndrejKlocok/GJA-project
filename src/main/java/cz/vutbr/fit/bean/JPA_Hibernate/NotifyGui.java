@@ -3,6 +3,13 @@ package cz.vutbr.fit.bean.JPA_Hibernate;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+/**
+ * Simple notification of gui using FacesContext
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 public class NotifyGui {
     /**
      * Notify gui with message

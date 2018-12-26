@@ -19,7 +19,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * Class is database service to Student model (Persistent object)
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 @Singleton
 public class StudentDAO extends DAO{
     /**

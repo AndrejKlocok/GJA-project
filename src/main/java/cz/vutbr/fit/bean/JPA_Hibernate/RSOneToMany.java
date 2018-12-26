@@ -13,6 +13,10 @@ import java.util.List;
 
 /**
  * Managed bean for OneToMany page
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 @ManagedBean(name = "RSOneToMany")
 public class RSOneToMany extends NotifyGui{
@@ -186,8 +190,4 @@ public class RSOneToMany extends NotifyGui{
         this.toFacultyAddSubj = toFacultyAddSubj;
     }
 
-    public void addMessage(String summary, String detail) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
 }

@@ -10,6 +10,10 @@ import java.util.Date;
 
 /**
  * Managed bean for RSOneToOne page
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 @ManagedBean(name = "RSOneToOne")
 public class RSOneToOne extends NotifyGui{

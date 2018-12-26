@@ -14,6 +14,10 @@ import java.util.List;
 
 /**
  * Managed bean for Layout page
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 @ManagedBean(name = "LayoutBean")
 public class LayoutBean {

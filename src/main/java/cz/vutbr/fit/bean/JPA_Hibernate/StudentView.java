@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 /**
  * Managed bean students list
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 @ManagedBean(name = "StudentView")
 public class StudentView {
