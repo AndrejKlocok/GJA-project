@@ -25,39 +25,18 @@
                     <h1>Home</h1>
                     <p> Tutorial Java ee aplikácie, ktorá pracuje s Mysql databázou.</p>
                     <p> Pred spustením tutoriálu je potrebné vytvoriť uživateľa,  databázu. Toto je pripravené
-                        v priloženom skripte, v <i>src/resources/db/dbMysql.sh</i></p>
-                    <p> Tento skript spúšťa jednotlivé query, ktoré vytvoria užívateľa, databázu a tabuľku Student</p>
+                        v priloženom skripte, v <i>src/dbMysql.sh</i></p>
 
-                    <ul>
-                        <li>
-                            JPA - špecifikácia perzistného API
-                        </li>
-                        <li>
-                            Hibernate - jedna z implementácii JPA
-                            <ul>
-                                <li>
-                                    Peristencia (načítanie dát z db)
-                                </li>
-                                <li>
-                                    Cashing
-                                </li>
-                                <li>
-                                    Managovanie vzťahov
-                                </li>
-                                <li>
-                                    Mapovanie objektov
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
                     <p>
                         Priložený skript inicializuje databazu GJA.
                     </p>
                     <p:panelGrid columns="1">
                         <pre><code class="sql">
+CREATE DATABASE IF NOT EXISTS GJA;
 CREATE USER user69@localhost IDENTIFIED BY 'heslo';
 GRANT ALL PRIVILEGES ON mydatabase.* TO 'user69'@'localhost';
 FLUSH PRIVILEGES;
+mysql -uroot -p$ {rootpasswd}  'GJA' &lt; init.sql
 
                         </code></pre>
                     </p:panelGrid>
