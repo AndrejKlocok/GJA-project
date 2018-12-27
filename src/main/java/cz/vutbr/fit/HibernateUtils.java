@@ -7,6 +7,13 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.service.ServiceRegistry;
 
+/**
+ * Hibernate builder class, that creates session factory from .cfg file
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 public class HibernateUtils {
 
     private static final SessionFactory sessionFactory = buildSessionFactory();

@@ -8,6 +8,10 @@ import java.util.Date;
 
 /**
  * Managed bean for CRUD page
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 @ManagedBean(name = "StudentInsert")
 public class StudentInsert extends StudentBean{

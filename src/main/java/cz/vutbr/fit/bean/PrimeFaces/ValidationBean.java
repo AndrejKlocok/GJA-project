@@ -13,6 +13,10 @@ import java.util.List;
 
 /**
  * Managed bean for Validation page
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 @ManagedBean(name = "ValidationBean")
 public class ValidationBean {

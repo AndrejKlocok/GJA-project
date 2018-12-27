@@ -4,7 +4,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-
+/**
+ * Student model (Persistent object)
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 @Entity
 @NamedQuery(name="Student.updateBlankName", query = "UPDATE Student S SET S.name = 'MenoStudenta' WHERE S.name =''")
 public class Student implements Serializable {

@@ -8,6 +8,13 @@ import org.primefaces.push.annotation.Singleton;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 
+/**
+ * Class is database service to Isic model (Persistent object)
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 @Singleton
 public class IsicDAO  extends  DAO{
     /**

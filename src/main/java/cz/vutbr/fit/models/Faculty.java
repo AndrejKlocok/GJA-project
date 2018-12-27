@@ -1,11 +1,16 @@
 package cz.vutbr.fit.models;
 
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Faculty model (Persistent object)
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 @Entity
 public class Faculty {
     @Id
