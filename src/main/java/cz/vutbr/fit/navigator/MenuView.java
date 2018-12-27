@@ -20,6 +20,7 @@ public class MenuView {
 
         DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
         DefaultSubMenu servletsMenu = new DefaultSubMenu("Servlets");
+        DefaultSubMenu jspMenu = new DefaultSubMenu("JSP");
         DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
         DefaultSubMenu rmiMenu = new DefaultSubMenu("RMI");
         DefaultSubMenu jmsMenu = new DefaultSubMenu("JMS");
@@ -34,6 +35,19 @@ public class MenuView {
         //Servlets
         item = new DefaultMenuItem("Hello");
         item.setCommand("#{menuView.servlets_hello}");
+        servletsMenu.addElement(item);
+
+        item = new DefaultMenuItem("Form");
+        item.setCommand("#{menuView.servlets_form}");
+        servletsMenu.addElement(item);
+
+        //JSP
+        item = new DefaultMenuItem("Form");
+        item.setCommand("#{menuView.jsp_form}");
+        servletsMenu.addElement(item);
+
+        item = new DefaultMenuItem("ImageUpload");
+        item.setCommand("#{menuView.jsp_imageUpload}");
         servletsMenu.addElement(item);
 
         //Primefaces
@@ -137,6 +151,8 @@ public class MenuView {
 
     //JSP
     public String  jsp_form(){ return "/ui/jsf/JSP/Form"; }
+
+    public String  jsp_imageUpload(){ return "/ui/jsf/JSP/ImageUpload"; }
 
     //JPA_Hibernate
     public String  entity() { return "/ui/jsf/JPA_Hibernate/Entity"; }
