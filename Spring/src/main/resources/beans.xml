@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       <!-- default-init-method = "init" -->
+       <!-- default-destroy-method = "destroy" -->
+
+    <!-- Simple Hello world example. -->
+    <bean id="helloWorld" class="cz.vutbr.fit.gja.spring.bean.xml.HelloWorld">
+        <property name="message" value="Hello world!"/>
+    </bean>
+
+    <!-- Lazy init example. -->
+    <bean id="lazy" class="cz.vutbr.fit.gja.spring.bean.xml.LazyInitExample" lazy-init="true"
+          init-method="init" destroy-method="finish">
+        <constructor-arg name="name" value="Lazy"/>
+    </bean>
+    <bean id="normal" class="cz.vutbr.fit.gja.spring.bean.xml.LazyInitExample" lazy-init="false"
+          init-method="init" destroy-method="finish">
+        <constructor-arg name="name" value="Normal"/>
+    </bean>
+
+    <!-- Scope example. -->
+    <bean id="singleton" class="cz.vutbr.fit.gja.spring.bean.xml.ScopeExample" scope="singleton" >
+        <constructor-arg value="Singleton"/>
+    </bean>
+    <bean id="prototype" class="cz.vutbr.fit.gja.spring.bean.xml.ScopeExample" scope="prototype" >
+        <constructor-arg value="Prototype"/>
+    </bean>
+
+    <!-- Lifecycle example -->
+    <bean class="cz.vutbr.fit.gja.spring.bean.xml.LifecycleProcessor"/>
+    <bean id="lifecycleExample" class="cz.vutbr.fit.gja.spring.bean.xml.LifecycleExample" lazy-init="true"/>
+
+    <!-- Dependency injection example -->
+    <bean id="engine" class="cz.vutbr.fit.gja.spring.bean.xml.Engine"/>
+    <bean id="ac" class="cz.vutbr.fit.gja.spring.bean.xml.AirCondition"/>
+    <bean id="car" class="cz.vutbr.fit.gja.spring.bean.xml.Car">
+        <constructor-arg name="engine" ref="engine"/>
+        <constructor-arg name="steeringWheel">
+            <bean class="cz.vutbr.fit.gja.spring.bean.xml.SteeringWheel">
+                <property name="brand" value="Recaro"/>
+            </bean>
+        </constructor-arg>
+        <!-- Collection examples -->
+        <constructor-arg name="wheels">
+            <list>
+                <value>Left front</value>
+                <value>Right front</value>
+                <value>Left rear</value>
+                <value>Right rear</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="seats">
+            <map>
+                <entry key="Left Front">
+                    <bean class="cz.vutbr.fit.gja.spring.bean.xml.Seat">
+                        <constructor-arg type="cz.vutbr.fit.gja.spring.bean.xml.AirCondition" ref="ac"/>
+                        <constructor-arg type="java.lang.String" value="Left Front"/>
+                    </bean>
+                </entry>
+                <entry key="Right Front">
+                    <bean class="cz.vutbr.fit.gja.spring.bean.xml.Seat">
+                        <constructor-arg type="cz.vutbr.fit.gja.spring.bean.xml.AirCondition">
+                            <null/>
+                        </constructor-arg>
+                        <constructor-arg type="java.lang.String" value="Right Front"/>
+                    </bean>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+</beans>
