@@ -1,4 +1,4 @@
-package cz.vutbr.fit.gja.spring.bean.xml;
+package cz.vutbr.fit.gja.spring.bean.xml.lifecycle;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

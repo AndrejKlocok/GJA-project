@@ -3,6 +3,8 @@ package cz.vutbr.fit.gja.spring;
 import cz.vutbr.fit.gja.spring.bean.annotation.Plane;
 import cz.vutbr.fit.gja.spring.bean.java.PlaneConfig;
 import cz.vutbr.fit.gja.spring.bean.xml.*;
+import cz.vutbr.fit.gja.spring.bean.xml.di.Car;
+import cz.vutbr.fit.gja.spring.bean.xml.lifecycle.LifecycleExample;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

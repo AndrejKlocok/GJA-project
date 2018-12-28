@@ -1,4 +1,4 @@
-package cz.vutbr.fit.gja.spring.bean.xml;
+package cz.vutbr.fit.gja.spring.bean.xml.di;
 
 import java.util.List;
 import java.util.Map;

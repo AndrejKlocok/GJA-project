@@ -1,4 +1,4 @@
-package cz.vutbr.fit.gja.spring.bean.xml;
+package cz.vutbr.fit.gja.spring.bean.xml.di;
 
 /**
  * @author Martin Kocour

@@ -1,4 +1,6 @@
-package cz.vutbr.fit.gja.spring.bean.xml;
+package cz.vutbr.fit.gja.spring.bean.xml.di;
+
+import cz.vutbr.fit.gja.spring.bean.xml.di.AirCondition;
 
 /**
  * @author Martin Kocour

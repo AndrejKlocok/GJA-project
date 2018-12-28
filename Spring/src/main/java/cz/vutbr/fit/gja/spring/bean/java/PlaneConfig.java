@@ -4,15 +4,11 @@ import cz.vutbr.fit.gja.spring.bean.annotation.Cockpit;
 import cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat;
 import cz.vutbr.fit.gja.spring.bean.annotation.Person;
 import cz.vutbr.fit.gja.spring.bean.annotation.Plane;
-import cz.vutbr.fit.gja.spring.bean.xml.Car;
-import cz.vutbr.fit.gja.spring.bean.xml.Seat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
