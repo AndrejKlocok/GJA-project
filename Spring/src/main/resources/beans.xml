@@ -71,4 +71,10 @@
         </constructor-arg>
     </bean>
 
+    <!-- Event example -->
+    <bean id="csStartEventSubscriber" class="cz.vutbr.fit.gja.spring.bean.xml.event.ContextStartedEventSubscriber"/>
+    <bean id="csStopEventSubscriber" class="cz.vutbr.fit.gja.spring.bean.xml.event.ContextStoppedEventSubscriber"/>
+    <bean id="customEventPublisher" class="cz.vutbr.fit.gja.spring.bean.xml.event.CustomEventPublisher"/>
+    <bean id="customEventSubscriber" class="cz.vutbr.fit.gja.spring.bean.xml.event.CustomEventSubscriber"/>
+
 </beans>

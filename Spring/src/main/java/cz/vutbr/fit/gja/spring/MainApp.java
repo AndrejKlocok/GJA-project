@@ -73,6 +73,12 @@ public class MainApp {
         car.getSeat("Left Front").controlHeater(4);
         System.out.println(car.toString());
 
+        System.out.println("\n\tf) Event example");
+        context.start();
+        HelloWorld helloBean2 = (HelloWorld) context.getBean("helloWorld");
+        System.out.println(helloBean2.getMessage());
+        context.stop();
+
         System.out.println("\nDestroy context...");
         context.destroy();
     }
