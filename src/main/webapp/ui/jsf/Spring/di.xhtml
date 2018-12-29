@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Spring - DI</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/spring.png" height="150" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Dependency injection</h1>
+                    <p>
+                        Dependency injection (DI) je proces, pri ktorom objekty definujú svoje závislosti
+                        (objekty, s ktorými pracujú) pomocou argumentov v konštruktrore,
+                        argumentov vo factory metódach alebo pomocou vlastností, ktoré sú nastavené na inštancii
+                        objektu po jej vytvorení. Kontajner potom injektuje tieto závislosti, keď vytvára bean.
+                        Tento proces je v podstate inverzný k procesu tvorby beanu, ktorý sám kontroluje
+                        inštanciáciu svojich závislostí (preto názov Inversion of Control).
+                    </p>
+                    <p>Všetky príklady je možné spustiť pomocou "mvn spring-boot:run"</p>
+
+                    <h2>DI pomocou XML konfigurácie</h2>
+                    <p>
+                        V tomto príklade vytvoríme objekt Car, ktorý obsahuje (je závislý na) SteeringWheel, Engine,
+                        4 kolies a 2 sedačiek. Kolesá a sedačky sú kolekcie typu List resp. Map, v prípade sedačiek.<br/>
+                        XML konfigurácia beanu Car vypadá nasledovne:
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+&lt;!-- Dependency injection example --&gt;
+&lt;bean id=&quot;engine&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.di.Engine&quot;/&gt;
+&lt;bean id=&quot;ac&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.di.AirCondition&quot;/&gt;
+&lt;bean id=&quot;car&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.di.Car&quot;&gt;
+    &lt;constructor-arg name=&quot;engine&quot; ref=&quot;engine&quot;/&gt;
+    &lt;constructor-arg name=&quot;steeringWheel&quot;&gt;
+        &lt;bean class=&quot;cz.vutbr.fit.gja.spring.bean.xml.di.SteeringWheel&quot;&gt;
+            &lt;property name=&quot;brand&quot; value=&quot;Recaro&quot;/&gt;
+        &lt;/bean&gt;
+    &lt;/constructor-arg&gt;
+    &lt;!-- Collection examples --&gt;
+    &lt;constructor-arg name=&quot;wheels&quot;&gt;
+        &lt;list&gt;
+            &lt;value&gt;Left front&lt;/value&gt;
+            &lt;value&gt;Right front&lt;/value&gt;
+            &lt;value&gt;Left rear&lt;/value&gt;
+            &lt;value&gt;Right rear&lt;/value&gt;
+        &lt;/list&gt;
+    &lt;/constructor-arg&gt;
+    &lt;constructor-arg name=&quot;seats&quot;&gt;
+        &lt;map&gt;
+            &lt;entry key=&quot;Left Front&quot;&gt;
+                &lt;bean class=&quot;cz.vutbr.fit.gja.spring.bean.xml.di.Seat&quot;&gt;
+                    &lt;constructor-arg type=&quot;cz.vutbr.fit.gja.spring.bean.xml.di.AirCondition&quot; ref=&quot;ac&quot;/&gt;
+                    &lt;constructor-arg type=&quot;java.lang.String&quot; value=&quot;Left Front&quot;/&gt;
+                &lt;/bean&gt;
+            &lt;/entry&gt;
+            &lt;entry key=&quot;Right Front&quot;&gt;
+                &lt;bean class=&quot;cz.vutbr.fit.gja.spring.bean.xml.di.Seat&quot;&gt;
+                    &lt;constructor-arg type=&quot;cz.vutbr.fit.gja.spring.bean.xml.di.AirCondition&quot;&gt;
+                        &lt;null/&gt;
+                    &lt;/constructor-arg&gt;
+                    &lt;constructor-arg type=&quot;java.lang.String&quot; value=&quot;Right Front&quot;/&gt;
+                &lt;/bean&gt;
+            &lt;/entry&gt;
+        &lt;/map&gt;
+    &lt;/constructor-arg&gt;
+&lt;/bean&gt;
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Závislosti objektu Car vkladáme v tomto prípade pomocou konštruktoru viď "constructor-arg" tag.
+                        Závislosti však môžeme vkladať aj pomocou setter metód, viď "property" tag. V tomto príklade
+                        je tiež vidieť vkladanie vnorených beanov a vkladanie závislostí cez odkazy, viď "ref" tag.
+                    </p>
+
+                    <h2>DI pomocou Java anotácií a XML konfigurácie</h2>
+                    <p>
+                        Vkladanie závislostí len čisto pomocou XML môže byť neprehladné. Spring framework preto obsahuje
+                        Java anotácie na automatické vkladanie závislostí. Základná anotácia je "@Autowired". Môžeme ju aplikovať
+                        na field, konštruktor, parameter alebo metodu objektu. Takto oanotovany cieľ sa následne dohľadá
+                        v kontajnery buď pomocou mena alebo typu, ak existuje len jeden. Ak sa meno nezhoduje a existuje
+                        viacero beanov toho istého typu, tak je nutné použiť anotáciu "@Qualifier".
+                        Ďalšie anotácie sú "@Value" (špecifikáciu kolekcií, viď príklad) a "@Required".
+                    </p>
+                    <p>
+                        V tomto príklade vytvoríme objekt Plane, ktorý sa skladá z kokpitu a mapovania sedadla na pasažiera.
+                        Na mapovanie vyuzžijeme anotáciu "@Value", viď príklad.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+public class Plane {
+    @Autowired
+    private Cockpit cockpit;
+    @Value(&quot;&#35; &#123;passengers&#125;&quot;)
+    private Map&lt;PassengerSeat, Person&gt; passengers;
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+public class Cockpit {
+    private Person captain;
+    private Person copilot;
+
+    @Autowired
+    public Cockpit(@Qualifier("martin") Person captain, @Qualifier("michal") Person copilot) {
+        this.captain = captain;
+        this.copilot = copilot;
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Beany následne definujeme v XML konfigurácii ale už bez závislostí. Jednoduché dátové typy
+                        ako String, Integer apod. musíme zadefinovať ručne.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+&lt;?xml version = &quot;1.0&quot; encoding = &quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:util=&quot;http://www.springframework.org/schema/util&quot; xmlns:c=&quot;http://www.springframework.org/schema/c&quot;
+       xmlns:p=&quot;http://www.springframework.org/schema/p&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd&quot;&gt;
+
+    &lt;context:annotation-config/&gt;
+
+    &lt;bean id=&quot;martin&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.Person&quot;&gt;
+        &lt;constructor-arg name=&quot;name&quot; value=&quot;Martin&quot;/&gt;
+        &lt;constructor-arg name=&quot;surname&quot; value=&quot;Kocour&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;michal&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.Person&quot;&gt;
+        &lt;constructor-arg name=&quot;name&quot; value=&quot;Michal&quot;/&gt;
+        &lt;constructor-arg name=&quot;surname&quot; value=&quot;Gabonay&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;andrej&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.Person&quot;&gt;
+        &lt;constructor-arg name=&quot;name&quot; value=&quot;Andrej&quot;/&gt;
+        &lt;constructor-arg name=&quot;surname&quot; value=&quot;Klcok&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;hypes&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.Person&quot;&gt;
+        &lt;constructor-arg name=&quot;name&quot; value=&quot;Tomas&quot;/&gt;
+        &lt;constructor-arg name=&quot;surname&quot; value=&quot;Hypes&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;vlk&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.Person&quot;&gt;
+        &lt;constructor-arg name=&quot;name&quot; value=&quot;Tomas&quot;/&gt;
+        &lt;constructor-arg name=&quot;surname&quot; value=&quot;Vlk&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;s1&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat&quot;&gt;
+        &lt;constructor-arg value=&quot;1&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;s2&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat&quot;&gt;
+        &lt;constructor-arg value=&quot;2&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;s3&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat&quot;&gt;
+        &lt;constructor-arg value=&quot;3&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;s4&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat&quot;&gt;
+        &lt;constructor-arg value=&quot;4&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;s5&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat&quot;&gt;
+        &lt;constructor-arg value=&quot;5&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;s6&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat&quot;&gt;
+        &lt;constructor-arg value=&quot;6&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;util:list id=&quot;seats&quot;&gt;
+        &lt;ref bean=&quot;s1&quot;/&gt;
+        &lt;ref bean=&quot;s2&quot;/&gt;
+        &lt;ref bean=&quot;s3&quot;/&gt;
+        &lt;ref bean=&quot;s4&quot;/&gt;
+        &lt;ref bean=&quot;s5&quot;/&gt;
+        &lt;ref bean=&quot;s6&quot;/&gt;
+    &lt;/util:list&gt;
+
+    &lt;util:map id=&quot;passengers&quot; map-class=&quot;java.util.HashMap&quot; value-type=&quot;cz.vutbr.fit.gja.spring.bean.annotation.Person&quot;
+              key-type=&quot;cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat&quot;&gt;
+        &lt;entry key-ref=&quot;s1&quot; value-ref=&quot;andrej&quot;/&gt;
+        &lt;entry key-ref=&quot;s2&quot; value-ref=&quot;vlk&quot;/&gt;
+        &lt;entry key-ref=&quot;s3&quot; value-ref=&quot;hypes&quot;/&gt;
+    &lt;/util:map&gt;
+
+    &lt;bean name=&quot;plane&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.Plane&quot;/&gt;
+    &lt;bean name=&quot;cockpit&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.annotation.Cockpit&quot;/&gt;
+
+&lt;/beans&gt;
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <h2>DI len pomocou Java anotácií</h2>
+                    <p>
+                        Ten istý príklad ako v predchádzajúcej kapitole, ale použijeme len Java konfiguráciu pomocou
+                        anotácií "@Configuration", "@Bean". Anotácia "@Scope" je tu uvedená len ako príklad pre definovanie
+                        prototypovaného beanu.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Configuration
+public class PlaneConfig {
+
+    @Bean
+    public Plane plane1() {
+        return new Plane();
+    }
+
+    @Bean
+    public Map&lt;PassengerSeat, Person&gt; passengers() {
+        Map&lt;PassengerSeat, Person&gt; passengers = new HashMap&lt;&gt;();
+        passengers.put(new PassengerSeat(1), new Person("Andrej", "Klocok"));
+        passengers.put(new PassengerSeat(2), new Person("Tomas", "Vlk"));
+        passengers.put(new PassengerSeat(3), null);
+        passengers.put(new PassengerSeat(4), null);
+        return passengers;
+    }
+
+    @Bean(initMethod = "init")
+    @Scope("prototype")
+    public Cockpit cockpit() {
+        return new Cockpit(captain(), copilot());
+    }
+
+    @Bean
+    public Person captain() {
+        return new Person("Martin", "Kocour");
+    }
+
+    @Bean
+    public Person copilot() {
+        return new Person("Michal", "Gabonay");
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

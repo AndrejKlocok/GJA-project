@@ -1,0 +1,19 @@
+----------
+Maintainer
+----------
+Martin Kocour, <xkocou08@stud.fit.vutbr.cz>
+
+-----------
+Description
+-----------
+This example shows Spring Core framework.
+
+For more details please check javadoc of MainApp.java (src/main/java/cz/vutbr/fit/gja/spring/MainApp.java).
+
+---
+RUN
+---
+mvn spring-boot:run
+OR
+mvn clean package && java -jar target/spring-core-0.0.1-SNAPSHOT.jar
+

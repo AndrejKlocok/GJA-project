@@ -1,0 +1,73 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:annotation-config/>
+
+    <bean id="martin" class="cz.vutbr.fit.gja.spring.bean.annotation.Person">
+        <constructor-arg name="name" value="Martin"/>
+        <constructor-arg name="surname" value="Kocour"/>
+    </bean>
+    <bean id="michal" class="cz.vutbr.fit.gja.spring.bean.annotation.Person">
+        <constructor-arg name="name" value="Michal"/>
+        <constructor-arg name="surname" value="Gabonay"/>
+    </bean>
+    <bean id="andrej" class="cz.vutbr.fit.gja.spring.bean.annotation.Person">
+        <constructor-arg name="name" value="Andrej"/>
+        <constructor-arg name="surname" value="Klcok"/>
+    </bean>
+    <bean id="hypes" class="cz.vutbr.fit.gja.spring.bean.annotation.Person">
+        <constructor-arg name="name" value="Tomas"/>
+        <constructor-arg name="surname" value="Hypes"/>
+    </bean>
+    <bean id="vlk" class="cz.vutbr.fit.gja.spring.bean.annotation.Person">
+        <constructor-arg name="name" value="Tomas"/>
+        <constructor-arg name="surname" value="Vlk"/>
+    </bean>
+
+    <bean id="s1" class="cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat">
+        <constructor-arg value="1"/>
+    </bean>
+    <bean id="s2" class="cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat">
+        <constructor-arg value="2"/>
+    </bean>
+    <bean id="s3" class="cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat">
+        <constructor-arg value="3"/>
+    </bean>
+    <bean id="s4" class="cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat">
+        <constructor-arg value="4"/>
+    </bean>
+    <bean id="s5" class="cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat">
+        <constructor-arg value="5"/>
+    </bean>
+    <bean id="s6" class="cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat">
+        <constructor-arg value="6"/>
+    </bean>
+
+    <util:list id="seats">
+        <ref bean="s1"/>
+        <ref bean="s2"/>
+        <ref bean="s3"/>
+        <ref bean="s4"/>
+        <ref bean="s5"/>
+        <ref bean="s6"/>
+    </util:list>
+
+    <util:map id="passengers" map-class="java.util.HashMap" value-type="cz.vutbr.fit.gja.spring.bean.annotation.Person"
+              key-type="cz.vutbr.fit.gja.spring.bean.annotation.PassengerSeat">
+        <entry key-ref="s1" value-ref="andrej"/>
+        <entry key-ref="s2" value-ref="vlk"/>
+        <entry key-ref="s3" value-ref="hypes"/>
+    </util:map>
+
+    <bean name="plane" class="cz.vutbr.fit.gja.spring.bean.annotation.Plane"/>
+    <bean name="cockpit" class="cz.vutbr.fit.gja.spring.bean.annotation.Cockpit"/>
+
+</beans>
