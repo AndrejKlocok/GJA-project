@@ -39,7 +39,14 @@ public class MainApp {
      *    Normal bean is created after XML configuration is inflated. Lazy bean is inflated when it is called.
      *    In this example we also shows an order of implicit and explicit initialization and destroy methods.
      *
-     * 3. Scope example shows difference between prototype and singleton bean.
+     * 3. Scope example shows difference between prototype and singleton bean. For more details check
+     * {@link ScopeExample#getCounter()}, the counter is incremented every time we access it.
+     *
+     * 4. Lifecycle examples demonstrates the order of called method init and destroy.
+     *
+     * 5. Dependency injection shows how to create a bean which depends on other beans (i.e. car consist of seat, steering wheel, ...)
+     *
+     * 6. Event handling example demonstrates how to handle core events and how to create custom event.
      */
     private static void showXMLBasedConfiguration() {
         //Expects beans.xml on ClassPath
@@ -52,18 +59,18 @@ public class MainApp {
         System.out.println("Your message: " + helloBean.getMessage());
 
         System.out.println("\n\tb) Lazy init example");
-        LazyInitExample lazyBean = (LazyInitExample) context.getBean("lazy");
-        LazyInitExample normalBean = (LazyInitExample) context.getBean("normal");
+        LazyInitExample lazyBean = (LazyInitExample) context.getBean("lazy"); // created after this line is called
+        LazyInitExample normalBean = (LazyInitExample) context.getBean("normal"); // created before this line is called and after context is created
 
         System.out.println("\n\tc) Scope example");
         ScopeExample prototype1 = (ScopeExample) context.getBean("prototype");
         System.out.println(prototype1.toString());
         ScopeExample prototype2 = (ScopeExample) context.getBean("prototype");
-        System.out.println(prototype2.toString());
+        System.out.println(prototype2.toString()); //different reference
         ScopeExample singleton1 = (ScopeExample) context.getBean("singleton");
         System.out.println(singleton1.toString());
         ScopeExample singleton2 = (ScopeExample) context.getBean("singleton");
-        System.out.println(singleton2.toString());
+        System.out.println(singleton2.toString()); //same reference (check counter)
 
         System.out.println("\n\td) Lifecycle example");
         LifecycleExample lifecycleBean = (LifecycleExample) context.getBean("lifecycleExample");
@@ -84,7 +91,13 @@ public class MainApp {
     }
 
     /**
-     * Annotation based configuration
+     * Annotation based configuration.
+     *
+     * This example shows how to use Spring annotations together with XML file configuration
+     * to configure dependency injection.
+     *
+     * @see Plane
+     * See also configuration file annotation-beans.xml
      */
     private static void showAnnotationBasedConfiguration() {
         ApplicationContext context = new ClassPathXmlApplicationContext("annotation-beans.xml");
@@ -92,7 +105,13 @@ public class MainApp {
         System.out.println(plane.toString());
     }
 
-
+    /**
+     * Java based configuration.
+     *
+     * This example shows how to use only Spring annotations to configure beans.
+     *
+     * @see PlaneConfig
+     */
     private static void showJavaBasedConfiguration() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PlaneConfig.class);
         Plane plane = (Plane) context.getBean("plane1");

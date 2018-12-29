@@ -21,9 +21,11 @@
     </bean>
 
     <!-- Scope example. -->
+    <!-- Singleton bean has only one reference. Context.getBean() returns everytime the same bean. -->
     <bean id="singleton" class="cz.vutbr.fit.gja.spring.bean.xml.ScopeExample" scope="singleton" >
         <constructor-arg value="Singleton"/>
     </bean>
+    <!-- Prototype bean has many references. Context.getBean() retunrs everytime new bean.  -->
     <bean id="prototype" class="cz.vutbr.fit.gja.spring.bean.xml.ScopeExample" scope="prototype" >
         <constructor-arg value="Prototype"/>
     </bean>
