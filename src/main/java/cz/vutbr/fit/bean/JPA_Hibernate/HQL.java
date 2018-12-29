@@ -11,6 +11,10 @@ import java.util.List;
 
 /**
  * Managed bean for HQL page
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 @ManagedBean(name = "HQL")
 public class HQL {

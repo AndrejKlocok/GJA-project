@@ -27,6 +27,7 @@
             </p:submenu>
             <p:submenu label="JSP">
                 <p:menuitem value="Form" action="#{menuView.jsp_form}" />
+                <p:menuitem value="ImageUpload" action="#{menuView.jsp_imageUpload}" />
             </p:submenu>
             <p:submenu label="PrimeFaces">
                 <p:menuitem value="Setup" action="#{menuView.pr_setUp}" />
@@ -52,6 +53,11 @@
             <p:submenu label="JMS">
                 <p:menuitem value="Point to Point" action="#{menuView.pointToPoint}" />
                 <p:menuitem value="Publish Subscribe" action="#{menuView.publishSubscribe}" />
+            </p:submenu>
+            <p:submenu label="GWT">
+                <p:menuitem value="Archetype" action="#{menuView.archetype}" />
+                <p:menuitem value="GUI" action="#{menuView.gui}" />
+                <p:menuitem value="RPC" action="#{menuView.rpc}" />
             </p:submenu>
         </p:menu>
     </h:form>

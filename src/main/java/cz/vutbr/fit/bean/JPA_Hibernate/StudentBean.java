@@ -7,8 +7,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.util.Date;
 
+/**
+ * Student main bean, that contains main properties of model
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 @ManagedBean(name = "StudentBean")
-public class StudentBean {
+public class StudentBean extends NotifyGui{
     //db service
     protected StudentDAO studentDAO = new StudentDAO();
 
@@ -47,13 +54,4 @@ public class StudentBean {
 
     public void setLogin(String login) { this.login = login; }
 
-    /**
-     * Notify gui with message
-     * @param summary   brief headline
-     * @param detail    concrete detail
-     */
-    public void addMessage(String summary, String detail) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
 }

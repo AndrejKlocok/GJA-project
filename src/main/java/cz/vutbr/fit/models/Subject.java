@@ -3,6 +3,13 @@ package cz.vutbr.fit.models;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * Subject model (Persistent object)
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 @Entity
 public class Subject {
     @Id

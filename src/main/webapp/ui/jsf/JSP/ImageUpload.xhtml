@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Java Servlet</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/jsp.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+
+                    <h1>Upload obrázků pomocí JSP a servletu</h1>
+                    <p>Ve složce <code>JSP_ImageUpload</code> naleznete ukázkový projekt, který demonstruje nahrávání souborů přes formulář na server. Tento příklad se skládá ze dvou JSP stránek - formuláře a stránky, která zobrazí nahraný obrázek, a servletu, který zpracovává nahraný soubor.</p>
+
+                    <h2>Závilosti</h2>
+                    <p>Závislosti jsou stejné jako u projektu <code>JSP_Form</code> a navíc pro zpracování nahraných souborů jsou využity artefakty <code>commons-io</code> a <code>commons-fileupload</code> ze stejnojmenných skupin.</p>
+
+                    <h2>Formulář</h2>
+                    <p>O zobrazení formuláře se vstupem pro výběr souboru z&nbsp;počítače se stará JSP stránka v&nbsp;souboru <code>index.jsp</code>. Před formulářem se nachází zobrazení chybové hlášky, pokud je zadán příslušný parametr - na tuto stránku s&nbsp;chybovým parametrem přesměrovává servlet zpracující nahraný soubor, pokud během zpracování dojde k&nbsp;chybě. </p>
+
+                    <p:panelGrid columns="1">
+                    <pre><code class="html">
+&lt;%@ page contentType="text/html;charset=UTF-8" %&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;JSP ImageUpload&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;%-- Print error message if error parameter exists. --%&gt;
+        &lt;%
+            String error = request.getParameter("error");
+            if (error != null)
+            {
+        %&gt;
+        &lt;p style="color: red;"&gt;
+            &lt;% if ("type".equals(error)) { %&gt; Soubor není obrázkem!
+            &lt;% } else if ("exists".equals(error)) { %&gt; Soubor na serveru již existuje!
+            &lt;% } else if ("missing".equals(error)) { %&gt; Nahrávaný soubor chybí!
+            &lt;% } else if ("failed".equals(error)) { %&gt; Nahrávání souboru selhalo!
+            &lt;% } else { %&gt; Neznámá chyba!
+            &lt;% } %&gt;
+        &lt;/p&gt;
+        &lt;%
+            }
+        %&gt;
+
+        &lt;%-- Form --%&gt;
+        &lt;form action="upload" method="POST" enctype="multipart/form-data"&gt;
+            &lt;p&gt;&lt;input type="file" name="image"&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;button type="submit"&gt;Odeslat&lt;/button&gt;&lt;/p&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Servlet zpracující nahrávaný soubor</h2>
+                    <p>Servlet se nachází v&nbsp;souboru <code>UploadServlet.java</code>. Servlet v&nbsp;metodě <code class="java">init</code>, která se volá po vytvoření servletu, kontroluje existenci dočasné a cílové složky. Nahrávané soubory se ukládájí do dočasné složky, pokud jejich velikost překračuje stanovený limit.</p>
+                    <p>Servlet přepisuje pouze metodu <code class="java">doPost</code>. Pokud zadáte v&nbsp;prohlížeči adresu servletu přímo, prohlížeč zašle požadavek metodou GET a server vrátí chybu 405. Metoda <code class="java">doPost</code> zkontroluje, zda je nahrávaný soubor v&nbsp;pořádku a zda-li se jedná o obrázek (podle MIME typu). Pokude je vše v&nbsp;pořádku, provede přesměrování na JSP stránku image.jsp, kde bude obrázek zobrazen. V&nbsp;opačném případě provede přesměrování zpět na formulář s&nbsp;příslušným označením chyby v&nbsp;GET parametru <code>error</code>.</p>
+                    <p>Tento servlet negeneruje žádný obsah, pouze provádí kód a přesměrování, proto byl pro implementaci zvolen právě servlet a ne JSP.</p>
+                    <p:panelGrid columns="1">
+                    <pre><code class="java">
+package cz.vutbr.fit.gja;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ *  Servlet processing uploading image from form in index.jsp and redirecting back with error or to image.jsp where uploaded image will be shown.
+ */
+@WebServlet(name = "Upload", urlPatterns = {"/upload"})
+public class UploadServlet extends HttpServlet
+{
+    /** Temporary directory path */
+    private static final String TMP_DIR_PATH = System.getProperty("java.io.tmpdir");
+    /** Destination directory path */
+    public static final String DEST_DIR_PATH = ".";
+    /** Temporary directory file */
+    private File tmpDir;
+    /** Destination directory file */
+    private File destDir;
+
+    /**
+     * Called after construct servlet
+     *
+     * @param config Configuration of servlet
+     * @throws ServletException When directories are missing
+     */
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        ServletContext context = getServletContext();
+
+        // Create File object for temporary and destination directories
+        tmpDir = new File(TMP_DIR_PATH);
+        destDir = new File(context.getRealPath(DEST_DIR_PATH)); // Convert relative path to absolute
+
+        // Check if directories are really directories
+        if (!tmpDir.isDirectory())
+            throw new ServletException(TMP_DIR_PATH + " is not a directory!");
+        if (!destDir.isDirectory())
+            throw new ServletException(DEST_DIR_PATH + " is not a directory!");
+    }
+
+    /**
+     * Redirects back to the form and show error messages
+     *
+     * @param request Request object
+     * @param response Response object
+     * @param errorString Error string which will be inserted to GET parameter and in the form error message will by shown
+     *
+     * @throws IOException By method sendRedirect of object HttpServletResponse
+     */
+    private void errorRedirect(HttpServletRequest request, HttpServletResponse response, String errorString) throws IOException {
+        response.sendRedirect(request.getContextPath() + "/index.jsp?error=" + errorString);
+    }
+
+    /**
+     * Redirects to page which show uploaded image
+     *
+     * @param request Request object
+     * @param response Response object
+     * @param imageFilename Filename of uploaded image
+     *
+     * @throws IOException By method sendRedirect of object HttpServletResponse
+     */
+    private void successRedirect(HttpServletRequest request, HttpServletResponse response, String imageFilename) throws IOException {
+        response.sendRedirect(request.getContextPath() + "/image.jsp?filename=" + imageFilename);
+    }
+
+    /**
+     * Called on HTTP method POST
+     *
+     * @param request Request object
+     * @param response Response object
+     *
+     * @throws IOException By method sendRedirect of object HttpServletResponse
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        DiskFileItemFactory fileFactory = new DiskFileItemFactory();
+        // Set file size limit to 1 MiB
+        fileFactory.setSizeThreshold(1024 * 1024);
+        // Set directory for store files which size is above than size limit
+        fileFactory.setRepository(tmpDir);
+
+        ServletFileUpload uploadHandler = new ServletFileUpload(fileFactory);
+
+        try {
+            // Get list of form items
+            List&lt;FileItem&gt; items = uploadHandler.parseRequest(request);
+
+            for (FileItem item : items) {
+                // Skip form fields and files with different name (attribute name in tag input)
+                if (item.isFormField() || !item.getFieldName().equals("image"))
+                    continue;
+
+                // Check if any file is uploading
+                if (item.getName().isEmpty())
+                    break; // Skip loop to error redirect
+
+                // Check if file is image by MIME type
+                if (!item.getContentType().startsWith("image/"))
+                {
+                    errorRedirect(request, response, "type");
+                    return;
+                }
+
+                // Get filename of uploading file
+                String filename = item.getName();
+
+                // Create destination file
+                File file = new File(destDir, filename);
+
+                // Check if destination file already exists
+                if (file.exists())
+                {
+                    errorRedirect(request, response, "exists");
+                    return;
+                }
+
+                // Write file to destination directory
+                item.write(file);
+
+                // Redirect to uploaded image
+                successRedirect(request, response, filename);
+                return;
+            }
+
+            // File not found
+            errorRedirect(request, response, "missing");
+        }
+        catch (Exception e) {
+            errorRedirect(request, response, "failed");
+        }
+    }
+}
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Zobrazení obrázku</h2>
+                    <p>JSP stránka zobrazující nahraný obrázek se nachází v&nbsp;souboru <code>image.jsp</code>. Stránka očekává v&nbsp;parametru <code>filename</code> název souboru s&nbsp;obrázkem. Pokud tento parametr chybí, nebo daný soubor neexistuje, stránka místo obrázku zobrazí text informující o této skutečnosti.</p>
+                    <p:panelGrid columns="1">
+                    <pre><code class="html">
+&lt;%@ page import="java.io.File" %&gt;
+&lt;%@ page import="cz.vutbr.fit.gja.UploadServlet" %&gt;
+&lt;%@ page contentType="text/html;charset=UTF-8" %&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;JSP ImageUpload: Uploaded image&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;%
+            String filename = request.getParameter("filename");
+
+            // Parameter missing
+            if (filename == null) {
+        %&gt;
+        &lt;p&gt;Chybí parametr s&nbsp;názvem souboru!&lt;/p&gt;
+        &lt;%
+            }
+            // File is not exist
+            else if (!new File(config.getServletContext().getRealPath(UploadServlet.DEST_DIR_PATH), filename).exists()) {
+        %&gt;
+        &lt;p&gt;Soubor &lt;b&gt;&lt;%= filename %&gt;&lt;/b&gt; neexistuje!&lt;/p&gt;
+        &lt;%
+            }
+            // It is ok
+            else {
+        %&gt;
+        &lt;p&gt;Váš nahraný obrázek:&lt;/p&gt;
+        &lt;img src="./&lt;%= request.getParameter("filename") %&gt;" alt="Nahraný obrázek"&gt;
+        &lt;%
+            }
+        %&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </code></pre>
+                    </p:panelGrid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

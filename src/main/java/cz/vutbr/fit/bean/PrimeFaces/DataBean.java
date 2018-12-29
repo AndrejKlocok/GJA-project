@@ -15,6 +15,10 @@ import java.util.List;
 
 /**
  * Managed bean for Data page
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 @ManagedBean(name = "DataBean")
 public class DataBean extends StudentView {

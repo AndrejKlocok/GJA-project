@@ -12,6 +12,10 @@ import javax.persistence.Persistence;
 
 /**
  * Parent class that holds connections through JPA and Hibernate
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
  */
 public class DAO {
     //JPA

@@ -20,10 +20,12 @@ public class MenuView {
 
         DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
         DefaultSubMenu servletsMenu = new DefaultSubMenu("Servlets");
+        DefaultSubMenu jspMenu = new DefaultSubMenu("JSP");
         DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
         DefaultSubMenu rmiMenu = new DefaultSubMenu("RMI");
         DefaultSubMenu jmsMenu = new DefaultSubMenu("JMS");
         DefaultSubMenu primeMenu = new DefaultSubMenu("Primefaces");
+        DefaultSubMenu gwtMenu = new DefaultSubMenu("GWT");
 
         //MAIN
         item = new DefaultMenuItem("Home_Welcome");
@@ -33,6 +35,19 @@ public class MenuView {
         //Servlets
         item = new DefaultMenuItem("Hello");
         item.setCommand("#{menuView.servlets_hello}");
+        servletsMenu.addElement(item);
+
+        item = new DefaultMenuItem("Form");
+        item.setCommand("#{menuView.servlets_form}");
+        servletsMenu.addElement(item);
+
+        //JSP
+        item = new DefaultMenuItem("Form");
+        item.setCommand("#{menuView.jsp_form}");
+        servletsMenu.addElement(item);
+
+        item = new DefaultMenuItem("ImageUpload");
+        item.setCommand("#{menuView.jsp_imageUpload}");
         servletsMenu.addElement(item);
 
         //Primefaces
@@ -108,6 +123,13 @@ public class MenuView {
         item.setCommand("#{menuView.publishSubscribe}");
         jmsMenu.addElement(item);
 
+        //GWT
+        item = new DefaultMenuItem("GWT");
+        item.setCommand("#{menuView.archetype}");
+        item.setCommand("#{menuView.gui}");
+        item.setCommand("#{menuView.rpc}");
+        gwtMenu.addElement(item);
+
         model.addElement(mainMenu);
         model.addElement(primeMenu);
         model.addElement(dbMenu);
@@ -129,6 +151,8 @@ public class MenuView {
 
     //JSP
     public String  jsp_form(){ return "/ui/jsf/JSP/Form"; }
+
+    public String  jsp_imageUpload(){ return "/ui/jsf/JSP/ImageUpload"; }
 
     //JPA_Hibernate
     public String  entity() { return "/ui/jsf/JPA_Hibernate/Entity"; }
@@ -179,6 +203,13 @@ public class MenuView {
     public String filesImages(){ return "/ui/jsf/PrimeFaces/Files_Images";}
 
     public String pr_setUp(){ return "/ui/jsf/PrimeFaces/PrimeFaces_SetUp";}
+
+    //GWT
+    public String archetype() { return "/ui/jsf/GWT/Archetype"; }
+
+    public String gui() { return "/ui/jsf/GWT/GUI"; }
+
+    public String rpc() { return "/ui/jsf/GWT/RPC"; }
 
     // EJB
     public String stateful(){ return "/ui/jsf/EJB/stateful";}

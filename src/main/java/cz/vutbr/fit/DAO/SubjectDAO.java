@@ -10,6 +10,13 @@ import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class is database service to Subject model (Persistent object)
+ *
+ * @author  Andrej Klocok
+ * @version 1.0
+ * @since   2018-12-11
+ */
 public class SubjectDAO extends DAO {
     /**
      * Method returns single object of Subject

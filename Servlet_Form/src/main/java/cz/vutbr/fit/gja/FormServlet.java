@@ -49,6 +49,12 @@ public class FormServlet extends HttpServlet
         out.write("</form>");
     }
 
+    /**
+     * Writes data received from form
+     *
+     * @param out Object of PrintWriter
+     * @param request Object of request - needs for getting of parameters
+     */
     private void writeData(PrintWriter out, HttpServletRequest request) {
 
         // Write name
