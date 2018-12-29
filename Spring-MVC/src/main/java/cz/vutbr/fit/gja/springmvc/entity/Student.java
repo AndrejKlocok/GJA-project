@@ -1,6 +1,8 @@
 package cz.vutbr.fit.gja.springmvc.entity;
 
 import lombok.Data;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -33,14 +35,14 @@ public class Student {
     private Integer isicId;
 
     public Student() {
-
+        this.signed = new Date(0L);
     }
 
     public Student(String name, String login, Integer isicId) {
+        this();
         this.name = name;
         this.login = login;
         this.isicId = isicId;
-        this.signed = new Date(0L);
     }
 
 }

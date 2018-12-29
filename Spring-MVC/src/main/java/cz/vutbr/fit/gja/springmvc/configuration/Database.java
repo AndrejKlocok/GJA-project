@@ -10,10 +10,18 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 /**
  * @author Martin Kocour
  * created on 29/12/2018
+ *
+ * Database configuration.
  */
 @Configuration
 public class Database {
 
+    /**
+     * Initialize database.
+     *
+     * @param repository Student DAO
+     * @return Executable bean.
+     */
     @Bean
     public CommandLineRunner initDB(StudentRepository repository) {
         return args -> {
@@ -23,6 +31,11 @@ public class Database {
         };
     }
 
+    /**
+     * Specify DB connection.
+     *
+     * @return Data source bean.
+     */
     @Bean
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

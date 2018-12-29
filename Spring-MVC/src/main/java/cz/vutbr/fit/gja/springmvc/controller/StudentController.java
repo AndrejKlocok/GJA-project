@@ -2,10 +2,12 @@ package cz.vutbr.fit.gja.springmvc.controller;
 
 import cz.vutbr.fit.gja.springmvc.entity.Student;
 import cz.vutbr.fit.gja.springmvc.entity.StudentRepository;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Martin Kocour
@@ -17,6 +19,8 @@ import java.util.List;
  * A {@link StudentRepository} is injected by constructor into the controller.
  * We have routes for each operations ({@link GetMapping}, {@link PostMapping}, {@link PutMapping}
  * and {@link DeleteMapping}, corresponding to HTTP GET, POST, PUT, and DELETE calls).
+ *
+ * https://spring.io/guides/tutorials/rest/
  */
 @RestController
 public class StudentController {
@@ -39,26 +43,39 @@ public class StudentController {
 
     @PostMapping("/students")
     public Student newEmployee(@RequestBody Student newStudent) {
+        Optional<Student> student = studentRepository.findOne(Example.of(newStudent));
+        if (student.isPresent()) {
+            throw new DuplicateStudentFoundException(student.get().getId());
+        }
+
         return studentRepository.save(newStudent);
     }
 
     @PutMapping("/students/{id}")
     public Student updateStudent(@PathVariable Long id, @RequestBody Student newStudent) {
-        return studentRepository.findById(id).map( student -> {
-                    student.setName(newStudent.getName());
-                    student.setIsicId(newStudent.getIsicId());
-                    student.setLogin(newStudent.getLogin());
-                    student.setSigned(newStudent.getSigned());
-                    return studentRepository.save(student);
-                }).orElseGet(() -> {
-                    newStudent.setId(id);
-                    return studentRepository.save(newStudent);
-                });
+        try {
+            return studentRepository.findById(id).map(student -> {
+                student.setName(newStudent.getName());
+                student.setIsicId(newStudent.getIsicId());
+                student.setLogin(newStudent.getLogin());
+                student.setSigned(newStudent.getSigned());
+                return studentRepository.save(student);
+            }).orElseGet(() -> {
+                newStudent.setId(id);
+                return studentRepository.save(newStudent);
+            });
+        } catch (Exception e) {
+            throw new DuplicateStudentFoundException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/students/{id}")
     public void deleteStudent(@PathVariable Long id) {
-        studentRepository.deleteById(id);
+        try {
+            studentRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new StudentNotFoundException(id);
+        }
     }
 
     public static class StudentNotFoundException extends RuntimeException {
@@ -67,8 +84,18 @@ public class StudentController {
         }
     }
 
+    public static class DuplicateStudentFoundException extends RuntimeException {
+        DuplicateStudentFoundException(Long id) {
+            super("Found duplicate login with student " + id);
+        }
+
+        DuplicateStudentFoundException(String message) {
+            super(message);
+        }
+    }
+
     @ControllerAdvice
-    public static class StudentNotFoundAdvice {
+    public static class StudentErrorAdvice {
 
         /**
          * Handle {@link StudentNotFoundException}.
@@ -86,6 +113,25 @@ public class StudentController {
         @ExceptionHandler(StudentNotFoundException.class)
         @ResponseStatus(HttpStatus.NOT_FOUND)
         public String studentNotFoundHandler(StudentNotFoundException exception) {
+            return exception.getMessage();
+        }
+
+        /**
+         * Handle {@link DuplicateStudentFoundException}.
+         *
+         * {@link ResponseBody} signals that this advice is rendered
+         * straight into the response body.
+         * {@link ExceptionHandler} configures the advice to only
+         * respond if an {@link DuplicateStudentFoundException} is thrown.
+         * {@link ResponseStatus} says to issues an HttpStatus.NOT_FOUND, i.e. an HTTP 400.
+         *
+         * @param exception Caught exception.
+         * @return Exception message.
+         */
+        @ResponseBody
+        @ExceptionHandler(DuplicateStudentFoundException.class)
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        public String duplicateStudentFoundHandler(DuplicateStudentFoundException exception) {
             return exception.getMessage();
         }
     }

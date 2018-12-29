@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author Martin Kocour
  * created on 23/12/2018
+ *
+ * Simple controller to display i.e. Hello World!
  */
 @Controller
 public class GreetingController {
