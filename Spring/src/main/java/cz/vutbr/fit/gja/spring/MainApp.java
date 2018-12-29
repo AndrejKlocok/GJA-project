@@ -33,20 +33,20 @@ public class MainApp {
      *
      * File beans.xml contains bean specification.
      *
-     * 1. Hello world show simple usage of spring's beans.
+     * a) Hello world show simple usage of spring's beans.
      *
-     * 2. Lazy init example shows difference between lazy initialize beans and normal beans.
+     * b) Lazy init example shows difference between lazy initialize beans and normal beans.
      *    Normal bean is created after XML configuration is inflated. Lazy bean is inflated when it is called.
      *    In this example we also shows an order of implicit and explicit initialization and destroy methods.
      *
-     * 3. Scope example shows difference between prototype and singleton bean. For more details check
+     * c) Scope example shows difference between prototype and singleton bean. For more details check
      * {@link ScopeExample#getCounter()}, the counter is incremented every time we access it.
      *
-     * 4. Lifecycle examples demonstrates the order of called method init and destroy.
+     * d) Lifecycle examples demonstrates the order of called method init and destroy.
      *
-     * 5. Dependency injection shows how to create a bean which depends on other beans (i.e. car consist of seat, steering wheel, ...)
+     * e) Event handling example demonstrates how to handle core events and how to create custom event.
      *
-     * 6. Event handling example demonstrates how to handle core events and how to create custom event.
+     * f) Dependency injection shows how to create a bean which depends on other beans (i.e. car consist of seat, steering wheel, ...).
      */
     private static void showXMLBasedConfiguration() {
         //Expects beans.xml on ClassPath
@@ -75,16 +75,16 @@ public class MainApp {
         System.out.println("\n\td) Lifecycle example");
         LifecycleExample lifecycleBean = (LifecycleExample) context.getBean("lifecycleExample");
 
-        System.out.println("\n\te) Dependency injection example");
-        Car car = (Car) context.getBean("car");
-        car.getSeat("Left Front").controlHeater(4);
-        System.out.println(car.toString());
-
-        System.out.println("\n\tf) Event example");
+        System.out.println("\n\te) Event example");
         context.start();
         HelloWorld helloBean2 = (HelloWorld) context.getBean("helloWorld");
         System.out.println(helloBean2.getMessage());
         context.stop();
+
+        System.out.println("\n\tf) Dependency injection example");
+        Car car = (Car) context.getBean("car");
+        car.getSeat("Left Front").controlHeater(4);
+        System.out.println(car.toString());
 
         System.out.println("\nDestroy context...");
         context.destroy();

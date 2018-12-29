@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cz.vutbr.fit.gja</groupId>
-    <artifactId>spring-demo</artifactId>
+    <artifactId>spring-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-demo</name>
+    <name>spring-core</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

@@ -19,6 +19,7 @@ public class Plane {
     public String toString() {
         StringBuilder sb = new StringBuilder("Plane:\t");
         sb.append("Cockpit: ").append(cockpit.toString()).append("\t");
+        sb.append("Seats: ");
         passengers.forEach((s, p) -> sb.append(s.toString()).append(": ").append(p == null ? "Free" : p.toString()).append("\t"));
         return sb.toString();
     }
