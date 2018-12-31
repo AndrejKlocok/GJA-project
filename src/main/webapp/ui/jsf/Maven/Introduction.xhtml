@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Java Servlet</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/maven.png" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+
+                    <h1>Maven</h1>
+                    <p>Apache Maven je systém pro správu a kompilaci projektů v&nbsp;jazyce Java. Dnes je integrován do většiny IDE jako např. IntelliJ IDEA, NetBeans nebo Eclipse. Pomocí Mavenu tedy lze vytvořit jeden projekt a pracovat s&nbsp;ním v&nbsp;libovolném IDE. Maven poskytuje obsáhlý repozitář knihoven, které stačí uvést v&nbsp;projektovém souboru a při kompilaci se automaticky dostahují z&nbsp;webu. Při kompilaci na jiném stroji proto není nutné ručně řešit závislosti, vše za nás vyřeší Maven.</p>
+
+                    <h2>Instalace</h2>
+                    <p>Maven lze stáhnout z&nbsp;<a href="https://maven.apache.org/download.cgi">oficiálních stránek</a>, nebo na Linuxu přes správce aplikačních balíčků dostupném v&nbsp;dané distribuci, např. na Ubuntu lze získat následujícím příkazem:</p>
+                    <pre><code>$ sudo apt-get install maven</code></pre>
+                    <p>Různá IDE buď Maven obsahují přímo v&nbsp;sobě, nebo je možné ho přidat pluginem.</p>
+
+                    <h2>Konfigurace</h2>
+                    <p>Konfiguraci Mavenu na daném stroji obsahuje soubor <code>settings.xml</code>. Na Windows se obvykle nachází na ve složce <code>.m2</code>, která se nachází ve složce uživatele. Maven tento soubor buď automaticky vytvoří při jeho prvním spuštění, nebo ho lze vytvořit ručně. Na Linuxu se nachází ve složce <code>conf</code> v&nbsp;domonvské složce Mavenu. Domovská složka Mavenu lze zjistit např. příkazem:</p>
+                    <pre><code>$ mvn -v</code></pre>
+                    <p>V&nbsp;tomto souboru se nachází např. konfigurace serveru s&nbsp;veřejným repozitářem obsahující knihovny, např.:</p>
+                    <p:panelGrid columns="1">
+                    <pre><code class="xml">
+&lt;settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                                           http://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
+  ...
+  &lt;servers&gt;
+    &lt;server&gt;
+      &lt;id&gt;maven.oracle.com&lt;/id&gt;
+      &lt;username&gt;username@example.com&lt;/username&gt;
+      &lt;password&gt;heslo&lt;/password&gt;
+      &lt;configuration&gt;
+        ...
+      &lt;/configuration&gt;
+    &lt;/server&gt;
+  &lt;/servers&gt;
+  ...
+&lt;/settings&gt;
+                    </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Struktura projektu</h2>
+                    <p>Projekt v&nbsp;Mavenu má následující adresářovou strukturu:</p>
+                    <ul>
+                        <li>
+                            Složka projektu
+                            <ul>
+                                <li>
+                                    <code>pom.xml</code> - Project object model - Soubor s konfigurací projektu.
+                                </li>
+                                <li>
+                                    <code>src</code> - Složka se zdrojovými kódy
+                                    <ul>
+                                        <li>
+                                            <code>main</code> - Složka s vlastními zdrojovými kódy
+                                            <ul>
+                                                <li>
+                                                    <code>java</code> - Složka se zdrojovými kódy v Javě
+                                                </li>
+                                                <li>
+                                                    <code>resources</code>
+                                                </li>
+                                                <li>
+                                                    <code>webapp</code> - V&nbsp;případě webové aplikace se obsah této složky zkopíruje do kořenové složky webové aplikace.
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <code>test</code> - Složka se zdrojovými kódy testů
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <code>target</code> - Složka s cílovými (zkompilovanými) soubory. Vytváří se automaticky.
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h2>Ukázka souboru <code>pom.xml</code></h2>
+                    <p>Ukázkový projekt nacházející se ve složce <code>Servlet_Hello</code> obsahuje následující soubor <code>pom.xml</code>:</p>
+                    <p:panelGrid columns="1">
+                    <pre><code class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+                        &lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+                                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;cz.vutbr.fit.gja&lt;/groupId&gt;
+    &lt;artifactId&gt;Servlet_Hello&lt;/artifactId&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;1.8&lt;/source&gt;
+                    &lt;target&gt;1.8&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+            &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+            &lt;version&gt;3.0.1&lt;/version&gt;
+            &lt;type&gt;jar&lt;/type&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+&lt;/project&gt;
+                    </code></pre>
+                    </p:panelGrid>
+                    <p>Nejdříve soubor obsahuje základní informace o projektu jako je název skupiny a artefaktu, typ výsledného balíčku (<code>jar</code> pro klasickou aplikaci, <code>war</code> pro webovou) a verzi. Následuje definice fáze <code>build</code>, kde se nachází konfigurace překladu. Pro překlad je zde zvolena Java 8 (verze 1.8). Na konci je seznam závilostí, v&nbsp;tomto případě se zde nachází jedna - servlety, u které je opět uvedeno ID skupiny, artefaktu, verze a typ balíčku. Závislosti se při překladu projektu získávají z&nbsp;repozitářů, které jsou nakonfigurované v&nbsp;souboru <code>settings.xml</code>.</p>
+
+                    <h2>Sestavení projektu v&nbsp;Mavenu</h2>
+                    <p>Pokud pro vývoj využíváte IDE podporující Maven, sestavení a spuštění projektu zde můžete provést klasickou cestou, na kterou jste v&nbsp;daném IDE zvyklí. Sestavení projektu můžete také provést příkazem <code>mvn &lt;phase&gt;</code>, kde uvedete fázi, kterou chcete provést. Např. příkaz <code>mvn build</code> přeloží zdrojové soubory, příkaz <code>mvn package</code> vytvoří balíček (<code>jar</code>, případně <code>war</code>), <code>mvn install</code> jej nainstaluje do lokálního repozitáře Mavenu - je možné ho využít v&nbsp;dalších projektech. Jednotlivé fáze následují po sobě a vždy se provedou i všechny předchozí.</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

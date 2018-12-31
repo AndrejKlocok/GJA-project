@@ -19,6 +19,7 @@ public class MenuView {
         DefaultMenuItem item;
 
         DefaultSubMenu mainMenu = new DefaultSubMenu("Main");
+        DefaultSubMenu mavenMenu = new DefaultSubMenu("Maven");
         DefaultSubMenu servletsMenu = new DefaultSubMenu("Servlets");
         DefaultSubMenu jspMenu = new DefaultSubMenu("JSP");
         DefaultSubMenu dbMenu = new DefaultSubMenu("JPA_Hibernate");
@@ -32,6 +33,11 @@ public class MenuView {
         item.setCommand("#{menuView.home_welcome}");
         mainMenu.addElement(item);
 
+        //Maven
+        item = new DefaultMenuItem("Introduction");
+        item.setCommand("#{menuView.maven_intro}");
+        mavenMenu.addElement(item);
+
         //Servlets
         item = new DefaultMenuItem("Hello");
         item.setCommand("#{menuView.servlets_hello}");
@@ -44,11 +50,11 @@ public class MenuView {
         //JSP
         item = new DefaultMenuItem("Form");
         item.setCommand("#{menuView.jsp_form}");
-        servletsMenu.addElement(item);
+        jspMenu.addElement(item);
 
         item = new DefaultMenuItem("ImageUpload");
         item.setCommand("#{menuView.jsp_imageUpload}");
-        servletsMenu.addElement(item);
+        jspMenu.addElement(item);
 
         //Primefaces
         item = new DefaultMenuItem("PR_Setup");
@@ -143,6 +149,9 @@ public class MenuView {
 
     //Main Menu
     public String  home_welcome(){ return "/index"; }
+
+    //Maven
+    public String  maven_intro(){ return "/ui/jsf/Maven/Introduction"; }
 
     //Servlets
     public String  servlets_hello(){ return "/ui/jsf/Servlet/Hello"; }
