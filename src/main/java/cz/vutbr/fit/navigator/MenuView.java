@@ -232,4 +232,9 @@ public class MenuView {
     // Testing
     public String junit(){ return "/ui/jsf/testing/junit";}
     public String selenium(){ return "/ui/jsf/testing/selenium";}
+
+    // Spring
+    public String spring_core() { return "/ui/jsf/Spring/core"; }
+    public String spring_di() { return "/ui/jsf/Spring/di"; }
+    public String spring_mvc() { return "/ui/jsf/Spring/mvc"; }
 }

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Spring - MVC</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/spring.png" height="150" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Spring MVC</h1>
+                    <p>
+                        Spring Web MVC je pôvodný webový framework postavený na Servlet API a od samého
+                        začiatku bol zahrnutý do Spring Frameworku.
+                        Spring MVC je navrhnutý podľa vzoru Front Controller,
+                        kde centrálny Servlet, DispatcherServlet, poskytuje zdieľaný algoritmus na spracovanie žiadostí,
+                        zatiaľ čo skutočná práca sa vykonáva konfigurovateľnými delegovanými komponentami.
+                    </p>
+
+                    <p>
+                        Aplikáciu je možné spustiť pomocou "mvn spring-boot:run". Server počúva na adrese
+                        localhost:8081. Port je možné zmeniť v "application.properties".
+                    </p>
+
+                    <h2>Hello Brno! - jednoduchá aplikácia</h2>
+                    <p>
+                        Táto jednoduchá aplikácia vypíše Hello &lt;name&gt;!.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Controller
+public class GreetingController {
+
+    @RequestMapping(method = RequestMethod.GET, value = "/greeting")
+    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
+        model.addAttribute("name", name);
+        return "greeting";
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Name je defaultne World, ale je možné ho zmeniť v url query napríklad naseldovne.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="shell">
+curl localhost:8081/greeting?name=Brno
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <h2>REST API</h2>
+                    <p>
+                        V tom príklade umožníme užívateľovi pridávať, upravovať, zobrazovať a mazať záznamy v tabuľke
+                        "Student". Najprv ale potrebujeme zadefinovať mapovanie do databázy.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Configuration
+public class Database {
+
+    @Bean
+    public DriverManagerDataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost/GJA");
+        dataSource.setUsername("user69");
+        dataSource.setPassword("heslo"); // Should be hidden in properties file
+        return dataSource;
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Následne vytvoríme objekt typu "JPA.Entity". Ide o mapovanie záznamu na Java objekt.
+                        Anotácia "@Data" automaticky vytvorí setter a getter metódy.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Data
+@Entity
+public class Student {
+    private @Id @GeneratedValue(strategy=GenerationType.IDENTITY) Long id;
+    private String name;
+    private String login;
+    private Date signed;
+    @Column(name = "isic_id")
+    private Integer isicId;
+
+    public Student() {}
+
+    public Student(String name, String login, Integer isicId) {
+        this.name = name;
+        this.login = login;
+        this.isicId = isicId;
+        this.signed = new Date(0L);
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        V ďalšom kroky vytvoríme jednoduchý DAO interface. Tento interface dedí metódy z JpaRepository.
+                        To nám zabezpečí ukladania, mazania a vyhľadavánia nad tabuľkou Student.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+public interface StudentRepository extends JpaRepository&lt;Student, Long&gt; {}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        V tomto kroku už máme všetko potrebné na tvorbu kontroleru. Kontroler je v podstate tiež bean.
+                        Jeho inicializáciu zabezpečí server hneď pri štarte automaticky.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@RestController
+public class StudentController {
+
+    private final StudentRepository studentRepository;
+
+    public StudentController(StudentRepository repository) {
+        this.studentRepository = repository;
+    }
+
+    @GetMapping("/students")
+    public List&lt;Student&gt; getAllStudents() {
+        return studentRepository.findAll();
+    }
+
+    @GetMapping("students/{id}")
+    public Student getOneStudent(@PathVariable Long id) {
+        return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+    }
+
+    @PostMapping("/students")
+    public Student newEmployee(@RequestBody Student newStudent) {
+        return studentRepository.save(newStudent);
+    }
+
+    @PutMapping("/students/{id}")
+    public Student updateStudent(@PathVariable Long id, @RequestBody Student newStudent) {
+        return studentRepository.findById(id).map( student -> {
+                    student.setName(newStudent.getName());
+                    student.setIsicId(newStudent.getIsicId());
+                    student.setLogin(newStudent.getLogin());
+                    student.setSigned(newStudent.getSigned());
+                    return studentRepository.save(student);
+                }).orElseGet(() -> {
+                    newStudent.setId(id);
+                    return studentRepository.save(newStudent);
+                });
+    }
+
+    @DeleteMapping("/students/{id}")
+    public void deleteStudent(@PathVariable Long id) {
+        studentRepository.deleteById(id);
+    }
+
+    public static class StudentNotFoundException extends RuntimeException {
+        StudentNotFoundException(Long id) {
+            super("Could not find student " + id);
+        }
+    }
+
+    @ControllerAdvice
+    public static class StudentNotFoundAdvice {
+
+        @ResponseBody
+        @ExceptionHandler(StudentNotFoundException.class)
+        @ResponseStatus(HttpStatus.NOT_FOUND)
+        public String studentNotFoundHandler(StudentNotFoundException exception) {
+            return exception.getMessage();
+        }
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Statická trieda StudentNotFoundAdvice obsahuje anotáciu "@ControllerAdvice". To zaručí, že vždy
+                        keď sa vyhodi výnimka "StudentNotFoundException", tak sa zavolá metóda studentNotFoundHandler()
+                        a s toutou výnimkou si poradí. V tomto prípade vráti HttpStatus.NOT_FOUND.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="shell">
+# List all students
+curl -X GET localhost:8081/students
+# Create new Student
+curl -X POST localhost:8081/students -H 'Content-type:application/json' -d '{"name": "Michael Scot", "login": "iscott3", "isicId": null}'
+# Get specific student
+curl -X GET localhost:8081/students/38
+# Update specific student
+curl -X PUT localhost:8081/students/38 -H 'Content-type:application/json' -d '{"name": "Michael Scot", "login": "abraka", "isicId": null}'
+# Delete specific student
+curl -X DELETE localhost:8081/students/38
+                        </code></pre>
+                    </p:panelGrid>
+                    <h1>Zdroje</h1>
+                    <p>
+                        <a href="https://spring.io/guides/tutorials/rest/">https://spring.io/guides/tutorials/rest/</a>
+                        <a href="https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/web.html">
+                            https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/web.html
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>

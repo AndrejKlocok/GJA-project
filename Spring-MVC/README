@@ -1,0 +1,17 @@
+----------
+Maintainer
+----------
+Martin Kocour, <xkocou08@stud.fit.vutbr.cz>
+
+-----------
+Description
+-----------
+This example shows Spring Web MVC capabilities.
+
+---
+RUN
+---
+mvn spring-boot:run
+OR
+mvn clean package && java -jar target/spring-mvc-0.0.1-SNAPSHOT.jar
+

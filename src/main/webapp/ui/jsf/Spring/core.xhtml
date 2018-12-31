@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>Spring Core</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/spring.png" height="150" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <h1>Spring</h1>
+                    <p>
+                        Spring framework je aplikačný framework a <a href="https://en.wikipedia.org/wiki/Inversion_of_control">IoC kontajner</a>
+                        pre <a href="https://cs.wikipedia.org/wiki/Java_(platforma)">Java platformu</a>.
+                        Core funkcie frameworku môžu byť použité pre rôzne Java aplikácia, avšak Spring bol vyvinutý
+                        najmä pre budovanie webových Java EE aplikácii.
+                        Spring sa v dnešnej dobe využíva tiež ako náhrada za <a href="https://en.wikipedia.org/wiki/Enterprise_JavaBeans">Java EJB</a>.
+                    </p>
+                    <h1>Spring Core Container</h1>
+                    <p>
+                        V tejto sekcii si ukážeme tvorbu jednoduchých
+                        <a href="https://www.tutorialspoint.com/spring/spring_bean_definition.htm">Bean</a> objektov.
+                        Beany budeme vytvárať pomocou XML konfigurácie v beans.xml. V MainApp.java budeme s nimi pracovať.
+                    </p>
+                    <p>Všetky príklady je možné spustiť pomocou "mvn spring-boot:run"</p>
+
+                    <h2>Príklad a - Hello World</h2>
+                    <p>V bean.xml vytvoríme bean nasledovne:</p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+&lt;!-- Simple Hello world example. --&gt;
+&lt;bean id=&quot;helloWorld&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.HelloWorld&quot;&gt;
+    &lt;property name=&quot;message&quot; value=&quot;Hello world!&quot;/&gt;
+&lt;/bean&gt;
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Vytvoríme triedu HelloWorld s field premenou message.
+                        Trieda bude tiež obsahovať "setter" pre túto premennú.
+                        Ak by neobsahovala "setter", tak by pri tvorbe kontextu nastala chyba NotWritablePropertyException.
+                    </p>
+
+                    <h2>Príklad b - Lazy inicializacia</h2>
+                    <p>
+                        Bean s lazy-init="true" sa vytvorí, až v momente keď sa prvýkrát zavolá metóda context.getBean("lazy").
+                        Inak sa bean vytvorí hneď pri tvorbe aplikačného kontextu.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+&lt;!-- Lazy init example. --&gt;
+&lt;bean id=&quot;lazy&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.LazyInitExample&quot; lazy-init=&quot;true&quot;
+        init-method=&quot;init&quot; destroy-method=&quot;finish&quot;&gt;
+    &lt;constructor-arg name=&quot;name&quot; value=&quot;Lazy&quot;/&gt;
+&lt;/bean&gt;
+&lt;bean id=&quot;normal&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.LazyInitExample&quot; lazy-init=&quot;false&quot;
+        init-method=&quot;init&quot; destroy-method=&quot;finish&quot;&gt;
+    &lt;constructor-arg name=&quot;name&quot; value=&quot;Normal&quot;/&gt;
+&lt;/bean&gt;
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Trieda LazyInitExample musí obsahovať konštruktor s 1 premennou "name".
+                        Túto premennú používame v MainApp.java pre jednoduché rozlíšenie beanov.
+                        Objekty triedy musia tiež obsahovať inicializačnú metódu "init".
+                        Táto metóda sa zavolá pri tvorbe beanu.
+                        V našom prípade metóda vypíše na stdout kedy sa bean vytvoril.
+                    </p>
+
+                    <h2>Príklad c - Singleton a Prototype</h2>
+                    <p>
+                        V prípade Singleton beanu, metóda ApplicationContext.getBean(String beanName)
+                        vráti vždy tú istú referenciu na bean s menom "beanName".
+                        Avšak ak je bean typu Prototype, tak metóda vráti vždy novú referenciu.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+    &lt;!-- Scope example. --&gt;
+    &lt;!-- Singleton bean has only one reference. Context.getBean() returns everytime the same bean. --&gt;
+    &lt;bean id=&quot;singleton&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.ScopeExample&quot; scope=&quot;singleton&quot; &gt;
+        &lt;constructor-arg value=&quot;Singleton&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;!-- Prototype bean has many references. Context.getBean() retunrs everytime new bean.  --&gt;
+    &lt;bean id=&quot;prototype&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.ScopeExample&quot; scope=&quot;prototype&quot; &gt;
+        &lt;constructor-arg value=&quot;Prototype&quot;/&gt;
+    &lt;/bean&gt;
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Príklad d - BeanPostProcessor</h2>
+                    <p>
+                        Tento príklad demonštruje použitie rozhrania BeanPostProcessor.
+                        Metódy tohoto rozhrania sa volajú pri každej tvorbe nového beanu v danom kontexte.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+public class LifecycleProcessor implements BeanPostProcessor {
+
+    @Override
+    @Nullable
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        if (bean instanceof LifecycleExample) {
+            System.out.println("LifecycleProcessor: " + beanName + ": call postProcessBeforeInitialization()");
+        }
+        return bean;
+    }
+
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (bean instanceof LifecycleExample) {
+            System.out.println("LifecycleProcessor: " + beanName + ": call postProcessAfterInitialization()");
+        }
+        return bean;
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>Toto rozhranie je nutné implementovať a implementáciu registrovať v konfigurácii.</p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+&lt;!-- Lifecycle example --&gt;
+&lt;bean class=&quot;cz.vutbr.fit.gja.spring.bean.xml.lifecycle.LifecycleProcessor&quot;/&gt;
+&lt;bean id=&quot;lifecycleExample&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.lifecycle.LifecycleExample&quot; lazy-init=&quot;true&quot;/&gt;
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Príklad e - Eventy</h2>
+                    <p>
+                        V rámci frameworku je možné komunikovať medzi jednotlivými beanami pomocou zasielania rôznych eventov.
+                        Framework obsahuje niekoľko vstavaných eventov ako "ContextStartedEvent", "ContextStoppedEvent", a iné.
+                        K týmto eventom je nutné vytvoriť ApplicationListener a v nich tieto eventy spracovať.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+public class ContextStoppedEventSubscriber implements ApplicationListener&lt;ContextStoppedEvent&gt; {
+    @Override
+    public void onApplicationEvent(ContextStoppedEvent contextStoppedEvent) {
+        System.out.println("ContextStoppedEventSubscriber: received ContextStoppedEvent");
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p>
+                        Tiež je možné implementovať vlastné eventy. Vlastný event musí rozširovať
+                        triedu "ApplicationEvent". Takto implementovany event je ďalej nutné publikovať v rámci daného kontextu
+                        pomocou "ApplicationEventPublisherAware".
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+public class CustomEventPublisher implements ApplicationEventPublisherAware {
+    private ApplicationEventPublisher publisher;
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.publisher = applicationEventPublisher;
+    }
+
+    public void publish() {
+        publisher.publishEvent(new CustomEvent(this,"Time:  " + new Date().getTime()));
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                    <p:panelGrid columns="1">
+                        <pre><code class="xml">
+&lt;!-- Event example --&gt;
+&lt;bean id=&quot;csStartEventSubscriber&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.event.ContextStartedEventSubscriber&quot;/&gt;
+&lt;bean id=&quot;csStopEventSubscriber&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.event.ContextStoppedEventSubscriber&quot;/&gt;
+&lt;bean id=&quot;customEventPublisher&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.event.CustomEventPublisher&quot;/&gt;
+&lt;bean id=&quot;customEventSubscriber&quot; class=&quot;cz.vutbr.fit.gja.spring.bean.xml.event.CustomEventSubscriber&quot;/&gt;
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <h2>Príklad f - Dependency injection</h2>
+                    <p>Tento príklad je bližšie vysvetlený v sekcii "Spring - Dependency injection"</p>
+
+                    <h1>Zdroje</h1>
+                    <p>
+                        <a href="https://www.tutorialspoint.com/spring/index.htm">
+                            https://www.tutorialspoint.com/spring/index.htm
+                        </a><br/>
+                        <a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/core.html#spring-core">
+                            https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/core.html#spring-core
+                        </a><br/>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>
