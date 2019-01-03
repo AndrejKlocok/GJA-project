@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
  * @author Martin Kocour
  * created on 03/01/2019
  */
-@Path("xml/student")
+@Path("/xml/student")
 public class XMLStudentService {
 
     @GET
