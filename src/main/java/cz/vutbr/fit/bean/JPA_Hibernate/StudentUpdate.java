@@ -23,17 +23,21 @@ public class StudentUpdate extends StudentFind {
      */
     public void  updateStudent(){
         //get student from db
-        Student s = studentDAO.getStudent(login);
+        Student s;
+        s = studentDAO.getStudent(login);
         //if student does not exist
         if(s == null){
-            addMessage("Failure", "Entity was not found");
-            return;
+            s = new Student(name, login);
+            addMessage("Success", "Entity was created");
         }
-        //update properties
-        s.setName(name);
+        else{
+            //update properties
+            s.setName(name);
+        }
         //call service
         if(!studentDAO.updateStudent(s)){
             addMessage("Failure", "Entity was not updated");
+            return;
         }
         addMessage("Success", "Entity was updated");
     }
