@@ -12,6 +12,28 @@
     <title>GJA-Tutorial</title>
 </h:head>
 <h:body>
+    <style type="text/css">
+        table {
+            border: 1px;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+
+        th, td {
+            border: 1px solid #C08000;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding: 1px 5px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #FFF8E0;
+            font-weight: bold;
+        }
+    </style>
     <div class="ui-g">
         <div class="ui-g-12">
             <p:graphicImage name="pictures/javaee.png" style="margin: auto; display: block"/>
@@ -23,12 +45,70 @@
             <div class="ui-g-12 ui-g-nopad">
                 <div class="box">
                     <h1>Home</h1>
-                    <p> Tutorial Java ee aplikácie, ktorá pracuje s Mysql databázou.</p>
-                    <p> Pred spustením tutoriálu je potrebné vytvoriť uživateľa,  databázu. Toto je pripravené
-                        v priloženom skripte, v <i>src/dbMysql.sh</i></p>
-
                     <p>
-                        Priložený skript inicializuje databazu GJA.
+                        Tutorial Java EE aplikácie do predmetu GJA. Tento tutoriál obsahuje praktické príklady a návod
+                        na ich spustenie spolu s prezentáciou vzorového kódu. Venuje sa väčšine prednášok, prezentovaných
+                        v predmete GJA:
+                    </p>
+                    <table>
+                        <tr>
+                            <th>Téma prednášky</th>
+                        </tr>
+
+                        <tr>
+                            <td>1. Servlety, Java Server Pages</td>
+                        </tr>
+
+                        <tr>
+                            <td>2. Testování, Maven a JAX</td>
+                        </tr>
+
+                        <tr>
+                            <td>3. RMI a JMS</td>
+                        </tr>
+
+                        <tr>
+                            <td>4. EJB a JavaServerFaces</td>
+                        </tr>
+
+                        <tr>
+                            <td>5. PrimeFaces</td>
+                        </tr>
+
+                        <tr>
+                            <td>6. Spring</td>
+
+                        </tr>
+
+                        <tr>
+                            <td>9. Java Persistence API, Hibernate</td>
+                        </tr>
+
+                        <tr>
+                            <td>10. Google Web Toolkit</td>
+                        </tr>
+
+                    </table>
+                    <p>V ľavej strane stránky sa nachádza menu, ktoré obsahuje kapitoly prednášok a jednotlivé
+                        podkapitoly, v ktorých sa nachádzajú samotné príklady.
+                    </p>
+                    <p>
+                        Pre spustenia tohto tutoriálu je potrebné mať aj sprovoznené
+                    </p>
+                    <ul>
+                        <li>Java8 SDK</li>
+                        <li>Maven</li>
+                        <li>GlassFish</li>
+                        <li>MySql</li>
+                    </ul>
+                    <p>
+                        Tutoriál pre JPA/Hibenate a Primefaces využíva pripojenie do databáze(MySQL5). Pred spustením týchto
+                        kapitol tutoriálu je potrebné vytvoriť uživateľa (pripojenie) a databázu podľa konfiguračných súborov
+                        <i>persistent.xml</i> a <i>hibernate.cfg.xml</i>. Toto je pripravené v priloženom skripte,
+                        v <i>src/dbMysql.sh</i>. Priložený skript inicializuje vytvorí databázu GJA a užívateľa <i>user69</i>
+                        s heslom, sprístupní mu práva na túto databázu. Na tieto operácie je potrebné spúštať tento skript nad
+                        root užívateľom mysql(implicitne root ale je možnosť zmeny v skriptu). Následne sa vytvoria tabuľy
+                        a vykoná počiatočný seed dát.
                     </p>
                     <p:panelGrid columns="1">
                         <pre><code class="sql">
@@ -40,6 +120,7 @@ mysql -uroot -p$ {rootpasswd}  'GJA' &lt; init.sql
 
                         </code></pre>
                     </p:panelGrid>
+
                 </div>
             </div>
         </div>

@@ -111,14 +111,23 @@ protected SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
                     </p>
                     <p:panelGrid columns="1">
                         <pre><code class="java">
-// Vytvorenie serviceRegistry z configuracneho subora hibernate.cfg.xml
-ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()//
-        .configure("hibernate.cfg.xml").build();
+// Hibernate 5:
+private static SessionFactory buildSessionFactory() {
+    try {
+        // Vytvorenie serviceRegistry z configuracneho subora hibernate.cfg.xml
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()//
+                .configure("hibernate.cfg.xml").build();
 
-// Vytvorenie metadat zdrojov pouzitim service registry
-Metadata metadata = new MetadataSources(serviceRegistry).getMetadataBuilder().build();
+        // Vytvorenie metadat zdrojov pouzitim service registry
+        Metadata metadata = new MetadataSources(serviceRegistry).getMetadataBuilder().build();
 
-return metadata.getSessionFactoryBuilder().build();
+        return metadata.getSessionFactoryBuilder().build();
+    } catch (Throwable ex) {
+
+        System.err.println("Initial SessionFactory creation failed." + ex);
+        throw new ExceptionInInitializerError(ex);
+    }
+}
                         </code></pre>
                     </p:panelGrid>
                 </div>

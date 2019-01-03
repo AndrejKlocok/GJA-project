@@ -203,7 +203,7 @@ public class StudentDAO extends DAO{
 
     /**
      * Method returns list of Students, in which every student has isic
-     * @return
+     * @return list of Students
      */
     public List<Student> getStudentsWithIsic(){
         //get session

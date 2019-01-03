@@ -28,8 +28,12 @@
                         Predpokladajme, že každá fakulta môže vyučovať N predmetov. Zavedieme novú triedu <i>Faculty</i>
                         a <i>Subject</i>. Je nutné vytvorenie týchto entit v databáze. Samotnú väzbu spravíme obojsmernú,
                         teda vytvoríme si väzobnú tabulku <i>Faculty_Subject</i>. Táto tabulka obsahuje id oboch tabuliek,
-                        , ktoré sú cudzími klúčami do spomínaných tabuliek (označené ako <i>fk_fakulty</i> a <i>fk_subject</i>).
+                        ktoré sú cudzími klúčami do spomínaných tabuliek (označené ako <i>fk_fakulty</i> a <i>fk_subject</i>).
                         pričom toto riešenie sa takmer zhoduje s využitím väzby N-N.
+                    </p>
+                    <p>
+                        Využijeme teda anotácie <b>@OneToMany(...)</b> - jedna fakulta zahŕňa viac predmetov
+                        a <b>@JoinTable(...)</b> - spojovacia tabulka -> mapovanie cudzích kľúčov
                     </p>
                     <p:panelGrid columns="1">
                         <pre><code class="java">
@@ -40,16 +44,32 @@ public class Faculty {
     @Column( nullable=false, unique=true)
     private Long id_faculty;
 
-    @Column( nullable=false)
+    @Column( nullable=false, unique = true)
     private String name;
 
     @OneToMany( orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinTable(name = "Faculty_Subject",
-            joinColumns = {@JoinColumn(name = "fk_faculty",
-                referencedColumnName = "id_faculty")},
-            inverseJoinColumns = {@JoinColumn(name = "fk_subject",
-                referencedColumnName = "id_subject")}
+            joinColumns = {@JoinColumn(name = "fk_faculty", referencedColumnName = "id_faculty")},
+            inverseJoinColumns = {@JoinColumn(name = "fk_subject", referencedColumnName = "id_subject")}
     )
+    private List&lt;Subject&gt; subjectList = new ArrayList&lt;&gt;();
+
+    public Faculty(){}
+
+    public Faculty(String name) {
+        this.name = name;
+    }
+
+    public void addSubject(Subject s){
+        this.subjectList.add(s);
+    }
+
+    public void removeSubject(Subject s){
+        this.subjectList.remove(s);
+    }
+    //Getters and Setters
+    ...
+}
                         </code></pre>
                         <pre><code class="java">
 @Entity
@@ -77,6 +97,15 @@ public class Subject {
                     referencedColumnName = "id_faculty")}
     )
     private Faculty subjectFaculty;
+                            public Subject(){}
+
+    public Subject(String name) {
+        this.name = name;
+        this.created = new Date(System.currentTimeMillis());
+    }
+    //Getters and setters
+    ...
+}
                         </code></pre>
                         <p>
                             Pridanie predmetu do fakulty:
