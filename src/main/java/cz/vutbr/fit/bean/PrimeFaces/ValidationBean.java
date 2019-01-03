@@ -42,9 +42,9 @@ public class ValidationBean {
     private int sliderNumber;
 
     /**
-     *
-     * @param text
-     * @return
+     * Method concatenate given string with increment number
+     * @param text  given string
+     * @return list of strings with increments
      */
     public List<String> autoComplete(String text) {
         List<String> output = new ArrayList<String>();
@@ -75,7 +75,7 @@ public class ValidationBean {
 
     /**
      * Method is listener to on input change event from slider component
-     * @param event
+     * @param event event from slider component
      */
     public void onInputChanged(ValueChangeEvent event) {
         //notify gui with faces message
