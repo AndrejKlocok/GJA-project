@@ -12,10 +12,6 @@ This example was tested in IntellijJ with oracles jdk 1.8 and glassfish 4.1.2.
 In JPA_Hibernate demo we use Mysql database, so in order to run these examples you
 need to have latest Mysql.
 
-inicializácia databáze pomocou skriptu dbMysql.sh
-mvn package a následne nasadenie na aplikačný server (alebo cez IDE)
- 
-
 * initialization using script dbMysql.sh
 * mvn package and upload .war on application server (or using IDE)
 
