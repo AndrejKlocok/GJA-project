@@ -25,7 +25,8 @@ import java.sql.Date;
  * https://spring.io/guides/tutorials/rest/
  */
 @Data
-@Entity(name = "Student")
+@Table(name = "Student")
+@Entity
 public class Student {
     private @Id @GeneratedValue(strategy=GenerationType.IDENTITY) Long id;
     private String name;
