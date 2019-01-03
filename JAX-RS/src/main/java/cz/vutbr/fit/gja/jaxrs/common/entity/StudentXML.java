@@ -1,5 +1,7 @@
 package cz.vutbr.fit.gja.jaxrs.common.entity;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -10,9 +12,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class StudentXML {
+    @XmlElement
     private String forename;
+    @XmlElement
     private String surname;
+    @XmlAttribute
     private String login;
+
+    public StudentXML() {
+    }
 
     public StudentXML(String forename, String surname, String login) {
         this.forename = forename;
