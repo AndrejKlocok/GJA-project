@@ -34,18 +34,29 @@
                     </p>
                     <p:panelGrid columns="1">
                         <pre><code class="java">
+/**
+ * Method returns list of Students, in which every student has isic
+ * @return list of Students
+ */
 public List&lt;Student&gt; getStudentsWithIsic(){
+    //get session
     Session session = sessionFactory.getCurrentSession();
+    //get transaction
     Transaction tr = session.getTransaction();
+    //init list
     List&lt;Student&gt; students = new ArrayList&lt;&gt;();
 
     try {
+        //begin transaction
         tr.begin();
+        //create criteria under Student class
         Criteria cr = session.createCriteria(Student.class);
+        //add not null
         cr.add(Restrictions.isNotNull("isic"));
+        //order by name ascending
         cr.addOrder(Order.asc("name"));
+        //get list
         students = cr.list();
-        tr.commit();
         tr.commit();
         return students;
     }
@@ -78,17 +89,30 @@ public List&lt;Student&gt; getStudentsWithIsic(){
                     </p>
                     <p:panelGrid columns="1">
                         <pre><code class="java">
+/**
+ * Method returns distinct count of student which login start with x and distinct name.
+ * @return Long
+ */
 public Long getDiscNameCount(){
+    //get session
     Session session = sessionFactory.getCurrentSession();
+    //get transaction
     Transaction tr = session.getTransaction();
+    //init cound
     Long count = 0L;
 
     try {
+        //start transaction
         tr.begin();
+        //create criteria under Student class
         Criteria cr = session.createCriteria(Student.class);
+        //count distinct
         cr.setProjection(Projections.countDistinct("name"));
+        //login like x%
         cr.add(Restrictions.ilike("login", "x%"));
+        //order by login ascending
         cr.addOrder(Order.asc("login"));
+        //get unique result
         count = (Long) cr.uniqueResult();
         tr.commit();
         return count;
@@ -116,6 +140,10 @@ public Long getDiscNameCount(){
                     </p>
                     <p:panelGrid columns="1">
                         <pre><code class="java">
+/**
+ * Method returns list of students, which login starts with x
+ * @return list of students
+ */
 public List&lt;Student&gt; getStudentsWithXlogin(){
     //get transaction
     EntityTransaction tr = em.getTransaction();
@@ -128,7 +156,7 @@ public List&lt;Student&gt; getStudentsWithXlogin(){
     try {
         tr.begin();
         //create root from class
-        Root&lt;Student&gt; root = criteriaQuery.from(Student.class);
+        Root&lt;Student> root = criteriaQuery.from(Student.class);
         //JPA criteria query
         criteriaQuery.select(root).where(criteriaBuilder.like(root.get("login"),"x%"))
                 .orderBy(criteriaBuilder.asc(root.get("login")));

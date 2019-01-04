@@ -1,0 +1,11 @@
+Jednoduchý príklad na testovanie pomocou nástroja Selenium.
+
+Potrebné kroky pre fungovanie:
+Nainštalovať JDK.
+Nainštalovať Google chrome(prípadne iný prehliadač, ale v našom príklade je využitý google chrome.)
+Nainštalovať Chrome driver
+Stiahnuť Selenium Java Client Driver
+Importovať stiahnuté Selenium knižnice do projektu.
+
+Preloží sa príkazom "mvn install"
+Spustí sa príkazom "mvn exec:java"

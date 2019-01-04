@@ -44,7 +44,7 @@ public class DataBean extends StudentView {
 
     /**
      * Listener for row canceling
-     * @param event
+     * @param event row cancel event
      */
     public void onRowCancel(RowEditEvent event) {
         //get student object

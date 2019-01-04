@@ -32,20 +32,37 @@
 @Entity
 ...
 public class Student implements Serializable {
-    ...
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column( nullable=false, unique=true)
     private Long id;
-    ...
+    @Column( nullable=false, unique=false)
+    private String name;
+    @Column(nullable=false, unique=false)
+    private String login;
+    @Temporal(TemporalType.DATE)
+    private Date signed;
+
     @OneToOne
     @JoinColumn(name = "isic_id")
     private ISIC isic;
+
+    public Student(){ }
+
+    public Student(String name, String login){
+        this.name = name;
+        this.login = login;
+        this.signed = new Date(System.currentTimeMillis());
+    }
+    //Getters and Setters
+    ...
+}
                         </code></pre>
                         <pre><code class="java">
 @Entity
 public class ISIC {
-    ...
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column( nullable=false, unique=true)
@@ -59,6 +76,18 @@ public class ISIC {
 
     @Column( nullable=false, unique=false)
     private Date creation;
+
+
+    public ISIC(){}
+
+    public ISIC(String isic_number, String faculty) {
+        this.isic_number = isic_number;
+        this.faculty = faculty;
+        this.creation = new Date(System.currentTimeMillis());
+    }
+    //Getters and setters
+    ...
+}
                         </code></pre>
                     </p:panelGrid>
 

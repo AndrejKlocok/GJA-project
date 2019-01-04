@@ -1,0 +1,15 @@
+-----------
+DESCRIPTION
+-----------
+JAX-RS example using Jersey container.
+
+---
+RUN
+---
+1. create war
+mvn clean package
+- War is in ./target/JAX-RS-1.0-SNAPSHOT.war
+
+2. deploy war to GlassFish server
+ - i.e. http://localhost:4848/common/index.jsf
+ - $GLASSFISH_HOME/bin/asadmin (deploy|redeploy) --contextroot JAX-RS-1.0-SNAPSHOT ../project/JAX-RS/target/JAX-RS-1.0-SNAPSHOT.war

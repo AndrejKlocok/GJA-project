@@ -237,4 +237,7 @@ public class MenuView {
     public String spring_core() { return "/ui/jsf/Spring/core"; }
     public String spring_di() { return "/ui/jsf/Spring/di"; }
     public String spring_mvc() { return "/ui/jsf/Spring/mvc"; }
+
+    // JAX
+    public String jax_jersey() { return "/ui/jsf/JAX/jax_jersey"; }
 }

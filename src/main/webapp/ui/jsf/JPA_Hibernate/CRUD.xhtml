@@ -28,15 +28,40 @@
                         </p>
                     <h2>Persist</h2>
                     <p>
-                        Pridanie študenta do databáze. Volá sa funkcia <i>insertStudent</i>, kde sa vytvorí transakcia
+                        Pridanie študenta do databáze. Volá sa funkcia <i>insertStudent()</i>, kde sa vytvorí transakcia
                         a vrámci nej sa uloží instancia študenta.<br/>
                         Alternatíva môže byť aj volanie <b>save()</b>. Podrobný popis je dostupný na
-                        <h:outputLink value="https://stackoverflow.com/questions/5862680/whats-the-advantage-of-persist-vs-save-in-hibernate">persist vs save</h:outputLink>
+                        <h:outputLink value="https://stackoverflow.com/questions/5862680/whats-the-advantage-of-persist-vs-save-in-hibernate">persist vs save</h:outputLink>.
                         <br/>
                         Príklad s využitím transakcie (podobným štýlom try catch sú riešené všetky dotazy):
                     </p>
-                    <p:panelGrid columns="1">
+                    <p:panelGrid columns="2">
+                                                <pre><code class="java">
+@ManagedBean(name = "StudentInsert")
+public class StudentInsert extends StudentBean{
+    /**
+     * Add student to database
+     */
+    public void addStudent(){
+        //Create student
+        Student student = new Student(name, login);
+        //insert student to database
+        if(!studentDAO.inserStudent(student)){
+            //notify
+            addMessage("Failure", "Entity was not created");
+            return;
+        }
+        //notify
+        addMessage("Success", "Entity was created");
+
+    }
+
+}
+                        </code></pre>
                         <pre><code class="java">
+@Singleton
+public class StudentDAO extends DAO{
+    ...
     /**
      * Method inserts student into database
      * @param student   given student object
@@ -60,16 +85,46 @@
             return false;
         }
     }
+    ...
+}
                         </code></pre>
                     </p:panelGrid>
                     <h2>Remove</h2>
                     <p>
                         Odstránenie študenta z db prebieha podobne, pričom najskôr nájdeme instanciu pomocou
-                        query dotazu a až potom zmažeme. V prípde, že dané id nie je v db, query nám vráti null. <br/>
+                        query dotazu a až potom zmažeme. V prípde, že dané id nie je v db, query nám vráti null.<br/>
                         Alternatíva môže byť aj volanie <b>delete()</b> od <i>Session</i>.
                     </p>
-                    <p:panelGrid columns="1">
+                    <p:panelGrid columns="2">
+                                                <pre><code class="java">
+@ManagedBean(name = "StudentDelete")
+public class StudentDelete extends StudentBean{
+
+    /**
+     * Method deletes student from database if he exists
+     */
+    public void deleteStudent(){
+        //get student from database
+        Student student = studentDAO.getStudent(login);
+        //if exists
+        if (student == null) {
+            addMessage("Failure", "Entity was not found");
+            return;
+        }
+
+        if(!studentDAO.deleteStudent(student)){
+            addMessage("Failure", "Entity was not deleted");
+        }
+
+        //notify gui
+        addMessage("Success", "Entity was deleted");
+    }
+}
+                        </code></pre>
                         <pre><code class="java">
+@Singleton
+public class StudentDAO extends DAO{
+    ...
     /**
      * Method deletes Student from database according to login property
      * @param student   given student
@@ -93,16 +148,50 @@
             return false;
         }
     }
+    ...
+}
                         </code></pre>
                     </p:panelGrid>
                     <h2>Merge</h2>
                     <p>
-                        Persist vyžijeme keď chceme vložiť objekt do db a súčasne ho pripojiť do entity managera
-                        Merge najde existujuci objekt s daným identifikátorom (PK) a aktualizuje ho, ak existuje
-                        tak vráti pripojený objekt a k nie tak ho vloži do databazy.
+                        Persist vyžijeme keď chceme vložiť objekt do db a súčasne ho pripojiť do entity managera.
+                        Merge synchronizuje stav odpojenej entity(objektu)s entitou v Persistent context.<br/>
+                        Nájde entitu s daným identifikátorom (PK) a aktualizuje ho a vráti spravovatelnú entitu.
                     </p>
-                    <p:panelGrid columns="1">
+                    <p:panelGrid columns="2">
                         <pre><code class="java">
+@ManagedBean(name = "StudentUpdate")
+public class StudentUpdate extends StudentFind {
+    /**
+     * Method update student state to database
+     */
+    public void  updateStudent(){
+        //get student from db
+        Student s;
+        s = studentDAO.getStudent(login);
+        //if student does not exist
+        if(s == null){
+            s = new Student(name, login);
+            addMessage("Success", "Entity was created");
+        }
+        else{
+            //update properties
+            s.setName(name);
+        }
+        //call service
+        if(!studentDAO.updateStudent(s)){
+            addMessage("Failure", "Entity was not updated");
+            return;
+        }
+        addMessage("Success", "Entity was updated");
+    }
+}
+                        </code></pre>
+                        <pre><code class="java">
+@Singleton
+public class StudentDAO extends DAO{
+    ...
+
     /**
      * Method updates Student in database
      * @param student   given student
@@ -128,6 +217,8 @@
             return false;
         }
     }
+    ...
+}
                         </code></pre>
                     </p:panelGrid>
                     <h:form>

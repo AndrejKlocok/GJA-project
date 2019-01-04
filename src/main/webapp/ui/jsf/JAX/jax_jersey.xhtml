@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="styles" name="style.css"  />
+    <h:outputStylesheet library="styles" name="highlight.min.css"  />
+    <title>JAX-RS</title>
+</h:head>
+<h:body>
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p:graphicImage name="pictures/jersey_logo.png" height="100" style="margin: auto; display: block"/>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+            <ui:include src="/ui/components/menu.xhtml"/>
+        </div>
+        <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-g-nopad">
+                <div class="box">
+                    <H1>Jersey</H1>
+                    <p>
+                        Jersey RESTful Web Services framework je open source projekt, ktorý je súčasťou aplikačného kontajneru GlassFish.
+                        Jersey je framework pre tvorbu RESTful Web Services v jazyku Java. Poskytuje podporu pre JAX-RS APIs.
+                    </p>
+                    <H1>Príklady</H1>
+                    <h2>SimpleStundentService</h2>
+                    <p>
+                        V tomto príklade si ukážeme tvorbu jednoduchej REST aplikácie.
+                    </p>
+                    <h3>Jednoduchý príklad na GET</h3>
+                    <p>
+                        Tento endpoint vrati jednoduchy objekt typu Student.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getStudent() {
+        Student student = new Student("Martin", "Kocour", "xkocou08");
+        return student.toString();
+    }
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <h3>MatrixParam</h3>
+                    <p>
+                        Pomocou MatrixParam anotácie je možné meniť meno a login študenta.
+                        URL cesta vypadá nasledovne: simple/student/matrix;forename=Adam;surname=Novak;login=xnovak00
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    @GET
+    @Path("/matrix")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getStudentByMatrixParam(@MatrixParam("forename") String forename,
+                              @MatrixParam("login") String login,
+                              @MatrixParam("surname") String surname) {
+        Student student = new Student(forename, surname, login);
+        return student.toString();
+    }
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <h3>QueryParam</h3>
+                    <p>
+                        Pomocou anotácie QueryParam možeme definovať atribúty objektu cez URL query.
+                        Anotácia DefaultValue definuje východzie hodnoty atribútov.
+                        URL cesta vypadá nasledovne: simple/student/query?surname=Novak&amp;login=xnovak00
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    @GET
+    @Path("/query")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getStudentByQueryParam(@DefaultValue("Default Name") @QueryParam("forename") String forename,
+                                          @DefaultValue("Default login") @QueryParam("login") String login,
+                                          @DefaultValue("Default surname") @QueryParam("surname") String surname) {
+        Student student = new Student(forename, surname, login);
+        return student.toString();
+    }
+                        </code></pre>
+                    </p:panelGrid>
+                    <h3>PathParam</h3>
+                    <p>
+                        Anotácia PathParam definuje premennú v URL path.
+                        URL cesta može vypadať nasledovne: simple/student/xnovak00/novak
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    @GET
+    @Path("/{login}/{surname}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getStudentByName(@PathParam("login") String login, @PathParam("surname") String surname) {
+        Student student = new Student();
+        student.setLogin(login);
+        student.setSurname(surname);
+        return student.toString();
+    }
+                        </code></pre>
+                    </p:panelGrid>
+                    <h3>Redirect</h3>
+                    <p>
+                        Tento príklad znázorňuje ako sa dá jednoducho presmerovať požiadavok.
+                        Všetky požiadavky na URL simple/student/redirect presmeruju poziadavok na
+                        simple/student/xhulec01/hulec
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    @GET
+    @Path("/redirect")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String redirect(@Context HttpServletResponse response) throws IOException {
+        response.sendRedirect("xhulec01/hulec"); // Try to change path
+        return "Redirecting...";
+    }
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <h3>Post</h3>
+                    <p>
+                        Pomocou POST anotácie definujeme, že daný endpoint počúva na POST HTTP požiadavky.
+                        Tento príklad jednoducho vytvorí nového študenta, jeho atribúty vezme z formulára,
+                        ktorý je súčasťou požiadavku.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+    @POST
+    @Path("/add")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String addStudent(@FormParam("forename") String forename,
+                             @FormParam("login") String login,
+                             @FormParam("surname") String surname) {
+        Student student = new Student(forename, surname, login);
+        return student.toString();
+    }
+                        </code></pre>
+                    </p:panelGrid>
+
+                    <H3>Celá trieda</H3>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Path("/simple/student")
+public class SimpleStudentService {
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getStudent() {
+        Student student = new Student("Martin", "Kocour", "xkocou08");
+        return student.toString();
+    }
+
+    @GET
+    @Path("/matrix")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getStudentByMatrixParam(@MatrixParam("forename") String forename,
+                              @MatrixParam("login") String login,
+                              @MatrixParam("surname") String surname) {
+        Student student = new Student(forename, surname, login);
+        return student.toString();
+    }
+
+    @GET
+    @Path("/query")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getStudentByQueryParam(@DefaultValue("Default Name") @QueryParam("forename") String forename,
+                                          @DefaultValue("Default login") @QueryParam("login") String login,
+                                          @DefaultValue("Default surname") @QueryParam("surname") String surname) {
+        Student student = new Student(forename, surname, login);
+        return student.toString();
+    }
+
+    @POST
+    @Path("/add")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String addStudent(@FormParam("forename") String forename,
+                             @FormParam("login") String login,
+                             @FormParam("surname") String surname) {
+        Student student = new Student(forename, surname, login);
+        return student.toString();
+    }
+
+    @GET
+    @Path("/redirect")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String redirect(@Context HttpServletResponse response) throws IOException {
+        response.sendRedirect("xhulec01/hulec"); // Try to change path
+        return "Redirecting...";
+    }
+                        </code></pre>
+                    </p:panelGrid>
+                    <h2>XMLStudentService</h2>
+                    <p>
+                        Tento príklad demonštruje požutie MediaType.APPLICATION_XML. Trieda StudentXML musí byť oanotovaná
+                        anotáciou XmlRootElement. Tá zabezpeči mapovanie Java objektu na XML element.
+                    </p>
+                    <p:panelGrid columns="1">
+                        <pre><code class="java">
+@Path("xml/student")
+public class XMLStudentService {
+
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    public StudentXML getXMLStudent() {
+        StudentXML studentXML = new StudentXML("XMLname", "XMLsurname", "XMLlogin");
+        return studentXML;
+    }
+}
+                        </code></pre>
+                    </p:panelGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h:outputScript library = "js" name = "highlight.min.js" />
+    <ui:include src="/ui/components/scripts.xhtml"/>
+</h:body>
+</html>
