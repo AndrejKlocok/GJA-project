@@ -1,0 +1,10 @@
+Jednoduchá ukázka servletu
+
+Autor:
+Tomáš Hypeš, xhypes00@stud.fit.vutbr.cz
+
+Spuštění na serveru Glassfish:
+$ mvn embedded-glassfish:run
+
+Otevření v prohlížeči (záleží na konfiguraci serveru):
+http://localhost:8080/Servlet_Hello-1.0-SNAPSHOT/form
