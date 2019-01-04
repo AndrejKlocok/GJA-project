@@ -1,0 +1,3 @@
+Jednoduchá ukážka testovanie pomocou JUnit.
+
+Spustenie pomocou príkazu: "mvn test"
