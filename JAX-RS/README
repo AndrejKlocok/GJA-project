@@ -12,4 +12,7 @@ mvn clean package
 
 2. deploy war to GlassFish server
  - i.e. http://localhost:4848/common/index.jsf
- - $GLASSFISH_HOME/bin/asadmin (deploy|redeploy) --contextroot JAX-RS-1.0-SNAPSHOT ../project/JAX-RS/target/JAX-RS-1.0-SNAPSHOT.war
+ - $GLASSFISH_HOME/bin/asadmin deploy --contextroot JAX-RS-1.0-SNAPSHOT ./target/JAX-RS-1.0-SNAPSHOT.war
+
+3. open
+http://localhost:8080/JAX-RS-1.0-SNAPSHOT/

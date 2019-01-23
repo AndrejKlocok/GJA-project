@@ -6,6 +6,9 @@ In another terminal window:
 
 $ mvn jetty:run -pl *-server -am -Denv=dev
 
+Open:
+http://localhost:8082
+
 Or if you'd rather use Tomcat than Jetty, use mvn tomcat7:run instead of mvn jetty:run.
 
 Note that the -pl and -am are not strictly necessary, they just tell Maven not to build the client module when you're dealing with the server one, and vice versa.

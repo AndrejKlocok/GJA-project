@@ -10,6 +10,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.tomcat.port>8082</maven.tomcat.port>
+        <jetty.http.port>8082</jetty.http.port>
     </properties>
 
     <dependencyManagement>
@@ -56,6 +58,11 @@
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
                     <version>9.4.8.v20171121</version>
+                    <configuration>
+                        <httpConnector>
+                            <port>${jetty.http.port}</port>
+                        </httpConnector>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>net.ltgt.gwt.maven</groupId>

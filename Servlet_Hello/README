@@ -5,6 +5,9 @@ Tomáš Hypeš, xhypes00@stud.fit.vutbr.cz
 
 Spuštění na serveru Glassfish:
 $ mvn embedded-glassfish:run
+alebo
+mvn package
+$GLASSFISH_HOME/bin/asadmin deploy --contextroot Servlet_Hello-1.0-SNAPSHOT ./target/Servlet_Hello-1.0-SNAPSHOT.war
 
 Otevření v prohlížeči (záleží na konfiguraci serveru):
-http://localhost:8080/Servlet_Hello-1.0-SNAPSHOT/form
+http://localhost:8080/Servlet_Hello-1.0-SNAPSHOT/hello
